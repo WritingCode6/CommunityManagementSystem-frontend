@@ -26,6 +26,10 @@ Vue.use(VueRouter)
           name: 'Personal',
           component: () => import('../views/personal/personal.vue')
         }, {
+          path: 'user',
+          name: 'User',
+          component: () => import('../views/user/user.vue')
+        },{
           path: 'parking',
           name: 'Parking',
           component: () => import('../views/parking/parking.vue')
@@ -49,6 +53,10 @@ Vue.use(VueRouter)
           path: 'feedback',
           name: 'Feedback',
           component: () => import('../views/feedback/feedback.vue')
+        },{
+          path: 'property',
+          name: 'Property',
+          component: () => import('../views/property/property.vue')
         }]
     },
 ]

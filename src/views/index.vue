@@ -1,11 +1,11 @@
 <template>
   <div id="index">
-    <div class="topbar">
-      <ul class="title_loca">
+    <div class="topBar">
+      <ul class="title_location">
         <li class="title">社区小管家</li>
         <li class="location">
           <img src="../assets/image/icon/icon_location.png" alt />
-          东莞·碧桂园
+          {{ communityLocation }}
         </li>
       </ul>
       <ul class="welcome_msg">
@@ -20,74 +20,77 @@
           </a>
         </li>
         <li class="line">|</li>
-        <li class="welcome">欢迎您，李华华</li>
+        <li class="welcome">欢迎您！{{ userName }}</li>
       </ul>
     </div>
     <div class="nav">
       <ul class="list">
         <li>
-          <a href>
-            <img src="../assets/image/icon/icon_homepage.png" alt />
-            <span>主页</span>
-          </a>
+          <router-link to="/index/homepage" class="homepage">
+            <span class="homepage_word">社区主页</span>
+            <span class="arrows">></span>
+          </router-link>
         </li>
         <li>
-          <a href>
-            <img src="../assets/image/icon/icon_personal.png" alt />
-            <span>个人中心</span>
+          <router-link to="/index/personal" class="personal">
+            <span class="personal_word">个人中心</span>
             <span class="arrows">></span>
-          </a>
+          </router-link>
         </li>
         <li>
-          <a href>
-            <img src="../assets/image/icon/icon_user.png" alt />
-            <span>住户相关</span>
+          <router-link to="/index/user" class="user">
+            <span class="user_word">住户相关</span>
             <span class="arrows">></span>
-          </a>
+          </router-link>
         </li>
         <li>
-          <a href>
-            <img src="../assets/image/icon/icon_parking.png" alt />
-            <span>车位管理</span>
+          <router-link to="/index/parking" class="parking">
+            <span class="parking_word">车位管理</span>
             <span class="arrows">></span>
-          </a>
+          </router-link>
         </li>
         <li>
-          <a href>
-            <img src="../assets/image/icon/icon_staff.png" alt />
-            <span>人员管理</span>
+          <router-link to="/index/staff" class="staff">
+            <span class="staff_word">人员管理</span>
             <span class="arrows">></span>
-          </a>
+          </router-link>
         </li>
         <li>
-          <a href>
-            <img src="../assets/image/icon/icon_visitor.png" alt />
-            <span>访客管理</span>
+          <router-link to="/index/visitor" class="visitor">
+            <span class="visitor_word">访客管理</span>
             <span class="arrows">></span>
-          </a>
+          </router-link>
         </li>
         <li>
-          <a href>
-            <img src="../assets/image/icon/icon_notice.png" alt />
-            <span>社区通知</span>
+          <router-link to="/index/notice" class="notice">
+            <span class="notice_word">社区通知</span>
             <span class="arrows">></span>
-          </a>
+          </router-link>
         </li>
         <li>
-          <a href>
-            <img src="../assets/image/icon/icon.activity.png" alt />
-            <span>社区活动</span>
+          <router-link to="/index/activity" class="activity">
+            <span class="activity_word">社区活动</span>
             <span class="arrows">></span>
-          </a>
+          </router-link>
         </li>
         <li>
-          <a href>
-            <img src="../assets/image/icon/icon_feedback.png" alt />
-            <span>投诉反馈</span>
+          <router-link to="/index/feedback" class="feedback">
+            <span class="feedback_word">投诉反馈</span>
             <span class="arrows">></span>
-          </a>
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/index/property" class="property">
+            <span class="property_word">物业信息</span>
+            <span class="arrows">></span>
+          </router-link>
         </li>
       </ul>
+    </div>
+    <div class="right_part">
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
   </div>
 </template>
@@ -96,88 +99,276 @@
 export default {
   name: "index",
   data() {
-    return {};
+    return {
+      communityLocation: '东莞 · 碧桂园',
+      userName: '李华华'
+    };
+  },
+  methods: {
+
   }
 };
 </script>
 
 <style scoped>
+#index {
+  font-family: Microsoft Yahei, SimSun;
+  font-size: 14px;
+}
 .clearfix::before,
 .clearfix::after {
   content: "";
   display: table;
   clear: both;
 }
-.topbar {
-  height: 59px;
+.topBar {
+  height: 60px;
   width: 100%;
-  line-height: 59px;
+  line-height: 60px;
   color: #fff;
   background: #a2738c;
 }
-.topbar .title_loca li {
+.title_location li {
   float: left;
 }
-.topbar .title {
-  font-size: 24px;
+.title {
+  font-family: STKaiti;
+  font-size: 28px;
   margin-left: 19px;
   margin-right: 72px;
   letter-spacing: 2px;
 }
-.title .location,
-.welcome_msg .welcome {
-  font-size: 14px;
-}
-.topbar .location img {
+.location img {
   margin-right: 7px;
 }
-.topbar .welcome_msg li {
+.welcome_msg li {
   float: right;
 }
-.topbar .welcome_msg .exit img {
-  margin-right: 45px;
-  margin-left: 19px;
-  margin-top: 15px;
+.exit img {
+  margin: 22px 40px 0 15px;
+  width: 18px;
+  height: 18px;
 }
-.topbar .welcome_msg .unread_message img {
-  margin-top: 10px;
+.unread_message img {
+  margin-top: 16px;
+  width: 27px;
+  height: 27px;
 }
-.topbar .welcome_msg .line {
-  margin-right: 20px;
-  margin-left: 20px;
+.line {
+  margin: 0 20px 0 20px;
 }
 .nav {
-  width: 176px;
+  width: 165px;
   background: #645c84;
-  padding-bottom: 100%;
-  position: fixed;
+  float: left;
+  /* 取消固定定位 */
+/*  padding-bottom: 100%;
+  position: fixed;*/
 }
 .list {
-  margin-top: 31px;
-}
-.list li {
-  height: 50px;
+  margin-top: 20px;
+  padding-bottom: 75px;
+  /*padding-bottom: 133%;*/
 }
 .list span {
   line-height: 50px;
   vertical-align: top;
 }
-.list li img {
-  margin-top: 13px;
-  margin-left: 25px;
-  margin-right: 10px;
-}
-.list .arrows {
+.arrows {
   margin-left: 12px;
 }
-.list a {
+/*
+.list li,
+*/
+.homepage,
+.personal,
+.user,
+.parking,
+.staff,
+.visitor,
+.notice,
+.activity,
+.feedback,
+.property {
   display: block;
   color: #bcbbbf;
   height: 50px;
   width: 100%;
 }
-.list a:hover {
-  background: #9b8fca;
+.homepage {
+  background: url("../assets/image/icon/icon_homepage.png") no-repeat;
+  background-position: 18%;
+}
+.personal {
+  background: url("../assets/image/icon/icon_personal.png") no-repeat;
+  background-position: 18%;
+}
+.user {
+  background: url("../assets/image/icon/icon_user.png") no-repeat;
+  background-position: 18%;
+}
+.parking {
+  background: url("../assets/image/icon/icon_parking.png") no-repeat;
+  background-position: 18%;
+}
+.staff {
+  background: url("../assets/image/icon/icon_staff.png") no-repeat;
+  background-position: 18%;
+}
+.visitor {
+  background: url("../assets/image/icon/icon_visitor.png") no-repeat;
+  background-position: 18%;
+}
+.notice {
+  background: url("../assets/image/icon/icon_notice.png") no-repeat;
+  background-position: 18%;
+}
+.activity {
+  background: url("../assets/image/icon/icon_activity.png") no-repeat;
+  background-position: 18%;
+}
+.feedback {
+  background: url("../assets/image/icon/icon_feedback.png") no-repeat;
+  background-position: 18%;
+}
+.property {
+  background: url("../assets/image/icon/icon_property.png") no-repeat;
+  background-position: 18%;
+}
+.homepage_word,
+.personal_word,
+.user_word,
+.parking_word,
+.staff_word,
+.visitor_word,
+.notice_word,
+.activity_word,
+.feedback_word,
+.property_word {
+  margin-left: 57px;
+}
+/* hover状态的变色处理 */
+.homepage:hover {
+  background: url("../assets/image/icon/icon_homepage_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
   color: #fff;
 }
+.homepage:hover {
+  background: url("../assets/image/icon/icon_homepage_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
+  color: #fff;
+}
+.personal:hover {
+  background: url("../assets/image/icon/icon_personal_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
+  color: #fff;
+}
+.user:hover {
+  background: url("../assets/image/icon/icon_user_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
+  color: #fff;
+}
+.parking:hover {
+  background: url("../assets/image/icon/icon_parking_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
+  color: #fff;
+}
+.staff:hover {
+  background: url("../assets/image/icon/icon_staff_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
+  color: #fff;
+}
+.visitor:hover {
+  background: url("../assets/image/icon/icon_visitor_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
+  color: #fff;
+}
+.notice:hover {
+  background: url("../assets/image/icon/icon_notice_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
+  color: #fff;
+}
+.activity:hover {
+  background: url("../assets/image/icon/icon_activity_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
+  color: #fff;
+}
+.feedback:hover {
+  background: url("../assets/image/icon/icon_feedback_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
+  color: #fff;
+}
+.property:hover {
+  background: url("../assets/image/icon/icon_property_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
+  color: #fff;
+}
+/* router-link被激活的CSS */
+.homepage .router-link-exact-active {
+  background: url("../assets/image/icon/icon_homepage_selected.png") no-repeat;
+  background-position: 18%;
+  color: #fff;
+}
+.personal .router-link-exact-active {
+  background: url("../assets/image/icon/icon_personal_selected.png") no-repeat;
+  background-position: 18%;
+  color: #fff;
+}
+.user .router-link-exact-active {
+  background: url("../assets/image/icon/icon_user_selected.png") no-repeat;
+  background-position: 18%;
+  color: #fff;
+}
+.parking .router-link-exact-active {
+  background: url("../assets/image/icon/icon_parking_selected.png") no-repeat;
+  background-position: 18%;
+  color: #fff;
+}
+.staff .router-link-exact-active {
+  background: url("../assets/image/icon/icon_staff_selected.png") no-repeat;
+  background-position: 18%;
+  color: #fff;
+}
+.visitor .router-link-exact-active {
+  background: url("../assets/image/icon/icon_visitor_selected.png") no-repeat;
+  background-position: 18%;
+  color: #fff;
+}
+.notice .router-link-exact-active {
+  background: url("../assets/image/icon/icon_notice_selected.png") no-repeat;
+  background-position: 18%;
+  color: #fff;
+}
+.activity .router-link-exact-active {
+  background: url("../assets/image/icon/icon_activity_selected.png") no-repeat;
+  background-position: 18%;
+  color: #fff;
+}
+.feedback .router-link-exact-active {
+  background: url("../assets/image/icon/icon_feedback_selected.png") no-repeat;
+  background-position: 18%;
+  color: #fff;
+}
+.property .router-link-exact-active {
+  background: url("../assets/image/icon/icon_property_selected.png") no-repeat;
+  background-position: 18%;
+  color: #fff;
+}
+
+
+
+
+
+
+
+
+
+.right_part {
+  /* 导航栏的宽度是165px，另外再加margin-left: 10px */
+  width: calc(99% - 175px);
+  /* 165+10 */
+  margin: 10px 10px 0 175px;
+  /*overflow-y: auto;*/
+}
+
 </style>
