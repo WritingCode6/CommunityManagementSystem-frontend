@@ -23,74 +23,76 @@
         <li class="welcome">欢迎您！{{ userName }}</li>
       </ul>
     </div>
-    <div class="nav">
-      <ul class="list">
-        <li>
-          <router-link to="/index/homepage" class="homepage">
-            <span class="homepage_word">社区主页</span>
-            <span class="arrows">></span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/index/personal" class="personal">
-            <span class="personal_word">个人中心</span>
-            <span class="arrows">></span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/index/user" class="user">
-            <span class="user_word">住户相关</span>
-            <span class="arrows">></span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/index/parking" class="parking">
-            <span class="parking_word">车位管理</span>
-            <span class="arrows">></span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/index/staff" class="staff">
-            <span class="staff_word">人员管理</span>
-            <span class="arrows">></span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/index/visitor" class="visitor">
-            <span class="visitor_word">访客管理</span>
-            <span class="arrows">></span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/index/notice" class="notice">
-            <span class="notice_word">社区通知</span>
-            <span class="arrows">></span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/index/activity" class="activity">
-            <span class="activity_word">社区活动</span>
-            <span class="arrows">></span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/index/feedback" class="feedback">
-            <span class="feedback_word">投诉反馈</span>
-            <span class="arrows">></span>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/index/property" class="property">
-            <span class="property_word">物业信息</span>
-            <span class="arrows">></span>
-          </router-link>
-        </li>
-      </ul>
-    </div>
-    <div class="right_part">
-      <keep-alive>
-        <router-view></router-view>
-      </keep-alive>
+    <div class="content">
+      <div class="nav">
+        <ul class="list">
+          <li>
+            <router-link to="/index/homepage" class="homepage">
+              <span class="homepage_word">社区主页</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/index/personal" class="personal">
+              <span class="personal_word">个人中心</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/index/user" class="user">
+              <span class="user_word">住户相关</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/index/parking" class="parking">
+              <span class="parking_word">车位管理</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/index/staff" class="staff">
+              <span class="staff_word">人员管理</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/index/visitor" class="visitor">
+              <span class="visitor_word">访客管理</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/index/notice" class="notice">
+              <span class="notice_word">社区通知</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/index/activity" class="activity">
+              <span class="activity_word">社区活动</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/index/feedback" class="feedback">
+              <span class="feedback_word">投诉反馈</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/index/property" class="property">
+              <span class="property_word">物业信息</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+        </ul>
+      </div>
+      <div class="right_part">
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
+      </div>
     </div>
   </div>
 </template>
@@ -157,10 +159,15 @@ export default {
 .line {
   margin: 0 20px 0 20px;
 }
+.content {
+  display: flex;
+  flex-direction: row;
+}
 .nav {
-  width: 165px;
+  width: 180px;
   background: #645c84;
-  float: left;
+  /* 取消浮动 */
+  /*float: left;*/
   /* 取消固定定位 */
 /*  padding-bottom: 100%;
   position: fixed;*/
@@ -354,21 +361,17 @@ export default {
   background-position: 18%;
   color: #fff;
 }
-
-
-
-
-
-
-
-
-
-.right_part {
-  /* 导航栏的宽度是165px，另外再加margin-left: 10px */
+/* 原定子组件展示样式 */
+/*.right_part {
+   !*导航栏的宽度是165px，另外再加margin-left: 10px *!
   width: calc(99% - 175px);
-  /* 165+10 */
+   !*165+10 *!
   margin: 10px 10px 0 175px;
-  /*overflow-y: auto;*/
+  overflow-y: auto;
+}*/
+.right_part {
+  width: 100%;
+  height: 100%;
+  margin: 15px;
 }
-
 </style>

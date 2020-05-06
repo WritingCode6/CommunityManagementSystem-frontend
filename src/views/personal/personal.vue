@@ -8,9 +8,10 @@
   export default {
     name: "personal",
     data() {
-        return {}
-    }
-  }
+      return {}
+    },
+    methods: {}
+  };
 </script>
 
 <style scoped>
