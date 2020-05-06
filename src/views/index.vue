@@ -27,12 +27,6 @@
       <div class="nav">
         <ul class="list">
           <li>
-            <router-link to="/index/homepage" class="homepage">
-              <span class="homepage_word">社区主页</span>
-              <span class="arrows">></span>
-            </router-link>
-          </li>
-          <li>
             <router-link to="/index/personal" class="personal">
               <span class="personal_word">个人中心</span>
               <span class="arrows">></span>
@@ -174,20 +168,16 @@ export default {
 }
 .list {
   margin-top: 20px;
-  padding-bottom: 75px;
-  /*padding-bottom: 133%;*/
+  /*padding-bottom: 80px;*/
+  padding-bottom: 180%;
 }
 .list span {
-  line-height: 50px;
+  line-height: 60px;
   vertical-align: top;
 }
 .arrows {
   margin-left: 12px;
 }
-/*
-.list li,
-*/
-.homepage,
 .personal,
 .user,
 .parking,
@@ -199,12 +189,8 @@ export default {
 .property {
   display: block;
   color: #bcbbbf;
-  height: 50px;
+  height: 60px;
   width: 100%;
-}
-.homepage {
-  background: url("../assets/image/icon/icon_homepage.png") no-repeat;
-  background-position: 18%;
 }
 .personal {
   background: url("../assets/image/icon/icon_personal.png") no-repeat;
@@ -242,7 +228,6 @@ export default {
   background: url("../assets/image/icon/icon_property.png") no-repeat;
   background-position: 18%;
 }
-.homepage_word,
 .personal_word,
 .user_word,
 .parking_word,
@@ -255,16 +240,6 @@ export default {
   margin-left: 57px;
 }
 /* hover状态的变色处理 */
-.homepage:hover {
-  background: url("../assets/image/icon/icon_homepage_selected.png") no-repeat #9b8fca;
-  background-position: 18%;
-  color: #fff;
-}
-.homepage:hover {
-  background: url("../assets/image/icon/icon_homepage_selected.png") no-repeat #9b8fca;
-  background-position: 18%;
-  color: #fff;
-}
 .personal:hover {
   background: url("../assets/image/icon/icon_personal_selected.png") no-repeat #9b8fca;
   background-position: 18%;
@@ -311,11 +286,6 @@ export default {
   color: #fff;
 }
 /* router-link被激活的CSS */
-.homepage .router-link-exact-active {
-  background: url("../assets/image/icon/icon_homepage_selected.png") no-repeat;
-  background-position: 18%;
-  color: #fff;
-}
 .personal .router-link-exact-active {
   background: url("../assets/image/icon/icon_personal_selected.png") no-repeat;
   background-position: 18%;
@@ -369,6 +339,7 @@ export default {
   margin: 10px 10px 0 175px;
   overflow-y: auto;
 }*/
+/* 更换布局后的子组件展示样式 */
 .right_part {
   width: 100%;
   height: 100%;

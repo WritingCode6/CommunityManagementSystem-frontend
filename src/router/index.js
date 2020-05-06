@@ -18,10 +18,6 @@ Vue.use(VueRouter)
       name: 'index',
       component: () => import('../views/index.vue'),
       children : [{
-          path: 'homepage',
-          name: 'homepage',
-          component: () => import('../views/homepage/homepage.vue')
-        }, {
           path: 'personal',
           name: 'Personal',
           component: () => import('../views/personal/personal.vue')

@@ -3,18 +3,22 @@
     <div class="login_box">
       <div class="title">社区小管家</div>
       <el-form
-              :model="ruleForm"
-              :rules="rules"
-              ref="ruleForm"
-              class="loginForm"
-              hide-required-asterisk >
+              :model="userInfo"
+              class="loginForm">
         <el-form-item prop="userName">
           <label>用户名</label>
-          <el-input v-model="ruleForm.userName" placeholder="请输入用户名" ></el-input>
+          <el-input
+                  v-model="userInfo.userName"
+                  placeholder="请输入用户名"
+                  @change="userNameChange"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <label>密码</label>
-          <el-input v-model="ruleForm.password" placeholder="请输入密码"></el-input>
+          <el-input
+                  v-model="userInfo.password"
+                  placeholder="请输入密码"
+                  show-password
+                  @change="pwdChange"></el-input>
         </el-form-item>
         <ul>
           <li class="forget">
@@ -27,8 +31,6 @@
           </li>
         </ul>
         <el-form-item class="button">
-          <!--示范代码，先注释-->
-          <!--<el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>-->
           <el-button type="primary" @click="login">登录</el-button>
         </el-form-item>
       </el-form>
@@ -40,33 +42,51 @@
 export default {
   data() {
     return {
-      ruleForm: {
+      userInfo: {
         userName: "",
         password: ""
-      },
-      /*rules: {
-        userName: [
-          { required: true, message: "请输入用户名", trigger: "blur"},
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
-        ],
-        password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
-        ]
-      }*/
+      }
     };
   },
   methods: {
-    /*submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    }*/
+    //字符串合理性判断
+    isValid(str) {
+      return /^[\u4e00-\u9fa5\w]{4,16}$/.test(str);
+    },
+    //用户名的合理性判断
+    userNameChange() {
+      let userName = this.userInfo.userName
+      if (userName === '')
+        this.$message.error('用户名不得为空');
+      else if (userName.length < 4 || userName.length > 16) {
+        this.$message.warning('用户名长度必须在4-16位');
+      } else if (!this.isValid(userName)) {
+        //排除特殊字符和空格
+        this.$message.warning('用户名必须由中文字符、数字、字母和下划线组成');
+      } else if (!isNaN(userName)) {
+        //判断username是不是一个值
+        this.$message.warning('用户名不能为纯数字');
+      }
+    },
+    //密码的合理性判断
+    pwdChange() {
+      let password = this.userInfo.password
+      if (password === '') {
+        this.$message.error('密码不得为空');
+      }
+      else if (password.length < 6 || password.length > 16) {
+        this.$message.warning('密码长度必须在6-16位');
+      }
+      else if (!this.isValid(password)) {
+        //排除特殊字符和空格
+        this.$message.warning('密码必须由中文字符、数字、字母和下划线组成');
+      }
+      else if (!isNaN(password)) {
+        //判断Pwd是不是一个值
+        this.$message.warning('密码不能为纯数字');
+      }
+    },
+    //登录接口
     login() {
       console.log('登录');
     }
