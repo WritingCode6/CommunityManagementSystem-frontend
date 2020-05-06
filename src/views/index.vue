@@ -159,6 +159,7 @@ export default {
 }
 .nav {
   width: 180px;
+  /*width: 30%;*/
   background: #645c84;
   /* 取消浮动 */
   /*float: left;*/
@@ -176,7 +177,7 @@ export default {
   vertical-align: top;
 }
 .arrows {
-  margin-left: 12px;
+  margin-left: 16px;
 }
 .personal,
 .user,
@@ -237,7 +238,7 @@ export default {
 .activity_word,
 .feedback_word,
 .property_word {
-  margin-left: 57px;
+  margin-left: 60px;
 }
 /* hover状态的变色处理 */
 .personal:hover {
@@ -341,7 +342,8 @@ export default {
 }*/
 /* 更换布局后的子组件展示样式 */
 .right_part {
-  width: 100%;
+  width: calc(99% - 180px);
+  /*width: 100%;*/
   height: 100%;
   margin: 15px;
 }
