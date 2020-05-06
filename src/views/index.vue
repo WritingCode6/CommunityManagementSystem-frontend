@@ -167,8 +167,8 @@ export default {
 }
 .list {
   margin-top: 20px;
-  padding-bottom: 75px;
-  /*padding-bottom: 133%;*/
+  /* padding-bottom: 75px; */
+  padding-bottom: 110%;
 }
 .list span {
   line-height: 50px;
