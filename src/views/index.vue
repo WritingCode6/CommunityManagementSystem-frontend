@@ -158,7 +158,8 @@ export default {
   flex-direction: row;
 }
 .nav {
-  width: 180px;
+  font-size: 18px;
+  width: 200px;
   /*width: 30%;*/
   background: #645c84;
   /* 取消浮动 */
@@ -168,16 +169,17 @@ export default {
   position: fixed;*/
 }
 .list {
-  margin-top: 20px;
-  /*padding-bottom: 80px;*/
-  padding-bottom: 180%;
+  margin-top: 30px;
+  /*padding-bottom: 50px;*/
+  padding-bottom: 30%;
+  /*padding-bottom: 180%;*/
 }
 .list span {
-  line-height: 60px;
+  line-height: 75px;
   vertical-align: top;
 }
 .arrows {
-  margin-left: 16px;
+  margin-left: 18px;
 }
 .personal,
 .user,
@@ -190,7 +192,7 @@ export default {
 .property {
   display: block;
   color: #bcbbbf;
-  height: 60px;
+  height: 75px;
   width: 100%;
 }
 .personal {
@@ -342,7 +344,7 @@ export default {
 }*/
 /* 更换布局后的子组件展示样式 */
 .right_part {
-  width: calc(99% - 180px);
+  width: calc(99% - 200px);
   /*width: 100%;*/
   height: 100%;
   margin: 15px;
