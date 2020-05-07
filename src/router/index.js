@@ -24,8 +24,14 @@ Vue.use(VueRouter)
         }, {
           path: 'user',
           name: 'User',
-          component: () => import('../views/user/user.vue')
-        },{
+          component: () => import('../views/user/user.vue'),
+          children : [{
+            path: 'userInfo',
+            name: 'UserInfo',
+            component: () => import('../views/user/user.vue')
+          }]
+        },
+        {
           path: 'parking',
           name: 'Parking',
           component: () => import('../views/parking/parking.vue')
