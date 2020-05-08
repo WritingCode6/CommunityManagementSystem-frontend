@@ -18,7 +18,7 @@
         <p>{{ msg4 }}</p>
       </div>
       <br />
-      <button type="button" value="修改公司简介" @click="toModifyIntro" class="modifyButton">修改公司简介</button>
+      <button type="button" value="修改公司简介" @click="openModifyIntro" class="modifyButton">修改公司简介</button>
     </div>
     <div class="honorRead" v-show="honorRead">
       <ul>
@@ -90,20 +90,25 @@ export default {
   },
   methods: {
     toHonor() {
+      //切换到资质荣誉板块
       this.introRead = false;
       this.honorRead = true;
     },
     toIntro() {
-      this.introRead = true;
+      //切换到公司简介板块
+      this.introRead = true,
       this.honorRead = false;
     },
-    toModifyIntro() {
+    openModifyIntro() {
+      //打开修改公司简介窗口
       this.modifyIntro = true;
     },
     closeModifyIntro() {
+      //关闭修改公司简介窗口
       this.modifyIntro = false;
     },
     save(){
+      //保存修改按钮
       this.modifyIntro = false;
     }
   }
@@ -280,5 +285,6 @@ h4::before {
   border-radius: 20px;
   cursor: pointer;
 }
+
 </style>
 
