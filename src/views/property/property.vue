@@ -1,5 +1,6 @@
 <template>
   <div id="property">
+    <!-- 缺组件化管理 -->
     <div class="introRead" v-show="introRead">
       <ul>
         <li class="intro">
@@ -89,26 +90,26 @@ export default {
     };
   },
   methods: {
+    //切换到资质荣誉板块
     toHonor() {
-      //切换到资质荣誉板块
       this.introRead = false;
       this.honorRead = true;
     },
+    //切换到公司简介板块
     toIntro() {
-      //切换到公司简介板块
       this.introRead = true,
       this.honorRead = false;
     },
+    //打开修改公司简介窗口
     openModifyIntro() {
-      //打开修改公司简介窗口
       this.modifyIntro = true;
     },
+    //关闭修改公司简介窗口
     closeModifyIntro() {
-      //关闭修改公司简介窗口
       this.modifyIntro = false;
     },
+    //保存修改按钮
     save(){
-      //保存修改按钮
       this.modifyIntro = false;
     }
   }
@@ -219,12 +220,11 @@ textarea{
 .modifyIntroCover {
   height: 100%;
   width: 100%;
-  left: 0;
-  top: 0;
   background: rgba(0, 0, 0, 0.5);
   position: absolute;
+  left: 0;
+  top: 0;
   z-index: 999;
-  padding-bottom: 12px;
 }
 .modifyContent {
   width: 1000px;

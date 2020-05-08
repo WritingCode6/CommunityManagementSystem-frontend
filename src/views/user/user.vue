@@ -168,7 +168,7 @@
             </label>
           </form>
           <div class="saveButton">
-            <button type="button" @click="saveAdd">保存修改</button>
+            <button type="button" @click="saveAdd">确定新增</button>
           </div>
         </div>
       </div>
@@ -315,10 +315,27 @@ export default {
           plateNumber: "粤A8888"
         }
       ],
+      //新增住户信息数据，仅作测试用途，到时候接收后台数据覆盖默认数据
+      addUserData: {
+        basicInfo: {
+          userName: 'hyy',
+          password: '123456a'
+        },
+        personalInfo: {
+          name: '黄一月',
+          personalID: '3302345666698097653',
+          sex: '男',
+          ancestralHome: '广东揭阳',
+          residenceAddress: '广东省东莞市大岭山镇教育西路'
+        },
+        houseInfo: {
+          buildingNumber: 1,
+          roomNumber: 101
+        }
+      },
       pageSize: 8,
       total: 100,
       currentPage: 1,
-
       deleteWindows: false,
       modifyWindows: false,
       addWindows: false,
@@ -342,36 +359,36 @@ export default {
       this.currentPage = val;
       console.log(`当前页: ${val}`);
     },
+    //打开删除提示窗口
     openDelete() {
-      //打开删除提示窗口
       this.deleteWindows = true;
     },
+    //关闭删除提示窗口
     closeDelete() {
-      //关闭删除提示窗口
       this.deleteWindows = false;
     },
+    //打开修改用户窗口
     openModify(){
-      //打开修改用户窗口
       this.modifyWindows = true;
     },
+    //关闭修改用户窗口
     closeModify(){
-      //关闭修改用户窗口
       this.modifyWindows = false;
     },
+    //打开新增用户窗口
     openAdd(){
-      //打开新增用户窗口
       this.addWindows = true;
     },
+    //关闭新增用户窗口
     closeAdd(){
-      //关闭新增用户窗口
       this.addWindows = false;
     },
+    //新增用户窗口保存修改按钮
     saveAdd(){
-      //新增用户窗口保存修改按钮
       this.addWindows = false;
     },
+    //修改用户窗口保存修改按钮
     saveModify(){
-      //修改用户窗口保存修改按钮
       this.modifyWindows = false;
     }
   },

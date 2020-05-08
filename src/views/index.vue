@@ -194,26 +194,26 @@ export default {
 .nav {
   font-size: 18px;
   width: 200px;
-  /*width: 30%;*/
+  height: 100%;
   background: #645c84;
+  /* 强行适应整个页面 */
+  padding-bottom: 32px;
   /* 取消浮动 */
   /*float: left;*/
-  /* 取消固定定位 */
-/*  padding-bottom: 100%;
-  position: fixed;*/
+  /*min-height: 800px;
+  max-height: 1000px;*/
 }
 .list {
   margin-top: 20px;
   /*padding-bottom: 50px;*/
-  padding-bottom: 30%;
-  /*padding-bottom: 180%;*/
+  /*padding-bottom: 30%;*/
 }
 .list span {
   line-height: 70px;
   vertical-align: top;
 }
 .arrows {
-  margin-left: 18px;
+  margin-left: 16px;
 }
 .personal,
 .user,
@@ -420,6 +420,7 @@ export default {
   background: rgba(0, 0, 0, 0.5);
   position: absolute;
   z-index: 100;
+  max-padding-bottom: 27px;
 }
 .exitBox {
   width: 634px;
