@@ -80,6 +80,185 @@
         </div>
       </div>
     </div>
+    <div class="deleteWindows" v-show="deleteWindows">
+      <div class="deleteBox">
+        <h4>删除住户信息</h4>
+        <div class="back">
+          <a href @click.prevent="closeDelete">
+            <img src="../../assets/image/icon/icon_back.png" alt />
+          </a>
+        </div>
+        <div class="deleteContent">确定要删除吗？</div>
+        <ul>
+          <li class="yes">
+            <button type="button">是</button>
+          </li>
+          <li class="no">
+            <button type="button" @click="closeDelete">否</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="addWindows" v-show="addWindows">
+      <div class="addBox">
+        <h4>新增住户信息</h4>
+        <div class="back">
+          <a href @click.prevent="closeAdd">
+            <img src="../../assets/image/icon/icon_back.png" alt />
+          </a>
+        </div>
+        <div class="addContent">
+          <form class="house">
+            <h5>房屋信息</h5>
+            <label class="houseLocation">
+              房间：
+              <input type="text" />
+            </label>
+            <label class="houseId">
+              房间ID：
+              <input type="text" />
+            </label>
+          </form>
+          <div class="line1"></div>
+          <form class="liver">
+            <h5>户主信息</h5>
+            <label class="name">
+              姓名：
+              <input type="text">
+            </label>
+            <label class="houseId">
+              住户ID：
+              <input type="text">
+            </label>
+            <label class="personalId">
+              身份证号：
+              <input type="text">
+            </label>
+            <label class="sex">性别：
+              <select>
+                <option value="man">男</option>
+                <option value="woman">女</option>
+              </select>
+            </label>
+            <label class="household">
+              户口所在地：
+              <input type="text">
+            </label>
+            <label class="nativePlace">
+              籍贯：
+              <input type="text">
+            </label>
+            <label class="userName">
+              用户名：
+              <input type="text">
+            </label>
+          </form>
+          <div class="line2"></div>
+          <form class="car">
+            <h5>车辆信息</h5>
+            <label class="carNumber">
+              车牌号：
+              <input type="text">
+            </label>
+            <label class="brand">
+              品牌：
+              <input type="text">
+            </label>
+            <label class="type">
+              型号：
+              <input type="text">
+            </label>
+            <label class="color">
+              颜色：
+              <input type="text">
+            </label>
+          </form>
+          <div class="saveButton">
+            <button type="button" @click="saveAdd">确定新增</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modifyWindows" v-show="modifyWindows">
+      <div class="modifyBox">
+        <h4>修改住户信息</h4>
+        <div class="back">
+          <a href @click.prevent="closeModify">
+            <img src="../../assets/image/icon/icon_back.png" alt />
+          </a>
+        </div>
+        <div class="modifyContent">
+          <form class="house">
+            <h5>房屋信息</h5>
+            <label class="houseLocation">
+              房间：
+              <input type="text" />
+            </label>
+            <label class="houseId">
+              房间ID：
+              <input type="text" />
+            </label>
+          </form>
+          <div class="line1"></div>
+          <form class="liver">
+            <h5>户主信息</h5>
+            <label class="name">
+              姓名：
+              <input type="text">
+            </label>
+            <label class="houseId">
+              住户ID：
+              <input type="text">
+            </label>
+            <label class="personalId">
+              身份证号：
+              <input type="text">
+            </label>
+            <label class="sex">性别：
+              <select>
+                <option value="man">男</option>
+                <option value="woman">女</option>
+              </select>
+            </label>
+            <label class="household">
+              户口所在地：
+              <input type="text">
+            </label>
+            <label class="nativePlace">
+              籍贯：
+              <input type="text">
+            </label>
+            <label class="userName">
+              用户名：
+              <input type="text">
+            </label>
+          </form>
+          <div class="line2"></div>
+          <form class="car">
+            <h5>车辆信息</h5>
+            <label class="carNumber">
+              车牌号：
+              <input type="text">
+            </label>
+            <label class="brand">
+              品牌：
+              <input type="text">
+            </label>
+            <label class="type">
+              型号：
+              <input type="text">
+            </label>
+            <label class="color">
+              颜色：
+              <input type="text">
+            </label>
+          </form>
+          <div class="saveButton">
+            <button type="button" @click="saveModify">保存修改</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -134,10 +313,31 @@
             plateNumber: '粤A8888'
           }
         ],
+        //新增住户信息数据，仅作测试用途，到时候接收后台数据覆盖默认数据
+        addUserData: {
+          basicInfo: {
+            userName: 'hyy',
+            password: '123456a'
+          },
+          personalInfo: {
+            name: '黄一月',
+            personalID: '3302345666698097653',
+            sex: '男',
+            ancestralHome: '广东揭阳',
+            residenceAddress: '广东省东莞市大岭山镇教育西路'
+          },
+          houseInfo: {
+            buildingNumber: 1,
+            roomNumber: 101
+          }
+        },
         pageSize: 8,
         total: 100,
         currentPage: 1,
-        userList: true
+        userList: true,
+        deleteWindows: false,
+        modifyWindows: false,
+        addWindows: false,
       }
     },
     methods: {
@@ -158,9 +358,42 @@
         this.currentPage = val;
         console.log(`当前页: ${val}`);
       },
+      //父子组件传值
       toUserInfo() {
         this.userList = false;
         this.$emit('userBoxData', this.userList);
+      },
+      //打开删除提示窗口
+      openDelete() {
+        this.deleteWindows = true;
+      },
+      //关闭删除提示窗口
+      closeDelete() {
+        this.deleteWindows = false;
+      },
+      //打开修改用户窗口
+      openModify(){
+        this.modifyWindows = true;
+      },
+      //关闭修改用户窗口
+      closeModify(){
+        this.modifyWindows = false;
+      },
+      //打开新增用户窗口
+      openAdd(){
+        this.addWindows = true;
+      },
+      //关闭新增用户窗口
+      closeAdd(){
+        this.addWindows = false;
+      },
+      //新增用户窗口保存修改按钮
+      saveAdd(){
+        this.addWindows = false;
+      },
+      //修改用户窗口保存修改按钮
+      saveModify(){
+        this.modifyWindows = false;
       }
     },
     beforeMount() {
@@ -170,81 +403,300 @@
 </script>
 
 <style scoped>
-  .user_box {
-    margin-top: 20px;
-    width: 100%;
-    height: 700px;
-    border: 1px solid #dcdcdc;
-    border-radius: 10px;
-    position: relative;
-    left: 55px;
-    font-size: 16px;
-  }
-  h3 {
-    font-size: 24px;
-    color: #666;
-    margin-left: 68px;
-    margin-top: 20px;
-  }
-  h3::before {
-    content: "";
-    width: 7px;
-    height: 26px;
-    background: #8a79af;
-    position: absolute;
-    left: 40px;
-    z-index: 1;
-  }
-  .search_form {
-    display: flex;
-    flex-direction: column;
-    margin: 40px 0 0 40px;
-  }
-  .search_box2 {
-    display: flex;
-    margin-top: 20px;
-  }
-  .search_input {
-    width: 450px;
-    border: 1px rgba(0,0,0,0.5) solid;
-    border-radius: 5px;
-  }
-  .el-button--primary {
-    width: 130px;
-    background: #8a79af;
-    border-color: #8a79af;
-    margin-left: 30px;
-  }
-  .select {
-    width: 140px;
-  }
-  .select_box2 {
-    margin-left: 30px;
-  }
-  .add_user {
-    float: right;
-    margin-top: -90px;
-  }
-  .add_button {
-    background-color: #D38CAE;
-    width: 240px;
-    height: 50px;
-    font-size: 20px;
-    /*  font-weight: 900;*/
-    line-height: 20px;
-    border-color: #D38CAE;
-    border-radius: 10px;
-  }
-  .user_table {
-    margin: 20px 0 0 40px;
-    width: 93%;
-  }
-  .operation {
-    display: inline-block;
-    margin-right: 10px;
-  }
-  .page_block {
-    float: right;
-    margin-top: 20px;
-  }
+.user_box {
+  margin-top: 20px;
+  width: 100%;
+  height: 700px;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  position: relative;
+  left: 55px;
+  font-size: 16px;
+}
+h3 {
+  font-size: 24px;
+  color: #666;
+  margin-left: 68px;
+  margin-top: 20px;
+}
+h3::before {
+  content: "";
+  width: 7px;
+  height: 26px;
+  background: #8a79af;
+  position: absolute;
+  left: 40px;
+  z-index: 1;
+}
+.search_form {
+  display: flex;
+  flex-direction: column;
+  margin: 40px 0 0 40px;
+}
+.search_box2 {
+  display: flex;
+  margin-top: 20px;
+}
+.search_input {
+  width: 450px;
+  border: 1px rgba(0, 0, 0, 0.5) solid;
+  border-radius: 5px;
+}
+.el-button--primary {
+  width: 130px;
+  background: #8a79af;
+  border-color: #8a79af;
+  margin-left: 30px;
+  position: relative;
+  z-index: 1;
+}
+.select {
+  width: 140px;
+}
+.select_box2 {
+  margin-left: 30px;
+}
+.add_user {
+  float: right;
+  margin-top: -90px;
+}
+.add_button {
+  background-color: #d38cae;
+  width: 240px;
+  height: 50px;
+  font-size: 20px;
+  /*  font-weight: 900;*/
+  line-height: 20px;
+  border-color: #d38cae;
+  border-radius: 10px;
+}
+.user_table {
+  margin: 20px 0 0 40px;
+  width: 93%;
+}
+.operation {
+  display: inline-block;
+  margin-right: 10px;
+}
+.page_block {
+  float: right;
+  margin-top: 20px;
+}
+.deleteWindows,.addWindows,.modifyWindows {
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  z-index: 100;
+}
+.deleteBox {
+  width: 634px;
+  height: 234px;
+  background: #fff;
+  margin: 177px auto;
+  position: relative;
+}
+.deleteBox h4 {
+  font-size: 24px;
+  font-weight: bold;
+  padding-top: 24px;
+  margin-left: 50px;
+  display: inline-block;
+}
+.deleteBox h4::before {
+  content: "";
+  width: 7px;
+  height: 26px;
+  background: #8a79af;
+  position: absolute;
+  left: 22px;
+  z-index: 1;
+}
+.deleteBox .back {
+  position: absolute;
+  left: 580px;
+  top: 24px;
+}
+.deleteContent {
+  margin: 80px 242px;
+  font-size: 20px;
+}
+.deleteBox ul {
+  width: 100%;
+  height: 58px;
+  background: #bcbcbc;
+}
+.deleteBox .yes button {
+  float: left;
+  width: 120px;
+  height: 39px;
+  background: #8a79af;
+  margin-left: 128px;
+  margin-top: 9px;
+  font-size: 18px;
+  color: #fff;
+  outline: none;
+  border-width: 0px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.deleteBox .no button {
+  float: right;
+  width: 120px;
+  height: 39px;
+  background: #fff;
+  margin-right: 166px;
+  margin-top: 9px;
+  font-size: 18px;
+  color: #000;
+  outline: none;
+  border-width: 0px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.addBox,.modifyBox {
+  width: 632px;
+  height: 560px;
+  background: #fff;
+  margin: 100px auto;
+  position: relative;
+  font-size: 20px;
+  color: #666;
+}
+.addBox h4,.modifyBox h4 {
+  font-size: 24px;
+  font-weight: bold;
+  padding-top: 24px;
+  margin-left: 50px;
+  display: inline-block;
+  color: #000;
+}
+.addBox h4::before,.modifyBox h4::before {
+  content: "";
+  width: 7px;
+  height: 26px;
+  background: #8a79af;
+  position: absolute;
+  left: 22px;
+  z-index: 1;
+}
+.addBox h4::after,.modifyBox h4::after {
+  content: "";
+  width: 94%;
+  /*width: 1100px;*/
+  height: 1px;
+  background: #666;
+  position: absolute;
+  top: 60px;
+  left: 18px;
+  z-index: 2;
+}
+.addBox .back,.modifyBox .back {
+  position: absolute;
+  left: 580px;
+  top: 20px;
+}
+.addContent,.modifyContent{
+  margin-top: 30px;
+}
+h5 {
+  font-size: 24px;
+  margin-left: 20px;
+  margin-top: 10px;
+  color: #000;
+}
+.addBox input,.modifyBox input {
+  width: 137px;
+  height: 26px;
+}
+.addBox select,.modifyBox select{
+  width: 137px;
+  height: 32px;
+}
+.house label {
+  display: block;
+  float: left;
+  margin-top: 10px;
+  margin-left: 70px;
+}
+.line1,.line2 {
+  width: 94%;
+  height: 0.8px;
+  background: #666;
+  margin-left: 18px;
+}
+.line1 {
+  margin-top: 55px;
+}
+.line2 {
+  margin-top: 185px;
+}
+.liver label {
+  display: block;
+  float: left;
+  margin-top: 10px;
+}
+.liver .name,.liver .houseId {
+  margin-left: 70px;
+}
+.liver .personalId {
+  margin-left: 30px;
+}
+.liver .personalId input {
+  width: 180px;
+}
+.liver .sex {
+  margin-left: 48px;
+}
+.liver .sex select {
+  width: 66px;
+}
+.liver .household {
+  margin-left: 10px;
+}
+.liver .nativePlace {
+  margin-left: 91px;
+}
+.liver .userName {
+  margin-left: 50px;
+}
+.car label {
+  display: block;
+  float: left;
+  margin-top: 10px;
+}
+.car .carNumber {
+  margin-left: 50px;
+}
+.car .brand {
+  margin-left: 91px;
+}
+.car .type {
+  margin-left: 70px;
+}
+.car .color {
+  margin-left: 91px;
+}
+.saveButton {
+  margin-top: 100px;
+  width: 100%;
+  height: 60px;
+  background: #bcbcbc;
+}
+.addBox button,.modifyBox button {
+  float: left;
+  width: 120px;
+  height: 39px;
+  background: #8a79af;
+  margin-left: 260px;
+  margin-top: 10px;
+  font-size: 18px;
+  color: #fff;
+  outline: none;
+  border-width: 0px;
+  border-radius: 10px;
+  cursor: pointer;
+}
 </style>
