@@ -10,7 +10,7 @@
       </ul>
       <ul class="welcome_msg">
         <li class="exit">
-          <a href>
+          <a href @click.prevent="openExit">
             <img src="../assets/image/icon/icon_exit.png" alt />
           </a>
         </li>
@@ -92,6 +92,25 @@
         <router-view></router-view>
       </keep-alive>
     </div>
+    <div class="exitWindows" v-show="exitWindows">
+      <div class="exitBox">
+        <h4>退出当前账号</h4>
+        <div class="back">
+          <a href @click.prevent="closeExit">
+            <img src="../assets/image/icon/icon_back.png" alt />
+          </a>
+        </div>
+        <div class="exitContent">确定要退出吗？</div>
+        <ul>
+          <li class="yes">
+            <button type="button">是</button>
+          </li>
+          <li class="no">
+            <button type="button" @click="closeExit">否</button>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -101,11 +120,20 @@ export default {
   data() {
     return {
       communityLocation: '东莞 · 碧桂园',
-      userName: '李华华'
+      userName: '李华华',
+
+      exitWindows:false
     };
   },
   methods: {
-
+    openExit(){
+      //打开退出账号窗口
+      this.exitWindows = true;
+    },
+    closeExit(){
+      //关闭退出账号窗口
+      this.exitWindows = false;
+    }
   }
 };
 </script>
@@ -370,5 +398,79 @@ export default {
   margin: 10px 10px 0 175px;
   /*overflow-y: auto;*/
 }
-
+.exitWindows {
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  z-index: 100;
+}
+.exitBox {
+  width: 634px;
+  height: 234px;
+  background: #fff;
+  margin: 177px auto;
+  position: relative;
+}
+.exitBox h4 {
+  font-size: 24px;
+  font-weight: bold;
+  padding-top: 24px;
+  margin-left: 50px;
+  display: inline-block;
+}
+.exitBox h4::before {
+  content: "";
+  width: 7px;
+  height: 26px;
+  background: #8a79af;
+  position: absolute;
+  left: 22px;
+  z-index: 1;
+}
+.exitBox .back {
+  position: absolute;
+  left: 580px;
+  top: 24px;
+  z-index: 9999;
+}
+.exitContent {
+  margin: 80px 242px;
+  font-size: 20px;
+}
+.exitBox ul {
+  width: 100%;
+  height: 58px;
+  background: #bcbcbc;
+}
+.exitBox .yes button {
+  float: left;
+  width: 120px;
+  height: 39px;
+  background: #8a79af;
+  margin-left: 128px;
+  margin-top: 9px;
+  font-size: 18px;
+  color: #fff;
+  outline: none;
+  border-width: 0px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.exitBox .no button {
+  float: right;
+  width: 120px;
+  height: 39px;
+  background: #fff;
+  margin-right: 166px;
+  margin-top: 9px;
+  font-size: 18px;
+  color: #000;
+  outline: none;
+  border-width: 0px;
+  border-radius: 10px;
+  cursor: pointer;
+}
 </style>
