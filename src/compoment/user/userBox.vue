@@ -45,7 +45,7 @@
       </div>
       <div class="user_table">
         <div class="add_user">
-          <el-button type="primary" class="add_button">新增用户</el-button>
+          <el-button type="primary" class="add_button" @click="openAdd">新增用户</el-button>
         </div>
         <el-table
                 :data="userData"
@@ -58,10 +58,10 @@
           <el-table-column prop="plateNumber" label="车牌号" min-width="15%"></el-table-column>
           <el-table-column label="操作" min-width="25%">
             <a href>
-              <span class="operation">修改</span>
+              <span class="operation" @click.prevent="openModify">修改</span>
             </a>
             <a href>
-              <span class="operation">删除</span>
+              <span class="operation" @click.prevent="openDelete">删除</span>
             </a>
             <router-link to="/index/user/userInfo">
               <span class="operation" @click="toUserInfo">查看详情</span>
@@ -108,15 +108,15 @@
           </a>
         </div>
         <div class="addContent">
-          <form class="house">
-            <h5>房屋信息</h5>
-            <label class="houseLocation">
-              房间：
-              <input type="text" />
+          <form class="personal">
+            <h5>个人信息</h5>
+            <label class="userName">
+              用户名：
+              <input type="text">
             </label>
-            <label class="houseId">
-              房间ID：
-              <input type="text" />
+            <label class="password">
+              密码：
+              <input type="password">
             </label>
           </form>
           <div class="line1"></div>
@@ -126,19 +126,15 @@
               姓名：
               <input type="text">
             </label>
-            <label class="houseId">
-              住户ID：
-              <input type="text">
-            </label>
-            <label class="personalId">
-              身份证号：
-              <input type="text">
-            </label>
             <label class="sex">性别：
               <select>
                 <option value="man">男</option>
                 <option value="woman">女</option>
               </select>
+            </label>
+            <label class="personalId">
+              身份证号：
+              <input type="text">
             </label>
             <label class="household">
               户口所在地：
@@ -148,28 +144,16 @@
               籍贯：
               <input type="text">
             </label>
-            <label class="userName">
-              用户名：
-              <input type="text">
-            </label>
           </form>
           <div class="line2"></div>
-          <form class="car">
-            <h5>车辆信息</h5>
-            <label class="carNumber">
-              车牌号：
+          <form class="house">
+            <h5>房屋信息</h5>
+            <label class="apartmentNumber">
+              栋数：
               <input type="text">
             </label>
-            <label class="brand">
-              品牌：
-              <input type="text">
-            </label>
-            <label class="type">
-              型号：
-              <input type="text">
-            </label>
-            <label class="color">
-              颜色：
+            <label class="houseNumber">
+              房号：
               <input type="text">
             </label>
           </form>
@@ -179,7 +163,7 @@
         </div>
       </div>
     </div>
-    <div class="modifyWindows" v-show="modifyWindows">
+    <!-- <div class="modifyWindows" v-show="modifyWindows">
       <div class="modifyBox">
         <h4>修改住户信息</h4>
         <div class="back">
@@ -199,7 +183,7 @@
               <input type="text" />
             </label>
           </form>
-          <div class="line1"></div>
+          <div class="line3"></div>
           <form class="liver">
             <h5>户主信息</h5>
             <label class="name">
@@ -233,7 +217,7 @@
               <input type="text">
             </label>
           </form>
-          <div class="line2"></div>
+          <div class="line4"></div>
           <form class="car">
             <h5>车辆信息</h5>
             <label class="carNumber">
@@ -258,7 +242,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -371,14 +355,14 @@
       closeDelete() {
         this.deleteWindows = false;
       },
-      //打开修改用户窗口
+      /* //打开修改用户窗口
       openModify(){
         this.modifyWindows = true;
       },
       //关闭修改用户窗口
       closeModify(){
         this.modifyWindows = false;
-      },
+      }, */
       //打开新增用户窗口
       openAdd(){
         this.addWindows = true;
@@ -558,7 +542,7 @@ h3::before {
 }
 .addBox,.modifyBox {
   width: 632px;
-  height: 560px;
+  height: 500px;
   background: #fff;
   margin: 100px auto;
   position: relative;
@@ -610,16 +594,11 @@ h5 {
 .addBox input,.modifyBox input {
   width: 137px;
   height: 26px;
+  padding-left: 8px;
 }
 .addBox select,.modifyBox select{
-  width: 137px;
-  height: 32px;
-}
-.house label {
-  display: block;
-  float: left;
-  margin-top: 10px;
-  margin-left: 70px;
+  width: 66px;
+  height: 30px;
 }
 .line1,.line2 {
   width: 94%;
@@ -631,56 +610,45 @@ h5 {
   margin-top: 55px;
 }
 .line2 {
-  margin-top: 185px;
+  margin-top: 143px;
 }
-.liver label {
+label {
   display: block;
   float: left;
   margin-top: 10px;
 }
-.liver .name,.liver .houseId {
+.personal .userName{
   margin-left: 70px;
 }
-.liver .personalId {
+.personal .password {
   margin-left: 30px;
 }
-.liver .personalId input {
-  width: 180px;
+.liver .name {
+  margin-left: 90px;
 }
 .liver .sex {
-  margin-left: 48px;
+  margin-left: 28px;
 }
-.liver .sex select {
-  width: 66px;
+.liver .personalId input {
+  width: 200px;
+}
+.liver .personalId {
+  margin-left: 50px;
 }
 .liver .household {
-  margin-left: 10px;
+  margin-left: 30px;
 }
 .liver .nativePlace {
-  margin-left: 91px;
+  margin-left: 30px;
 }
-.liver .userName {
-  margin-left: 50px;
+.house .apartmentNumber {
+  margin-left: 90px;
 }
-.car label {
-  display: block;
-  float: left;
-  margin-top: 10px;
-}
-.car .carNumber {
-  margin-left: 50px;
-}
-.car .brand {
-  margin-left: 91px;
-}
-.car .type {
-  margin-left: 70px;
-}
-.car .color {
-  margin-left: 91px;
+.house .houseNumber {
+  margin-left: 30px;
 }
 .saveButton {
-  margin-top: 100px;
+  margin-top: 70px;
   width: 100%;
   height: 60px;
   background: #bcbcbc;

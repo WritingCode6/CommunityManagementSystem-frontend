@@ -14,8 +14,8 @@ export default {
   components: { userBox, userInfo },
   data() {
     return {
-      userList: true,
-      userInfo: false
+      userList: false,
+      userInfo: true
     };
   },
   methods: {
