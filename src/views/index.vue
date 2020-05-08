@@ -193,23 +193,23 @@ export default {
 }
 .nav {
   font-size: 18px;
-  width: 200px;
+  width: 190px;
   height: 100%;
   background: #645c84;
   /* 强行适应整个页面 */
-  padding-bottom: 32px;
+  padding-bottom: 28px;
   /* 取消浮动 */
   /*float: left;*/
   /*min-height: 800px;
   max-height: 1000px;*/
 }
 .list {
-  margin-top: 20px;
+  margin-top: 30px;
   /*padding-bottom: 50px;*/
   /*padding-bottom: 30%;*/
 }
 .list span {
-  line-height: 70px;
+  line-height: 65px;
   vertical-align: top;
 }
 .arrows {
@@ -227,7 +227,7 @@ export default {
 .property {
   display: block;
   color: #bcbbbf;
-  height: 70px;
+  height: 65px;
   width: 100%;
 }
 .personal {
@@ -407,7 +407,7 @@ export default {
 }*/
 /* 更换布局后的子组件展示样式 */
 .right_part {
-  width: calc(99% - 200px);
+  width: calc(99% - 190px);
   /*width: 100%;*/
   height: 100%;
   margin: 15px;

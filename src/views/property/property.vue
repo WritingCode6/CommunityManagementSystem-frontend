@@ -170,7 +170,7 @@ a:hover {
   min-width: 1000px;
   max-width: 1200px;
 /*  width: 100%;*/
-  height: 580px;
+  height: 550px;
   border: 1px solid #bcbcbc;
   overflow-y: scroll;
 }

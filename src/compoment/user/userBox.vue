@@ -45,7 +45,9 @@
       </div>
       <div class="user_table">
         <div class="add_user">
-          <el-button type="primary" class="add_button">新增用户</el-button>
+          <a href @click.prevent="openAdd">
+            <el-button type="primary" class="add_button">新增用户</el-button>
+          </a>
         </div>
         <el-table
                 :data="userData"
@@ -57,10 +59,10 @@
           <el-table-column prop="roomNumber" label="房间号" min-width="10%"></el-table-column>
           <el-table-column prop="plateNumber" label="车牌号" min-width="15%"></el-table-column>
           <el-table-column label="操作" min-width="25%">
-            <a href>
+            <a href @click.prevent="openModify">
               <span class="operation">修改</span>
             </a>
-            <a href>
+            <a href @click.prevent="openDelete">
               <span class="operation">删除</span>
             </a>
             <router-link to="/index/user/userInfo">
@@ -306,12 +308,12 @@
             buildingNumber: '1',
             roomNumber: '101',
             plateNumber: '粤A8888'
-          },{
+          }/*,{
             name: '黄一月',
             buildingNumber: '1',
             roomNumber: '101',
             plateNumber: '粤A8888'
-          }
+          }*/
         ],
         //新增住户信息数据，仅作测试用途，到时候接收后台数据覆盖默认数据
         addUserData: {
@@ -331,7 +333,7 @@
             roomNumber: 101
           }
         },
-        pageSize: 8,
+        pageSize: 6,
         total: 100,
         currentPage: 1,
         userList: true,
@@ -406,7 +408,7 @@
 .user_box {
   margin-top: 20px;
   width: 100%;
-  height: 700px;
+  height: 650px;
   border: 1px solid #dcdcdc;
   border-radius: 10px;
   position: relative;

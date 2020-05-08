@@ -208,15 +208,15 @@ export default {
 .password{
   margin-top: 20px;
   width: 100%;
-  height: 350px;
+  height: 345px;
   border: 1px solid #dcdcdc;
   border-radius: 10px;
   position: relative;
   left: 55px;
 }
 .password {
-  margin-top: 30px;
-  height: 285px;
+  margin-top: 25px;
+  height: 280px;
 }
 h3 {
   font-size: 24px;
