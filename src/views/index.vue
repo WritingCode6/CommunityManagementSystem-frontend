@@ -57,6 +57,12 @@
             </router-link>
           </li>
           <li>
+            <router-link to="/index/repair" class="repair">
+              <span class="repair_word">物业报修</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li>
             <router-link to="/index/notice" class="notice">
               <span class="notice_word">社区通知</span>
               <span class="arrows">></span>
@@ -100,9 +106,7 @@ export default {
       userName: '李华华'
     };
   },
-  methods: {
-
-  }
+  methods: {}
 };
 </script>
 
@@ -169,13 +173,13 @@ export default {
   position: fixed;*/
 }
 .list {
-  margin-top: 30px;
+  margin-top: 20px;
   /*padding-bottom: 50px;*/
   padding-bottom: 30%;
   /*padding-bottom: 180%;*/
 }
 .list span {
-  line-height: 75px;
+  line-height: 70px;
   vertical-align: top;
 }
 .arrows {
@@ -186,61 +190,80 @@ export default {
 .parking,
 .staff,
 .visitor,
+.repair,
 .notice,
 .activity,
 .feedback,
 .property {
   display: block;
   color: #bcbbbf;
-  height: 75px;
+  height: 70px;
   width: 100%;
 }
 .personal {
   background: url("../assets/image/icon/icon_personal.png") no-repeat;
-  background-position: 18%;
+  background-position: 16%;
 }
 .user {
   background: url("../assets/image/icon/icon_user.png") no-repeat;
-  background-position: 18%;
+  background-position: 16%;
 }
 .parking {
   background: url("../assets/image/icon/icon_parking.png") no-repeat;
-  background-position: 18%;
+  background-position: 16%;
 }
 .staff {
   background: url("../assets/image/icon/icon_staff.png") no-repeat;
-  background-position: 18%;
+  background-position: 16%;
 }
 .visitor {
   background: url("../assets/image/icon/icon_visitor.png") no-repeat;
-  background-position: 18%;
+  background-position: 16%;
+}
+.repair {
+  background: url("../assets/image/icon/icon_repair.png") no-repeat;
+  background-position: 16%;
 }
 .notice {
   background: url("../assets/image/icon/icon_notice.png") no-repeat;
-  background-position: 18%;
+  background-position: 16%;
 }
 .activity {
   background: url("../assets/image/icon/icon_activity.png") no-repeat;
-  background-position: 18%;
+  background-position: 16%;
 }
 .feedback {
   background: url("../assets/image/icon/icon_feedback.png") no-repeat;
-  background-position: 18%;
+  background-position: 16%;
 }
 .property {
   background: url("../assets/image/icon/icon_property.png") no-repeat;
-  background-position: 18%;
+  background-position: 16%;
 }
+/* 添加动态效果 */
 .personal_word,
 .user_word,
 .parking_word,
 .staff_word,
 .visitor_word,
+.repair_word,
 .notice_word,
 .activity_word,
 .feedback_word,
 .property_word {
-  margin-left: 60px;
+  margin-left: 70px;
+}
+.personal_word:hover,
+.user_word:hover,
+.parking_word:hover,
+.staff_word:hover,
+.visitor_word:hover,
+.repair_word:hover,
+.notice_word:hover,
+.activity_word:hover,
+.feedback_word:hover,
+.property_word:hover {
+  margin-left: 65px;
 }
 /* hover状态的变色处理 */
 .personal:hover {
@@ -268,6 +291,11 @@ export default {
   background-position: 18%;
   color: #fff;
 }
+.repair:hover {
+  background: url("../assets/image/icon/icon_repair_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
+  color: #fff;
+}
 .notice:hover {
   background: url("../assets/image/icon/icon_notice_selected.png") no-repeat #9b8fca;
   background-position: 18%;
@@ -288,9 +316,14 @@ export default {
   background-position: 18%;
   color: #fff;
 }
-/* router-link被激活的CSS */
-.personal .router-link-exact-active {
-  background: url("../assets/image/icon/icon_personal_selected.png") no-repeat;
+/* router-link被激活的CSS，有bug */
+.router-link-exact-active {
+  background: url("../assets/image/icon/icon_check_user_selected.png") no-repeat #9b8fca;
+  background-position: 18%;
+  color: #fff;
+}
+/*.personal .router-link-exact-active-class {
+  background: url("../assets/image/icon/icon_personal_selected.png") no-repeat #9b8fca;
   background-position: 18%;
   color: #fff;
 }
@@ -333,7 +366,7 @@ export default {
   background: url("../assets/image/icon/icon_property_selected.png") no-repeat;
   background-position: 18%;
   color: #fff;
-}
+}*/
 /* 原定子组件展示样式 */
 /*.right_part {
    !*导航栏的宽度是165px，另外再加margin-left: 10px *!

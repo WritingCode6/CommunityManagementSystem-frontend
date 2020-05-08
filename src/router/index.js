@@ -43,7 +43,12 @@ Vue.use(VueRouter)
           path: 'visitor',
           name: 'Visitor',
           component: () => import('../views/visitor/visitor.vue')
-        }, {
+        },
+        {
+          path: 'repair',
+          name: 'Repair',
+          component: () => import('../views/repair/repair.vue')
+        },{
           path: 'notice',
           name: 'Notice',
           component: () => import('../views/notice/notice.vue')
