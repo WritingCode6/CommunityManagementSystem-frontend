@@ -30,6 +30,19 @@
         </div>
       </div>
     </div>
+    <div class="repairFormRead" v-show="repairFormRead">
+      <ul>
+        <li class="repairProcess">
+          <a href="" @click.prevent="torepairProcessRead">报修流程</a>
+        </li>
+        <li class="repairForm">
+          <span>报修单</span>
+        </li>
+      </ul>
+      <div class="content">
+        <!-- 报修单内容 -->
+      </div>
+    </div>
     <div class="modifyProcessWindows" v-show="modifyProcess">
       <div class="modifyProcessBox">
         <h4>修改报修流程</h4>
@@ -55,6 +68,7 @@ export default {
   data() {
     return {
       repairProcessRead: true,
+      repairFormRead: false,
       modifyProcess: false,
       msg:
         " 为保证社区正常运营，提升后勤服务质量及管理水平，规范运作维修、报修流程，现将物业维修及报修相关流程通知如下：\n" +
@@ -80,7 +94,15 @@ export default {
   },
   methods: {
     //切换到报修单板块
-    toRepairFormRead() {},
+    toRepairFormRead() {
+      this.repairFormRead = true;
+      this.repairProcessRead = false;
+    },
+    //切换到报修流程板块
+    torepairProcessRead(){
+      this.repairProcessRead = true;
+      this.repairFormRead = false;
+    },
     //打开修改报修流程窗口
     openModifyProcess() {
       this.modifyProcess = true;
@@ -277,5 +299,12 @@ h4::before {
   border-width: 0px;
   border-radius: 20px;
   cursor: pointer;
+}
+.repairFormRead .content{
+  margin-top: -1px;
+  min-width: 1000px;
+  max-width: 1200px;
+  height: 550px;
+  border: 1px solid #bcbcbc;
 }
 </style>

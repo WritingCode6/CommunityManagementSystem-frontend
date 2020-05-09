@@ -18,7 +18,7 @@
         <p>{{ msg3 }}</p>
         <p>{{ msg4 }}</p>
       </div>
-      <br />
+      <br>
       <button type="button" value="修改公司简介" @click="openModifyIntro" class="modifyButton">修改公司简介</button>
     </div>
     <div class="honorRead" v-show="honorRead">
