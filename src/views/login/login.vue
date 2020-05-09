@@ -215,7 +215,7 @@ a {
   width: 100%;
   background: #bcbcbc;
   position: relative;
-  top: 10px;
+  top: 11px;
 }
 .wrongButton button {
   width: 120px;

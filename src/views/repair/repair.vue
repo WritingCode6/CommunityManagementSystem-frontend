@@ -302,8 +302,9 @@ h4::before {
 }
 .repairFormRead .content{
   margin-top: -1px;
-  min-width: 1000px;
-  max-width: 1200px;
+/*  min-width: 1000px;
+  max-width: 1200px;*/
+  width: 95%;
   height: 550px;
   border: 1px solid #bcbcbc;
 }
