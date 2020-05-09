@@ -23,7 +23,8 @@
         <ul>
           <li class="forget">
             <!--看情况修为router-link-->
-            <a href>忘记密码</a>
+            <!-- 暂时将忘记密码设置为打开密码错误窗口 -->
+            <a href @click.prevent="openPasswordWrong">忘记密码</a>
           </li>
           <li class="enroll">
             <!--看情况修为router-link-->
@@ -35,6 +36,15 @@
         </el-form-item>
       </el-form>
     </div>
+    <div class="passwordWrong" v-show="passwordWrong">
+      <div class="wrongBox">
+        <h4>提示</h4>
+        <div class="wrongContent">账号或密码不正确</div>
+        <div class="wrongButton">
+          <button type="button" @click="closePasswordWrong">确定</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -44,8 +54,9 @@ export default {
     return {
       userInfo: {
         userName: "",
-        password: ""
-      }
+        password: "",
+      },
+      passwordWrong:false
     };
   },
   methods: {
@@ -89,6 +100,14 @@ export default {
     //登录接口
     login() {
       console.log('登录');
+    },
+    //打开提示密码错误窗口
+    openPasswordWrong(){
+      this.passwordWrong = true;
+    },
+    //关闭提示密码错误窗口
+    closePasswordWrong(){
+      this.passwordWrong = false;
     }
   }
 };
@@ -131,6 +150,11 @@ export default {
 /* 待修改 */
 a {
   color: #fff;
+  display: block;
+  width: 70px;
+  height: 100%;
+  position: relative;
+  z-index: 1;
 }
 .forget {
   float:left;
@@ -147,5 +171,63 @@ a {
   background-color: #D38CAD;
   margin-top: 15px;
   border-radius: 10px;
+}
+.passwordWrong {
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  z-index: 100;
+}
+.wrongBox {
+  width: 634px;
+  height: 236px;
+  background: #fff;
+  margin: 197px auto;
+  position: relative;
+}
+.passwordWrong h4 {
+  font-size: 24px;
+  font-weight: bold;
+  padding-top: 24px;
+  margin-left: 50px;
+  display: inline-block;
+  color: #000;
+}
+.passwordWrong h4::before {
+  content: "";
+  width: 7px;
+  height: 26px;
+  background: #8a79af;
+  position: absolute;
+  left: 22px;
+  z-index: 1;
+}
+.wrongContent {
+  margin: 50px 230px;
+  font-size: 20px;
+  color: #000;
+}
+.wrongButton {
+  height: 58px;
+  width: 100%;
+  background: #bcbcbc;
+  position: relative;
+  top: 10px;
+}
+.wrongButton button {
+  width: 120px;
+  height: 39px;
+  background: #8A79AF;
+  margin-left: 250px;
+  margin-top: 10px;
+  font-size: 18px;
+  color: #fff;
+  outline: none;
+  border-width: 0px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 </style>
