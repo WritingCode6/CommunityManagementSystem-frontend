@@ -3,37 +3,36 @@
     <div class="liverInfo">
       <h3>住户详情</h3>
       <div class="back">
-          <a href @click.prevent="">
-            <img src="../../assets/image/icon/icon_back.png" alt />
-          </a>
+        <router-link to="/index/user">
+          <img src="../../assets/image/icon/icon_back.png" alt @click="toUserBox" />
+        </router-link>
       </div>
       <div class="liverMsg">
         <h4>住户资料</h4>
         <ul>
           <li class="name">
             <span>姓名：</span>
-
+            {{ liverData.userInfo.name }}
           </li>
           <li class="userName">
             <span>用户名：</span>
-
+            {{ liverData.userInfo.userName }}
           </li>
           <li class="sex">
             <span>性别：</span>
-
+            {{ liverData.userInfo.sex }}
           </li>
-          
           <li class="personalId">
             <span>身份证号：</span>
-
+            {{ liverData.userInfo.idNumber }}
           </li>
           <li class="household">
             <span>户口所在地：</span>
-
+            {{ liverData.userInfo.residenceAddress }}
           </li>
           <li class="nativePlace">
             <span>籍贯：</span>
-
+            {{ liverData.userInfo.ancestralHome }}
           </li>
         </ul>
       </div>
@@ -50,15 +49,15 @@
           <ul>
             <li class="liver">
               <span>户主：</span>
-
+              {{ liverData.userInfo.name }}
             </li>
             <li class="apartmentNumber">
               <span>栋数：</span>
-
+              {{ liverData.houseInfo.buildingNumber }}
             </li>
             <li class="houseNumber">
               <span>房号：</span>
-
+              {{ liverData.houseInfo.roomNumber }}
             </li>
           </ul>
         </div>
@@ -76,19 +75,19 @@
           <ul>
             <li class="carNumber">
               <span>车牌号：</span>
-
+              {{ liverData.carInfo.plateNumber }}
             </li>
             <li class="brand">
               <span>品牌：</span>
-
+              {{ liverData.carInfo.brand }}
             </li>
             <li class="type">
               <span>型号：</span>
-
+              {{ liverData.carInfo.model }}
             </li>
             <li class="color">
               <span>颜色：</span>
-
+              {{ liverData.carInfo.color }}
             </li>
           </ul>
         </div>
@@ -98,12 +97,35 @@
 </template>
 
 <script>
+  import { sexChange } from "../../utils/sexUtil";
+
   export default {
     name: "userInfo",
     data() {
       return {
-        houseRead:true,
-        carRead:false
+        liverData: {
+          userInfo: {
+            name: '黄一月',
+            userName: '黄一月',
+            sex: 0,
+            idNumber: '1111112222222222222',
+            ancestralHome: '广东广州',
+            residenceAddress: '广州市体育西路'
+          },
+          carInfo: {
+            plateNumber: '粤A88888',
+            brand: '长安',
+            model: '？',
+            color: '红色'
+          },
+          houseInfo: {
+            buildingNumber: '1',
+            roomNumber: '101'
+          }
+        },
+        houseRead: true,
+        carRead: false,
+        userInfo: true
       }
     },
     methods: {
@@ -116,16 +138,25 @@
       toHouseMsg(){
         this.houseRead = true;
         this.carRead = false;
+      },
+      //父子组件传值
+      toUserBox() {
+        this.userInfo = false;
+        this.$emit('userInfoData', this.userInfo);
       }
+    },
+    beforeMount() {
+      this.liverData.userInfo.sex = sexChange(this.liverData.userInfo.sex);
     }
   }
 </script>
 
 <style scoped>
 .liverInfo {
-  width: 1200px;
+ /* width: 1200px;*/
+  width: 100%;
   height: 100%;
-  margin-top: 50px;
+  margin-top: 35px;
   position: relative;
   left: 60px;
 }
@@ -133,7 +164,7 @@ h3 {
   font-size: 24px;
   font-weight: bold;
   color: #666;
-  margin-left: 48px;
+  margin-left: 35px;
 }
 h3::before {
   content: "";
@@ -141,7 +172,7 @@ h3::before {
   height: 26px;
   background: #8a79af;
   position: absolute;
-  left: 22px;
+  left: 5px;
   z-index: 1;
 }
 .back {
@@ -150,22 +181,23 @@ h3::before {
   margin-right: 80px;
 }
 .liverMsg {
-  width: 1150px;
-  height: 250px;
-  border: 0.8px solid #bcbcbc;
+  /*width: 1150px;*/
+  width: 95%;
+  height: 270px;
+  border: 1px solid #bcbcbc;
   border-radius: 10px;
-  margin-top: 20px;
-  margin-bottom: 50px;
+  margin-top: 25px;
+  margin-bottom: 60px;
 }
 h4 {
   font-size: 20px;
-  margin-left: 24px;
+  margin-left: 34px;
   margin-top: 10px;
 }
 h4::after {
   content: "";
   width: 90%;
-  height: 0.8px;
+  height: 1px;
   background: rgb(151, 149, 149);
   position: absolute;
   top: 88px;
@@ -182,11 +214,11 @@ h4::after {
   color: #666;
 }
 .name {
-  left:100px;
+  left:80px;
   top:60px;
 }
 .userName {
-  left:450px;
+  left:460px;
   top:40px;
 }
 .sex {
@@ -194,11 +226,11 @@ h4::after {
   top:20px;
 }
 .personalId {
-  left: 60px;
+  left: 40px;
   top:70px;
 }
 .household {
-  left:410px;
+  left:420px;
   top:50px;
 }
 .nativePlace {
@@ -215,7 +247,8 @@ h4::after {
 .otherMsg_car .top {
   background-size: 202px;
   background-repeat: no-repeat;
-  width: 1012px;
+  /*width: 1012px;*/
+  width: 95%;
   height: 36px;
   position: relative;
   z-index: 1;
@@ -248,21 +281,22 @@ h4::after {
 }
 .content {
   margin-top: -1px;
-  width: 1150px;
-  height: 150px;
+  /*width: 1150px;*/
+  width: 95%;
+  height: 180px;
   border: 1px solid #bcbcbc;
   border-radius: 0 10px 10px 10px;
 }
 .liver {
-  left:100px;
+  left:90px;
   top:40px;
 }
 .apartmentNumber {
-  left:460px;
+  left:450px;
   top:20px;
 }
 .houseNumber {
-  left:850px;
+  left:840px;
   top:0;
 }
 .carNumber {

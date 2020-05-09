@@ -30,7 +30,7 @@
         </div>
       </div>
     </div>
-    <div class="modifyProcessWindows" v-show="modifyProncess">
+    <div class="modifyProcessWindows" v-show="modifyProcess">
       <div class="modifyProcessBox">
         <h4>修改报修流程</h4>
         <div class="back">
@@ -55,8 +55,7 @@ export default {
   data() {
     return {
       repairProcessRead: true,
-      modifyProncess: false,
-
+      modifyProcess: false,
       msg:
         " 为保证社区正常运营，提升后勤服务质量及管理水平，规范运作维修、报修流程，现将物业维修及报修相关流程通知如下：\n" +
         "1、 巡查人员在发现需维修情况后，认真填写报修单报修，并送至物业维修部门。\n" +
@@ -84,15 +83,15 @@ export default {
     toRepairFormRead() {},
     //打开修改报修流程窗口
     openModifyProcess() {
-      this.modifyProncess = true;
+      this.modifyProcess = true;
     },
     //关闭修改报修流程窗口
     closeModifyProcess() {
-      this.modifyProncess = false;
+      this.modifyProcess = false;
     },
     //保存修改报修流程
     saveModifyProcess() {
-      this.modifyProncess = false;
+      this.modifyProcess = false;
     }
   }
 };
@@ -144,7 +143,8 @@ a:hover {
 }
 .repairProcessRead .content {
   margin-top: -1px;
-  width: 850px;
+  width: 68%;
+  /*width: 850px;*/
   height: 550px;
   border: 1px solid #bcbcbc;
   overflow-y: scroll;
@@ -166,7 +166,7 @@ p {
 .repairPicture {
   float: left;
   margin-top: -550px;
-  margin-left: 900px;
+  margin-left: 70%;
 }
 h4 {
   font-size: 24px;
@@ -180,14 +180,15 @@ h4::before {
   height: 26px;
   background: #8a79af;
   position: absolute;
-  left: 900px;
+  /*left: 900px;*/
+  left: 70%;
   z-index: 1;
 }
 .option h4::before {
   background-color: #d38cad;
 }
 .repairProcessRead button {
-  width: 242px;
+  width: 300px;
   height: 92px;
   background: #d38cad;
   font-size: 20px;

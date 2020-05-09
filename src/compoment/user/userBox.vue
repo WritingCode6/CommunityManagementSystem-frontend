@@ -57,9 +57,10 @@
           <el-table-column prop="roomNumber" label="房间号" min-width="10%"></el-table-column>
           <el-table-column prop="plateNumber" label="车牌号" min-width="15%"></el-table-column>
           <el-table-column label="操作" min-width="25%">
-            <a href>
+            <!-- 修改未做 -->
+            <!--<a href>
               <span class="operation" @click.prevent="openModify">修改</span>
-            </a>
+            </a>-->
             <a href>
               <span class="operation" @click.prevent="openDelete">删除</span>
             </a>
@@ -112,11 +113,11 @@
             <h5>个人信息</h5>
             <label class="userName">
               用户名：
-              <input type="text">
+              <input type="text" v-model="addUserData.basicInfo.userName">
             </label>
             <label class="password">
               密码：
-              <input type="password">
+              <input type="password" v-model="addUserData.basicInfo.password">
             </label>
           </form>
           <div class="line1"></div>
@@ -124,25 +125,25 @@
             <h5>户主信息</h5>
             <label class="name">
               姓名：
-              <input type="text">
+              <input type="text" v-model="addUserData.personalInfo.name">
             </label>
             <label class="sex">性别：
-              <select>
-                <option value="man">男</option>
-                <option value="woman">女</option>
+              <select v-model="addUserData.personalInfo.sex">
+                <option value="0">男</option>
+                <option value="1">女</option>
               </select>
             </label>
             <label class="personalId">
               身份证号：
-              <input type="text">
-            </label>
-            <label class="household">
-              户口所在地：
-              <input type="text">
+              <input type="text" v-model="addUserData.personalInfo.personalID">
             </label>
             <label class="nativePlace">
               籍贯：
-              <input type="text">
+              <input type="text" v-model="addUserData.personalInfo.ancestralHome">
+            </label>
+            <label class="household">
+              户口所在地：
+              <input type="text" v-model="addUserData.personalInfo.residenceAddress">
             </label>
           </form>
           <div class="line2"></div>
@@ -150,11 +151,11 @@
             <h5>房屋信息</h5>
             <label class="apartmentNumber">
               栋数：
-              <input type="text">
+              <input type="text" v-model="addUserData.houseInfo.buildingNumber">
             </label>
             <label class="houseNumber">
               房号：
-              <input type="text">
+              <input type="text" v-model="addUserData.houseInfo.roomNumber">
             </label>
           </form>
           <div class="saveButton">
@@ -247,6 +248,10 @@
 </template>
 
 <script>
+/*
+  import { sexChange } from "../../utils/sexUtil";
+*/
+
   export default {
     name: "userBox",
     data() {
@@ -306,7 +311,7 @@
           personalInfo: {
             name: '黄一月',
             personalID: '3302345666698097653',
-            sex: '男',
+            sex: 0,
             ancestralHome: '广东揭阳',
             residenceAddress: '广东省东莞市大岭山镇教育西路'
           },
@@ -380,8 +385,11 @@
         this.modifyWindows = false;
       }
     },
-    beforeMount() {
+    created() {
       this.pagination();
+/*
+      this.addUserData.personalInfo.sex = sexChange(this.addUserData.personalInfo.sex)
+*/
     }
   }
 </script>
@@ -460,13 +468,15 @@ h3::before {
 }
 .operation {
   display: inline-block;
-  margin-right: 10px;
+  margin-right: 15px;
 }
 .page_block {
   float: right;
   margin-top: 20px;
 }
-.deleteWindows,.addWindows,.modifyWindows {
+.deleteWindows,
+.addWindows,
+.modifyWindows {
   height: 100%;
   width: 100%;
   left: 0;
@@ -540,7 +550,8 @@ h3::before {
   border-radius: 10px;
   cursor: pointer;
 }
-.addBox,.modifyBox {
+.addBox,
+.modifyBox {
   width: 632px;
   height: 500px;
   background: #fff;
@@ -549,7 +560,8 @@ h3::before {
   font-size: 20px;
   color: #666;
 }
-.addBox h4,.modifyBox h4 {
+.addBox h4,
+.modifyBox h4 {
   font-size: 24px;
   font-weight: bold;
   padding-top: 24px;
@@ -557,7 +569,8 @@ h3::before {
   display: inline-block;
   color: #000;
 }
-.addBox h4::before,.modifyBox h4::before {
+.addBox h4::before,
+.modifyBox h4::before {
   content: "";
   width: 7px;
   height: 26px;
@@ -566,7 +579,8 @@ h3::before {
   left: 22px;
   z-index: 1;
 }
-.addBox h4::after,.modifyBox h4::after {
+.addBox h4::after,
+.modifyBox h4::after {
   content: "";
   width: 94%;
   /*width: 1100px;*/
@@ -577,12 +591,14 @@ h3::before {
   left: 18px;
   z-index: 2;
 }
-.addBox .back,.modifyBox .back {
+.addBox .back,
+.modifyBox .back {
   position: absolute;
   left: 580px;
   top: 20px;
 }
-.addContent,.modifyContent{
+.addContent,
+.modifyContent{
   margin-top: 30px;
 }
 h5 {
@@ -591,16 +607,19 @@ h5 {
   margin-top: 10px;
   color: #000;
 }
-.addBox input,.modifyBox input {
+.addBox input,
+.modifyBox input {
   width: 137px;
   height: 26px;
   padding-left: 8px;
 }
-.addBox select,.modifyBox select{
+.addBox select,
+.modifyBox select{
   width: 66px;
   height: 30px;
 }
-.line1,.line2 {
+.line1,
+.line2 {
   width: 94%;
   height: 0.8px;
   background: #666;
@@ -630,7 +649,10 @@ label {
   margin-left: 28px;
 }
 .liver .personalId input {
-  width: 200px;
+  width: 160px;
+}
+.liver .household input {
+  width: 280px;
 }
 .liver .personalId {
   margin-left: 50px;
@@ -639,7 +661,7 @@ label {
   margin-left: 30px;
 }
 .liver .nativePlace {
-  margin-left: 30px;
+  margin-left: 7px;
 }
 .house .apartmentNumber {
   margin-left: 90px;
@@ -648,12 +670,13 @@ label {
   margin-left: 30px;
 }
 .saveButton {
-  margin-top: 70px;
+  margin-top: 75px;
   width: 100%;
   height: 60px;
   background: #bcbcbc;
 }
-.addBox button,.modifyBox button {
+.addBox button,
+.modifyBox button {
   float: left;
   width: 120px;
   height: 39px;

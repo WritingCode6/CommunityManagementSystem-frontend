@@ -1,7 +1,7 @@
 <template>
   <div id="user">
     <userBox v-show="userList" @userBoxData="getUserBox"></userBox>
-    <userInfo v-show="userInfo"></userInfo>
+    <userInfo v-show="userInfo" @userInfoData="getUserInfo"></userInfo>
   </div>
 </template>
 
@@ -14,8 +14,8 @@ export default {
   components: { userBox, userInfo },
   data() {
     return {
-      userList: false,
-      userInfo: true
+      userList: true,
+      userInfo: false
     };
   },
   methods: {
@@ -23,6 +23,10 @@ export default {
     getUserBox(childData) {
       this.userList = childData;
       this.userInfo = true;
+    },
+    getUserInfo(childData) {
+      this.userInfo = childData;
+      this.userList = true;
     }
   }
 };

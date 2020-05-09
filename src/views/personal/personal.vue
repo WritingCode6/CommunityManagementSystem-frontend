@@ -135,6 +135,8 @@
 </template>
 
 <script>
+import { sexChange } from "../../utils/sexUtil";
+
 export default {
   name:"personal",
   data() {
@@ -178,22 +180,16 @@ export default {
     writeToReadInfo() {
       this.onlyReadInfo = true;
       this.onlyWriteInfo = false;
-      this.sexChange();
+      this.userInfo.sex = sexChange(this.userInfo.sex);
     },
     //密码可修改变为只读
     writeToReadPwd() {
       this.onlyReadPwd = true;
       this.onlyWritePwd = false;
-    },
-    //性别转换，包括修改的转换和初渲染的转换
-    sexChange() {
-      if(this.userInfo.sex === 0 || this.userInfo.sex === '0')  this.userInfo.sex = '男';
-      else if(this.userInfo.sex === 1 || this.userInfo.sex === '1')  this.userInfo.sex = '女';
-      else this.userInfo.sex = '';
     }
   },
   beforeMount() {
-    this.sexChange();
+    this.userInfo.sex = sexChange(this.userInfo.sex);
   }
 };
 </script>

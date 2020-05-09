@@ -123,19 +123,18 @@ export default {
     return {
       communityLocation: '东莞 · 碧桂园',
       userName: '李华华',
-
-      exitWindows:false
+      exitWindows: false
     };
   },
   methods: {
+    //打开退出账号窗口
     openExit(){
-      //打开退出账号窗口
       this.exitWindows = true;
     },
     closeExit(){
-      //关闭退出账号窗口
       this.exitWindows = false;
-    }
+    },
+
   }
 };
 </script>
