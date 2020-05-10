@@ -14,10 +14,10 @@
       </div>
       <ul class="parkingButton">
         <li class="batchAdd">
-          <button type="button" >批量增加车位</button>
+          <button type="button" @click="openBatchAdd">批量增加车位</button>
         </li>
         <li class="batchDelete">
-          <button type="button" >批量删除车位</button>
+          <button type="button" @click="openBatchDelete">批量删除车位</button>
         </li>
       </ul>
       <div class="parkingPicture">
@@ -41,13 +41,78 @@
         <!-- 车辆资料写这里 -->
       </div>
       <div class="addCarButon">
-        <button type="button" >增加车辆</button>
+        <button type="button" @click="openCarAdd">增加车辆信息</button>
       </div>
       <div class="carPicture">
         <h4>车辆数量</h4>
         <div class="picture">
           <!-- 曲线画在这里 -->
           大概这么大（请把我删除）
+        </div>
+      </div>
+    </div>
+    <div class="batchAddWindows" v-show="batchAddWindows">
+      <div class="batchBox">
+        <h4>批量增加车位</h4>
+        <div class="back">
+          <a href @click.prevent="closeBatchAdd">
+            <img src="../../assets/image/icon/icon_back.png" alt />
+          </a>
+        </div>
+        <div class="batchParkingNumber">车位号：</div>
+        <input type="text" class="batchinput">
+        <div class="batchAddButton">
+          <button type="button" @click="saveBatchAdd">确定批量新增</button>
+        </div>
+      </div>
+    </div>
+    <div class="batchDeleteWindows" v-show="batchDeleteWindows">
+      <div class="batchBox">
+        <h4>批量删除车位</h4>
+        <div class="back">
+          <a href @click.prevent="closeBatchDelete">
+            <img src="../../assets/image/icon/icon_back.png" alt />
+          </a>
+        </div>
+        <div class="batchParkingNumber">车位号：</div>
+        <input type="text" class="batchinput">
+        <div class="batchDeleteButton">
+          <button type="button" @click="saveBatchDelete">确定批量删除</button>
+        </div>
+      </div>
+    </div>
+    <div class="carAddWindows" v-show="carAddWindows">
+      <div class="carAddBox">
+        <h4>新增车辆信息</h4>
+        <div class="back">
+          <a href @click.prevent="closeCarAdd">
+            <img src="../../assets/image/icon/icon_back.png" alt />
+          </a>
+        </div>
+        <ul class="newCarMsg">
+          <li class="newName">
+            车主姓名：
+            <input type="text">
+          </li>
+          <li class="newCarNumber">
+            车牌号：
+            <input type="text">
+          </li>
+          <li class="newBrand">
+            品牌：
+            <input type="text">
+          </li>
+          <li class="newType">
+            型号：
+            <input type="text">
+          </li>
+          <li class="newColor">
+            颜色：
+            <input type="text">
+          </li>
+        </ul>
+        <div class="carAddButton">
+          <button type="button" @click="saveCarAdd">确定新增</button>
         </div>
       </div>
     </div>
@@ -61,6 +126,9 @@ export default {
     return {
       parkingMsgRead:true,
       carMsgRead:false,
+      batchAddWindows:false,
+      batchDeleteWindows:false,
+      carAddWindows:false
     };
   },
   methods:{
@@ -73,6 +141,42 @@ export default {
     toParkingMsg(){
       this.parkingMsgRead = true;
       this.carMsgRead = false;
+    },
+    //打开批量增加车位窗口
+    openBatchAdd(){
+      this.batchAddWindows = true;
+    },
+    //关闭批量增加车位窗口
+    closeBatchAdd(){
+      this.batchAddWindows = false;
+    },
+    //确定批量增加车位
+    saveBatchAdd(){
+      this.batchAddWindows = false;
+    },
+    //打开批量删除车位窗口
+    openBatchDelete(){
+      this.batchDeleteWindows = true;
+    },
+    //关闭批量删除车位窗口
+    closeBatchDelete(){
+      this.batchDeleteWindows = false;
+    },
+    //确定批量删除车位
+    saveBatchDelete(){
+      this.batchDeleteWindows = false;
+    },
+    //打开新增车辆信息窗口
+    openCarAdd(){
+      this.carAddWindows = true;
+    },
+    //关闭新增车辆信息窗口
+    closeCarAdd(){
+      this.carAddWindows = false;
+    },
+    //确定新增车辆信息
+    saveCarAdd(){
+      this.carAddWindows = false;
     }
   }
 };
@@ -200,5 +304,146 @@ h4 {
   border-radius: 5px;
   position: relative;
   top: -320px;
+}
+.batchAddWindows,
+.batchDeleteWindows,
+.carAddWindows {
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  z-index: 100;
+}
+.batchBox,
+.carAddBox {
+  width: 634px;
+  height: 236px;
+  background: #fff;
+  margin: 197px auto;
+  position: relative;
+}
+.carAddBox {
+  height: 380px;
+  margin: 150px auto;
+}
+.batchAddWindows h4,
+.batchDeleteWindows h4,
+.carAddWindows h4 {
+  font-size: 24px;
+  font-weight: bold;
+  padding-top: 24px;
+  margin-left: 50px;
+  display: inline-block;
+  color: #000;
+}
+.batchAddWindows h4::before,
+.batchDeleteWindows h4::before,
+.carAddWindows h4::before {
+  content: "";
+  width: 7px;
+  height: 26px;
+  background: #D38CAD;
+  position: absolute;
+  left: 22px;
+  z-index: 1;
+}
+.batchDeleteWindows h4::before {
+  background: #FDC38A;
+}
+.batchAddWindows h4::after,
+.batchDeleteWindows h4::after,
+.carAddWindows h4::after {
+  content: "";
+  width: 94%;
+  height: 1px;
+  background: #666;
+  position: absolute;
+  top: 70px;
+  left: 18px;
+  z-index: 2;
+} 
+.batchAddWindows .back,
+.batchDeleteWindows .back,
+.carAddWindows .back {
+  position: absolute;
+  left: 550px;
+  top: 24px;
+  z-index: 9999;
+}
+.batchParkingNumber {
+  font-size: 20px;
+  color: #666;
+  margin-top: 55px;
+  margin-left: 120px;
+}
+.batchinput {
+  float: left;
+  margin-top: -25px;
+  margin-left: 200px;
+  font-size: 20px;
+  width: 50%;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.batchAddButton,
+.batchDeleteButton,
+.carAddButton  {
+  margin-top: 50px;
+  width: 100%;
+  height: 58px;
+  background: #bcbcbc;
+}
+.carAddButton {
+  margin-top: 266px;
+}
+.batchAddButton button,
+.batchDeleteButton button,
+.carAddButton button {
+  float: left;
+  width: 120px;
+  height: 39px;
+  background: #D38CAD;
+  margin-left: 256px;
+  margin-top: 10px;
+  font-size: 18px;
+  color: #fff;
+  outline: none;
+  border-width: 0px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.batchDeleteButton button  {
+  background: #FDC38A;
+}
+.carAddWindows ul {
+  font-size: 20px;
+  color: #666;
+  margin-top: 79px;
+}
+.carAddWindows li {
+  float: left;
+  margin-bottom: 20px;
+}
+.newCarMsg input{
+  height: 25px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 20px;
+  width: 120px;
+}
+.newName {
+  margin-left: 70px;
+}
+.newCarNumber {
+  margin-left: 20px;
+}
+.newBrand,
+.newColor {
+  margin-left: 110px;
+}
+.newType {
+  margin-left: 40px;
 }
 </style>

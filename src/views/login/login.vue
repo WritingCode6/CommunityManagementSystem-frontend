@@ -221,7 +221,7 @@ a {
   width: 120px;
   height: 39px;
   background: #8A79AF;
-  margin-left: 250px;
+  margin-left: 256px;
   margin-top: 10px;
   font-size: 18px;
   color: #fff;
