@@ -3,10 +3,10 @@
     <div class="repairProcessRead" v-show="repairProcessRead">
       <ul>
         <li class="repairProcess">
-          <span>报修流程</span>
+          <span class="repair_word">报修流程</span>
         </li>
         <li class="repairForm">
-          <a href @click.prevent="toRepairFormRead">报修单</a>
+          <a href @click.prevent="toRepairFormRead" class="repair_href">报修单</a>
         </li>
       </ul>
       <div class="content">
@@ -33,21 +33,63 @@
     <div class="repairFormRead" v-show="repairFormRead">
       <ul>
         <li class="repairProcess">
-          <a href="" @click.prevent="torepairProcessRead">报修流程</a>
+          <a href="" @click.prevent="torepairProcessRead" class="repair_href">报修流程</a>
         </li>
         <li class="repairForm">
-          <span>报修单</span>
+          <span class="repair_word">报修单</span>
         </li>
       </ul>
       <div class="content">
-        <!-- 报修单内容 -->
+        <div class="function_box">
+          <div class="search_box1">
+            <el-input
+                    v-model="name"
+                    class="search_input"
+                    placeholder="请输入住户姓名"></el-input>
+            <el-button type="primary">搜索</el-button>
+          </div>
+          <div class="add_form">
+            <el-button type="primary" class="add_button">新增报修单</el-button>
+          </div>
+        </div>
+        <div class="form_table">
+          <el-table
+                  :data="formData"
+                  style="width: 100%"
+                  highlight-current-row>
+            <!-- 设置min-width来自适应宽度 -->
+            <el-table-column prop="id" label="单号" min-width="10%"></el-table-column>
+            <el-table-column prop="facility" label="设施" min-width="15%"></el-table-column>
+            <el-table-column prop="place" label="所在地" min-width="15%"></el-table-column>
+            <el-table-column prop="isReceived" label="状态" min-width="12%"></el-table-column>
+            <el-table-column prop="createTime" label="创建时间" min-width="18%"></el-table-column>
+            <el-table-column label="操作" min-width="15%">
+              <a href>
+                <span class="operation">修改</span>
+              </a>
+              <a href>
+                <span class="operation">查看详情</span>
+              </a>
+            </el-table-column>
+          </el-table>
+          <div class="page_block">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-size="pageSize"
+                    :total="total"
+                    layout="prev, pager, next, total">
+            </el-pagination>
+          </div>
+        </div>
       </div>
     </div>
     <div class="modifyProcessWindows" v-show="modifyProcess">
       <div class="modifyProcessBox">
         <h4>修改报修流程</h4>
         <div class="back">
-          <a href @click.prevent="closeModifyProcess">
+          <a href @click.prevent="closeModifyProcess" class="modify_href">
             <img src="../../assets/image/icon/icon_back.png" alt />
           </a>
         </div>
@@ -89,7 +131,68 @@ export default {
       msg6:
         "5、 遇紧急情况涉及公共安全隐患的，可直接拨打紧急维修电话13222227356联系报修。",
       msg7:
-        "6、 报修单填写维修项目属人为故意损坏的，必须由损坏人员赔付后方可维修。"
+        "6、 报修单填写维修项目属人为故意损坏的，必须由损坏人员赔付后方可维修。",
+      formData: [
+        {
+          id: 1,
+          facility: '水管',
+          place: '走廊',
+          isReceived: '已处理',
+          createTime: '2020-20-20'
+        },
+        {
+          id: 2,
+          facility: '水管',
+          place: '房屋',
+          isReceived: '未处理',
+          createTime: '2020-20-20'
+        },
+        {
+          id: 3,
+          facility: '水管',
+          place: '房屋',
+          isReceived: '未处理',
+          createTime: '2020-20-20'
+        },
+        {
+          id: 4,
+          facility: '水管',
+          place: '房屋',
+          isReceived: '未处理',
+          createTime: '2020-20-20'
+        },
+        {
+          id: 5,
+          facility: '水管',
+          place: '房屋',
+          isReceived: '未处理',
+          createTime: '2020-20-20'
+        },
+        {
+          id: 6,
+          facility: '水管',
+          place: '房屋',
+          isReceived: '未处理',
+          createTime: '2020-20-20'
+        },
+        {
+          id: 7,
+          facility: '水管',
+          place: '房屋',
+          isReceived: '未处理',
+          createTime: '2020-20-20'
+        },
+        {
+          id: 8,
+          facility: '水管',
+          place: '房屋',
+          isReceived: '未处理',
+          createTime: '2020-20-20'
+        }
+      ],
+      pageSize: 10,
+      total: 100,
+      currentPage: 1
     };
   },
   methods: {
@@ -144,8 +247,11 @@ export default {
 li {
   float: left;
 }
-span,
-a {
+/*span,
+a,*/
+.modify_href,
+.repair_word,
+.repair_href {
   display: block;
   width: 90px;
   height: 36px;
@@ -165,9 +271,9 @@ a:hover {
 }
 .repairProcessRead .content {
   margin-top: -1px;
-  width: 68%;
+  width: 75%;
   /*width: 850px;*/
-  height: 550px;
+  height: 590px;
   border: 1px solid #bcbcbc;
   overflow-y: scroll;
 }
@@ -188,7 +294,7 @@ p {
 .repairPicture {
   float: left;
   margin-top: -550px;
-  margin-left: 70%;
+  margin-left: 77%;
 }
 h4 {
   font-size: 24px;
@@ -203,7 +309,7 @@ h4::before {
   background: #8a79af;
   position: absolute;
   /*left: 900px;*/
-  left: 70%;
+  left: 77%;
   z-index: 1;
 }
 .option h4::before {
@@ -300,12 +406,54 @@ h4::before {
   border-radius: 20px;
   cursor: pointer;
 }
+
+/*fxy*/
 .repairFormRead .content{
   margin-top: -1px;
-/*  min-width: 1000px;
-  max-width: 1200px;*/
-  width: 95%;
-  height: 550px;
+  width: 100%;
+  height: 590px;
   border: 1px solid #bcbcbc;
+}
+.function_box {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+.search_box1 {
+  line-height: 50px;
+}
+.search_input {
+  width: 450px;
+ /* border: 1px rgba(0, 0, 0, 0.5) solid;*/
+  border-radius: 5px;
+}
+.el-button--primary {
+  width: 130px;
+  background: #8a79af;
+  border-color: #8a79af;
+  margin-left: 30px;
+  position: relative;
+  z-index: 1;
+}
+.add_button {
+  background-color: #d38cae;
+  width: 240px;
+  height: 50px;
+  font-size: 20px;
+  line-height: 20px;
+  border-color: #d38cae;
+  border-radius: 10px;
+}
+.form_table {
+  margin: 20px 0 0 40px;
+  width: 93%;
+}
+.operation {
+  display: inline-block;
+  margin-right: 15px;
+}
+.page_block {
+  float: right;
+  margin-top: 20px;
 }
 </style>

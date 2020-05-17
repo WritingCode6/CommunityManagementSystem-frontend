@@ -330,15 +330,6 @@
       }
     },
     methods: {
-      //实现分页，未写
-      pagination() {
-        /*this.total = this.userData.length;
-        if(this.userData.length > this.pageSize) {
-          let totalData = this.userData;
-          let data = this.userData.slice(0,this.pageSize);
-          this.userData = data;
-        }*/
-      },
       handleSizeChange(val) {
         this.pageSize = val;
         console.log(`每页 ${val} 条`);
@@ -431,7 +422,7 @@ h3::before {
 }
 .search_input {
   width: 450px;
-  border: 1px rgba(0, 0, 0, 0.5) solid;
+  /*border: 1px rgba(0, 0, 0, 0.5) solid;*/
   border-radius: 5px;
 }
 .el-button--primary {
@@ -621,7 +612,7 @@ h5 {
 .line1,
 .line2 {
   width: 94%;
-  height: 0.8px;
+  height: 1px;
   background: #666;
   margin-left: 18px;
 }

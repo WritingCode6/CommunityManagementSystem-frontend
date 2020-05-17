@@ -351,59 +351,6 @@ export default {
   background-position: 18%;
   color: #fff;
 }
-/*.personal .router-link-exact-active-class {
-  background: url("../assets/image/icon/icon_personal_selected.png") no-repeat #9b8fca;
-  background-position: 18%;
-  color: #fff;
-}
-.user .router-link-exact-active {
-  background: url("../assets/image/icon/icon_user_selected.png") no-repeat;
-  background-position: 18%;
-  color: #fff;
-}
-.parking .router-link-exact-active {
-  background: url("../assets/image/icon/icon_parking_selected.png") no-repeat;
-  background-position: 18%;
-  color: #fff;
-}
-.staff .router-link-exact-active {
-  background: url("../assets/image/icon/icon_staff_selected.png") no-repeat;
-  background-position: 18%;
-  color: #fff;
-}
-.visitor .router-link-exact-active {
-  background: url("../assets/image/icon/icon_visitor_selected.png") no-repeat;
-  background-position: 18%;
-  color: #fff;
-}
-.notice .router-link-exact-active {
-  background: url("../assets/image/icon/icon_notice_selected.png") no-repeat;
-  background-position: 18%;
-  color: #fff;
-}
-.activity .router-link-exact-active {
-  background: url("../assets/image/icon/icon_activity_selected.png") no-repeat;
-  background-position: 18%;
-  color: #fff;
-}
-.feedback .router-link-exact-active {
-  background: url("../assets/image/icon/icon_feedback_selected.png") no-repeat;
-  background-position: 18%;
-  color: #fff;
-}
-.property .router-link-exact-active {
-  background: url("../assets/image/icon/icon_property_selected.png") no-repeat;
-  background-position: 18%;
-  color: #fff;
-}*/
-/* 原定子组件展示样式 */
-/*.right_part {
-   !*导航栏的宽度是165px，另外再加margin-left: 10px *!
-  width: calc(99% - 175px);
-   !*165+10 *!
-  margin: 10px 10px 0 175px;
-  overflow-y: auto;
-}*/
 /* 更换布局后的子组件展示样式 */
 .right_part {
   width: calc(99% - 190px);
