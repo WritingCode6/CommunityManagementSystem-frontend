@@ -54,15 +54,38 @@
           </a>
         </div>
         <div class="addContentBox">
-          <input type="text" class="title" placeholder="请输入通知标题">
-          <textarea type="text" class="addContent" placeholder="请输入通知内容"></textarea>
+          <el-form 
+                ref="form" 
+                :model="noticeContent" 
+                :rules="formRules"
+                :show-message="false">
+            <el-form-item class="title" prop="title">
+              <el-input
+                  type="text" 
+                  class="input" 
+                  placeholder="请输入通知标题"
+                  style="font-size:20px"
+                  v-model="noticeContent.title">
+              </el-input>
+            </el-form-item>
+            <el-form-item class="addContent" prop="content">
+              <el-input
+                  type="textarea" 
+                  placeholder="请输入通知内容"
+                  style="font-size:18px"
+                  resize="none" 
+                  :rows="16"
+                  v-model="noticeContent.content">
+              </el-input>
+            </el-form-item>
+          </el-form>
         </div>
         <div class="button">
           <button type="button" value="确定发布" @click="saveAdd">确定发布</button>
         </div>
       </div>
     </div>
-    <div class="modifyWindows" v-show="modifyWindows">
+    <div class="modifyWindows" v-show="modifyWindows" >
       <div class="modifyBox">
         <h4>修改社区通知</h4>
         <div class="back">
@@ -71,8 +94,31 @@
           </a>
         </div>
         <div class="modifyContentBox">
-          <input type="text" class="title" v-model="noticeMsg.title">
-          <textarea type="text" class="modifyContent" v-model="noticeMsg.msg"></textarea>
+          <el-form 
+                ref="form" 
+                :model="noticeMsg" 
+                :rules="formRules"
+                :show-message="false">
+            <el-form-item class="title" prop="title">
+              <el-input
+                  type="text" 
+                  class="input" 
+                  placeholder="请输入通知标题"
+                  style="font-size:20px"
+                  v-model="noticeMsg.title">
+              </el-input>
+            </el-form-item>
+            <el-form-item class="addContent" prop="content">
+              <el-input
+                  type="textarea" 
+                  placeholder="请输入通知内容"
+                  style="font-size:18px"
+                  resize="none" 
+                  :rows="16"
+                  v-model="noticeMsg.content">
+              </el-input>
+            </el-form-item>
+          </el-form>
         </div>
         <div class="button">
           <button type="button" value="保存修改" @click="saveModify">保存修改</button>
@@ -84,7 +130,7 @@
         <h4>查看社区通知</h4>
         <div class="checkContentBox">
           <span>{{ noticeMsg.title }}</span>
-          <div>{{ noticeMsg.msg }}</div>
+          <div>{{ noticeMsg.content }}</div>
           <div>大概是这样 我懒得分段写了T T</div>
         </div>
         <div class="button">
@@ -156,9 +202,14 @@
           }
         ],
 
+        noticeContent:{
+          title:"",
+          content:"",
+        },
+
         noticeMsg:{
           title:"关于举报群租房的通知",
-          msg:"各位居民：\n"+
+          content:"各位居民：\n"+
               "为进一步依法规范地区房屋租赁管理，加强对“群租房”的依法治理，"+
               "保障出租房屋使用安全，消除各种安全隐患，落实人口调控措施，"+
               "谐稳定，为居民创造良好的居住环境，大屯街道将开展"+
@@ -171,6 +222,15 @@
               "2、 改变房屋内部结构分割出租，按床位等方式变相分割出租；\n"+
               "3、 将厨房、卫生间、阳台等作为卧室出租供人居住。\n"+
               "举报电话：欧陆经典社区流管站 84850529"
+        },
+
+        formRules:{
+          title:[
+            { required: true, trigger: "blur" }
+          ],
+          content:[
+            { required: true, trigger: "blur" }
+          ]
         },
 
         pageSize: 4,
@@ -387,6 +447,7 @@
   position: absolute;
   left: 900px;
   top: 24px;
+  z-index: 99;
 }
 .deleteBox .back {
   position: absolute;
@@ -414,6 +475,8 @@
 .modifyBox .title,
 .checkBox span {
   display: block;
+  width: 300px;
+  height: 25px;
   margin: 30px auto;
   font-size: 24px;
   text-align: center;
@@ -429,13 +492,11 @@
   left: 5%;
   z-index: 2;
 }
-.addBox textarea,
-.modifyBox textarea{
+.addBox .addContent,
+.modifyBox .modifyContent{
   width: 850px;
-  height: 80%;
-  margin: 0 33px;
+  margin: 10px 33px;
   overflow-y: scroll;
-  font-size: 20px;
   text-indent: 40px;
   font-size: 20px;
   letter-spacing: 2px;
