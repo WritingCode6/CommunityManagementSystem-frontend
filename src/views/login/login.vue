@@ -32,7 +32,7 @@
           </li>
         </ul>
         <el-form-item class="button">
-          <el-button type="primary" @click="login">登录</el-button>
+          <el-button type="primary" @click="toLogin">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import {login} from "../../api/login";
+
 export default {
   data() {
     return {
@@ -98,8 +100,16 @@ export default {
       }
     },
     //登录接口
-    login() {
-      console.log('登录');
+    toLogin() {
+      let userName = this.userInfo.userName;
+      let password = this.userInfo.password;
+      login({ userName, password })
+      .then(res => {
+        console.log(res);
+        console.log('登录');
+      }).catch(err => {
+        console.log(err);
+      })
     },
     //打开提示密码错误窗口
     openPasswordWrong(){

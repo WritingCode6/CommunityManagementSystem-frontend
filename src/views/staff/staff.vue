@@ -19,7 +19,7 @@
               </el-date-picker>
               <button class="search_btn">搜索</button>
               <div class="add_staff">
-                <el-button type="primary" class="add_button1" @click="addDutyInfo">新增值班</el-button>
+                <el-button type="primary" class="add_button1" @click="addDutyInfo">新增值班信息</el-button>
                 <el-button type="primary" class="add_button2" @click="addStaffInfo">新增工作人员用户</el-button>
               </div>
             </div>
@@ -28,24 +28,28 @@
         <el-table
                 :data="staffData"
                 style="width: 100%"
+                :default-sort = "{prop: 'employee_id', order: 'ascending'}"
+                ref="singleTable"
+                @select='getStaffInfo(row)'
                 highlight-current-row>
           <!-- 设置min-width来自适应宽度 -->
-          <el-table-column prop="employee_id" label="工号" min-width="10%"></el-table-column>
+          <el-table-column prop="employee_id" label="工号" min-width="10%" sortable></el-table-column>
           <el-table-column prop="name" label="姓名" min-width="15%"></el-table-column>
           <el-table-column prop="type" label="值班类型" min-width="15%"></el-table-column>
           <el-table-column prop="place" label="值班区域" min-width="15%"></el-table-column>
           <el-table-column prop="date" label="值班时间" min-width="20%"></el-table-column>
           <el-table-column label="操作" min-width="25%">
-            <!-- 修改未做 -->
-            <!--<a href>
-              <span class="operation" @click.prevent="openModify">修改</span>
-            </a>-->
-            <a href>
-              <span class="operation">删除</span>
-            </a>
-            <a href>
-              <span class="operation">查看详情</span>
-            </a>
+            <span  slot-scope="scope">
+              <a href>
+                <span class="operation" @click.prevent="delDutyInfo">删除值班</span>
+              </a>
+              <a href>
+                <span class="operation" @click.prevent="delStaffInfo">删除用户</span>
+              </a>
+              <a href>
+                <span class="operation" @click.prevent="getStaffInfo(scope.$index, scope.row)">查看详情</span>
+              </a>
+            </span>
           </el-table-column>
         </el-table>
         <div class="page_block">
@@ -177,10 +181,80 @@
         </div>
       </div>
     </div>
+    <div class="delWindows" v-show="delWindows1">
+      <div class="deleteBox">
+        <h4>删除值班信息</h4>
+        <div class="back" @click="closeDelDuty">
+            <img src="../../assets/image/icon/icon_back.png" alt />
+        </div>
+        <div class="deleteContent">确定要删除该人员的值班信息吗？</div>
+        <ul>
+          <li class="yes">
+            <button type="button" @click="delDutyPost">是</button>
+          </li>
+          <li class="no">
+            <button type="button" @click="closeDelDuty">否</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="delWindows" v-show="delWindows2">
+      <div class="deleteBox">
+        <h4>删除工作人员账户信息</h4>
+        <div class="back" @click="closeDelStaff">
+          <img src="../../assets/image/icon/icon_back.png" alt />
+        </div>
+        <div class="deleteContent">确定要删除该人员的账号信息吗？</div>
+        <ul>
+          <li class="yes">
+            <button type="button" @click="delStaffPost">是</button>
+          </li>
+          <li class="no">
+            <button type="button" @click="closeDelStaff">否</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="checkWindows" v-show="checkWindows">
+      <div class="check_staff">
+        <h4>查看工作人员信息</h4>
+        <div class="back">
+          <a href @click.prevent="closeStaffInfo">
+            <img src="../../assets/image/icon/icon_back.png" alt />
+          </a>
+        </div>
+        <div class="check_content">
+          <h5>个人资料</h5>
+          <div class="check_form">
+            <div class="check_form1">
+              <span class="check_word">姓名：</span>
+              <span class="check_info">{{ staffDetail.name }}</span>
+            </div>
+            <div class="check_form1">
+              <span class="check_word">工号：</span>
+              <span class="check_info">{{ staffDetail.serviceId }}</span>
+            </div>
+            <div class="check_form1">
+              <span class="check_word">性别：</span>
+              <span class="check_info">{{ staffDetail.sex }}</span>
+            </div>
+            <div class="check_form2">
+              <span class="check_word">手机号：</span>
+              <span class="check_info">{{ staffDetail.phone }}</span>
+            </div>
+          </div>
+          <div class="backButton">
+            <button type="button" @click="closeStaffInfo">返回</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+  import {sexChange} from "../../utils/sexUtil";
+
   export default {
     name: "staff",
     data() {
@@ -281,9 +355,19 @@
           userName: '',
           password: ''
         },
+        //工作人员详细信息
+        staffDetail: {
+          name: '菊花',
+          serviceId: '001',
+          sex: 1,
+          phone: '19909090909'
+        },
         addDuty: false,
         addWindows1: false,
-        addWindows2: false
+        addWindows2: false,
+        delWindows1: false,
+        delWindows2: false,
+        checkWindows: false
       }
     },
     methods: {
@@ -311,6 +395,42 @@
       addStaffPost() {
         this.addWindows2 = false;
       },
+      //打开删除值班信息窗口
+      delDutyInfo() {
+        this.delWindows1 = true;
+        console.log(this.delWindows1)
+      },
+      //关闭删除值班信息窗口
+      closeDelDuty() {
+        this.delWindows1 = false;
+      },
+      //删除值班信息
+      delDutyPost() {
+        this.delWindows1 = false;
+      },
+      //打开删除工作人员信息窗口
+      delStaffInfo() {
+        this.delWindows2 = true;
+      },
+      //关闭删除工作人员信息窗口
+      closeDelStaff() {
+        this.delWindows2 = false;
+      },
+      //删除工作人员账号信息
+      delStaffPost() {
+        this.delWindow2 = false;
+      },
+      //打开查看工作人员详情信息窗口
+      getStaffInfo(index, row) {
+        console.log(index, row);
+        this.checkWindows = true;
+        this.staffDetail.sex = sexChange(this.staffDetail.sex);
+
+      },
+      //关闭查看工作人员详情信息窗口
+      closeStaffInfo() {
+        this.checkWindows = false;
+      }
     }
   }
 </script>
@@ -399,8 +519,10 @@ h3::before {
   float: right;
   margin-top: 20px;
 }
-/*弹出增加框样式*/
-.addWindows {
+/*弹出框样式*/
+.addWindows,
+.delWindows,
+.checkWindows {
   height: 100%;
   width: 100%;
   left: 0;
@@ -427,8 +549,25 @@ h3::before {
   font-size: 20px;
   color: #666;
 }
+.deleteBox {
+  width: 634px;
+  height: 234px;
+  background: #fff;
+  margin: 177px auto;
+  position: relative;
+}
+.check_staff {
+  width: 632px;
+  height: 320px;
+  background: #fff;
+  margin: 200px auto;
+  position: relative;
+  font-size: 20px;
+  color: #666;
+}
 .add_duty h4,
-.add_staff_info h4 {
+.add_staff_info h4,
+.check_staff h4 {
   font-size: 24px;
   font-weight: bold;
   padding-top: 24px;
@@ -437,7 +576,8 @@ h3::before {
   color: #000;
 }
 .add_duty h4::before,
-.add_staff_info h4::before {
+.add_staff_info h4::before,
+.check_staff h4::before {
   content: "";
   width: 7px;
   height: 26px;
@@ -447,7 +587,8 @@ h3::before {
   z-index: 1;
 }
 .add_duty h4::after,
-.add_staff_info h4::after {
+.add_staff_info h4::after,
+.check_staff h4::after{
   content: "";
   width: 94%;
   height: 1px;
@@ -458,15 +599,51 @@ h3::before {
   z-index: 2;
 }
 .add_duty .back,
-.add_staff_info .back {
+.add_staff_info .back,
+.check_staff .back {
   position: absolute;
   left: 580px;
   top: 20px;
 }
 .duty_content,
-.staff_content {
+.staff_content,
+.check_content {
   display: flex;
   flex-direction: column;
+}
+.deleteBox {
+  width: 634px;
+  height: 234px;
+  background: #fff;
+  margin: 177px auto;
+  position: relative;
+}
+.deleteBox h4 {
+  font-size: 24px;
+  font-weight: bold;
+  padding-top: 24px;
+  margin-left: 50px;
+  display: inline-block;
+}
+.deleteBox h4::before {
+  content: "";
+  width: 7px;
+  height: 26px;
+  background: #8a79af;
+  position: absolute;
+  left: 22px;
+  z-index: 1;
+}
+.deleteBox .back {
+  position: absolute;
+  left: 580px;
+  top: 24px;
+}
+.deleteContent {
+  width: 300px;
+  height: 26px;
+  margin: 80px 170px;
+  font-size: 20px;
 }
 h5 {
   font-size: 20px;
@@ -476,14 +653,27 @@ h5 {
   color: #000;
 }
 .duty_form,
-.staff_form {
+.staff_form,
+.check_form {
   display: flex;
   justify-content: space-around;
   margin-top: 20px;
 }
 .staff_form {
   position: relative;
-  right: 50px;
+  right: 38px;
+}
+.check_form {
+  flex-wrap: wrap;
+}
+.check_form1,
+.check_form2 {
+  width: 220px;
+  margin: 15px 0 25px 0;
+}
+.check_form2 {
+  position: relative;
+  right: 20px;
 }
 .duty_word,
 .staff_word {
@@ -508,6 +698,9 @@ h5 {
 .staff_text {
   width: 505px;
 }
+.check_info {
+  color: #000;
+}
 .line1 {
   width: 94%;
   height: 1px;
@@ -516,6 +709,7 @@ h5 {
   margin-left: 18px;
 }
 .saveButton,
+.backButton,
 .saveButton_staff {
   margin-top: 45px;
   width: 100%;
@@ -525,8 +719,12 @@ h5 {
 .saveButton_staff {
   margin-top: 30px;
 }
+.backButton {
+  margin-top: 25px;
+}
 .add_duty button,
-.add_staff_info button {
+.add_staff_info button,
+.check_staff button {
   float: left;
   width: 120px;
   height: 39px;
@@ -537,6 +735,39 @@ h5 {
   color: #fff;
   outline: none;
   border-width: 0px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.deleteBox ul {
+  width: 100%;
+  height: 58px;
+  background: #bcbcbc;
+}
+.deleteBox .yes button {
+  float: left;
+  width: 120px;
+  height: 39px;
+  background: #8a79af;
+  margin-left: 128px;
+  margin-top: 9px;
+  font-size: 18px;
+  color: #fff;
+  outline: none;
+  border-width: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.deleteBox .no button {
+  float: right;
+  width: 120px;
+  height: 39px;
+  background: #fff;
+  margin-right: 166px;
+  margin-top: 9px;
+  font-size: 18px;
+  color: #000;
+  outline: none;
+  border-width: 0;
   border-radius: 10px;
   cursor: pointer;
 }
