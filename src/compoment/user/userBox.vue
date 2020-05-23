@@ -544,7 +544,7 @@ h3::before {
   width: 632px;
   height: 500px;
   background: #fff;
-  margin: 100px auto;
+  margin: 8% auto;
   position: relative;
   font-size: 20px;
   color: #666;
