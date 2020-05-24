@@ -37,6 +37,14 @@ Vue.use(VueRouter)
           }
         },
         {
+          path: 'personalUser',
+          name: 'PersonalUser',
+          component: () => import('../views/personal/personalUser'),
+          meta: {
+            needLogin: true
+          }
+        },
+        {
           path: 'user',
           name: 'User',
           component: () => import('../views/user/user.vue'),
@@ -63,6 +71,14 @@ Vue.use(VueRouter)
           }
         },
         {
+          path: 'parkingUser',
+          name: 'ParkingUser',
+          component: () => import('../views/parking/parkingUser.vue'),
+          meta: {
+            needLogin: true
+          }
+        },
+        {
           path: 'staff',
           name: 'Staff',
           component: () => import('../views/staff/staff.vue'),
@@ -79,6 +95,14 @@ Vue.use(VueRouter)
           path: 'repair',
           name: 'Repair',
           component: () => import('../views/repair/repair.vue'),
+          meta: {
+            needLogin: true
+          }
+        },
+        {
+          path: 'repairUser',
+          name: 'RepairUser',
+          component: () => import('../views/repair/repairUser.vue'),
           meta: {
             needLogin: true
           }

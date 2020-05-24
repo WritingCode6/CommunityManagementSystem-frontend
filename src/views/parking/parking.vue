@@ -30,10 +30,10 @@
           </el-table>
           <div class="page_block">
             <el-pagination
-              :current-page="currentPage1"
-              :page-size="pageSize1"
-              :total="total1"
-              layout="prev, pager, next, total"
+                    :current-page="currentPage1"
+                    :page-size="pageSize1"
+                    :total="total1"
+                    layout="prev, pager, next, total"
             ></el-pagination>
           </div>
         </div>
@@ -90,10 +90,10 @@
           </el-table>
           <div class="page_block">
             <el-pagination
-              :current-page="currentPage2"
-              :page-size="pageSize2"
-              :total="total2"
-              layout="prev, pager, next, total"
+                    :current-page="currentPage2"
+                    :page-size="pageSize2"
+                    :total="total2"
+                    layout="prev, pager, next, total"
             ></el-pagination>
           </div>
         </div>
@@ -726,7 +726,7 @@ h4 {
 .carAddButton,
 .carModifyButton,
 .carCheckButton {
-  margin-top: 266px;
+  margin-top: 268px;
 }
 .batchAddButton button,
 .batchDeleteButton button,

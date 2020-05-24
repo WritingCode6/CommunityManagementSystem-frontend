@@ -26,27 +26,45 @@
     <div class="content">
       <div class="nav">
         <ul class="list">
-          <li>
+          <li v-if="role">
             <router-link to="/index/personal" class="personal">
               <span class="personal_word">个人中心</span>
               <span class="arrows">></span>
             </router-link>
           </li>
-          <li>
+          <li v-else>
+            <router-link to="/index/personalUser" class="personal">
+              <span class="personal_word">个人中心</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li v-if="role">
             <router-link to="/index/user" class="user">
               <span class="user_word">住户相关</span>
               <span class="arrows">></span>
             </router-link>
           </li>
-          <li>
+          <li v-if="role">
             <router-link to="/index/parking" class="parking">
               <span class="parking_word">车位管理</span>
               <span class="arrows">></span>
             </router-link>
           </li>
-          <li>
+          <li v-else>
+            <router-link to="/index/parkingUser" class="parking">
+              <span class="parking_word">车位查询</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li v-if="role">
             <router-link to="/index/staff" class="staff">
               <span class="staff_word">人员管理</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li v-else>
+            <router-link to="/index/staff" class="staff">
+              <span class="staff_word">人员信息</span>
               <span class="arrows">></span>
             </router-link>
           </li>
@@ -56,8 +74,14 @@
               <span class="arrows">></span>
             </router-link>
           </li>-->
-          <li>
+          <li v-if="role">
             <router-link to="/index/repair" class="repair">
+              <span class="repair_word">物业报修</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
+          <li v-else>
+            <router-link to="/index/repairUser" class="repair">
               <span class="repair_word">物业报修</span>
               <span class="arrows">></span>
             </router-link>
@@ -117,6 +141,8 @@
 </template>
 
 <script>
+/*import {roleJudge} from "../utils/roleUtil";*/
+
 export default {
   name: "index",
   data() {
@@ -124,7 +150,9 @@ export default {
       communityLocation: '东莞 · 碧桂园',
       //渲染用户名，待做
       userName: '李华华',
-      exitWindows: false
+      exitWindows: false,
+      //true是管理员，false是住户
+      role: false
     };
   },
   methods: {
@@ -142,6 +170,9 @@ export default {
       this.$router.push('/login');
       this.$message.success("退出成功！")
     }
+  },
+  beforeMount() {
+    /*this.role = roleJudge();*/
   }
 };
 </script>
@@ -211,9 +242,8 @@ export default {
 }
 .list {
   margin-top: 30px;
-  padding-bottom: 65px;
-  /*padding-bottom: 50px;*/
-  /*padding-bottom: 30%;*/
+  /*padding-bottom: 65px;*/
+  padding-bottom: 124px;
 }
 .list span {
   line-height: 65px;
