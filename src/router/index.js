@@ -6,66 +6,124 @@ Vue.use(VueRouter)
   const routes = [
     {
       path: "/",
-      redirect: '/index',
+      redirect: '/index/personal',
+      meta: {
+        needLogin: true
+      }
     },
     {
       path: '/login',
       name: 'Login',
-      component: () => import('../views/login/login.vue')
+      component: () => import('../views/login/login.vue'),
+      meta: {
+        needLogin: false
+      }
     },
     {
       path: '/index',
       name: 'index',
+      redirect: '/index/personal',
+      meta: {
+        needLogin: true
+      },
       component: () => import('../views/index.vue'),
-      children : [{
+      children : [
+        {
           path: 'personal',
           name: 'Personal',
-          component: () => import('../views/personal/personal.vue')
-        }, {
+          component: () => import('../views/personal/personal.vue'),
+          meta: {
+            needLogin: true
+          }
+        },
+        {
           path: 'user',
           name: 'User',
           component: () => import('../views/user/user.vue'),
-          children : [{
-            path: 'userInfo',
-            name: 'UserInfo',
-            component: () => import('../compoment/user/userInfo')
-          }]
+          meta: {
+            needLogin: true
+          },
+          children : [
+            {
+              path: 'userInfo',
+              name: 'UserInfo',
+              component: () => import('../compoment/user/userInfo'),
+              meta: {
+                needLogin: true
+              }
+            }
+          ]
         },
         {
           path: 'parking',
           name: 'Parking',
-          component: () => import('../views/parking/parking.vue')
-        }, {
+          component: () => import('../views/parking/parking.vue'),
+          meta: {
+            needLogin: true
+          }
+        },
+        {
           path: 'staff',
           name: 'Staff',
-          component: () => import('../views/staff/staff.vue')
-        }, {
+          component: () => import('../views/staff/staff.vue'),
+          meta: {
+            needLogin: true
+          }
+        },
+        /*{
           path: 'visitor',
           name: 'Visitor',
           component: () => import('../views/visitor/visitor.vue')
-        },
+        }, */
         {
           path: 'repair',
           name: 'Repair',
-          component: () => import('../views/repair/repair.vue')
-        },{
+          component: () => import('../views/repair/repair.vue'),
+          meta: {
+            needLogin: true
+          }
+        },
+        {
           path: 'notice',
           name: 'Notice',
-          component: () => import('../views/notice/notice.vue')
-        }, {
+          component: () => import('../views/notice/notice.vue'),
+          meta: {
+            needLogin: true
+          }
+        },
+        {
           path: 'activity',
           name: 'Activity',
-          component: () => import('../views/activity/activity.vue')
-        }, {
+          component: () => import('../views/activity/activity.vue'),
+          meta: {
+            needLogin: true
+          }
+        },
+        {
           path: 'feedback',
           name: 'Feedback',
-          component: () => import('../views/feedback/feedback.vue')
-        },{
+          component: () => import('../views/feedback/feedback.vue'),
+          meta: {
+            needLogin: true
+          }
+        },
+        {
           path: 'property',
           name: 'Property',
-          component: () => import('../views/property/property.vue')
-        }]
+          component: () => import('../views/property/property.vue'),
+          meta: {
+            needLogin: true
+          }
+        }
+      ]
     },
+    {
+      path : '*',
+      redirect: '/index',
+      meta: {
+        needLogin: true
+      }
+    }
 ]
 
 const router = new VueRouter({
@@ -73,5 +131,25 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+//在每个路由上判断是否需要登录，token是否过期
+router.beforeEach(function(to, from, next) {
+  if (to.meta.needLogin) {
+    //页面是否登录
+    if (localStorage.getItem("token")) {
+      //本地存储中是否有token数据
+      next(); //表示已经登录
+    } else {
+      //next可以传递一个路由对象作为参数 表示需要跳转到的页面
+      next({
+        path: '/login'
+      });
+      alert('请登录后再访问主页')
+    }
+  } else {
+    //表示不需要登录
+    next(); //继续往后走
+  }
+});
 
 export default router

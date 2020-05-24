@@ -105,7 +105,7 @@
         <div class="exitContent">确定要退出吗？</div>
         <ul>
           <li class="yes">
-            <button type="button">是</button>
+            <button type="button" @click="exit">是</button>
           </li>
           <li class="no">
             <button type="button" @click="closeExit">否</button>
@@ -122,6 +122,7 @@ export default {
   data() {
     return {
       communityLocation: '东莞 · 碧桂园',
+      //渲染用户名，待做
       userName: '李华华',
       exitWindows: false
     };
@@ -131,10 +132,16 @@ export default {
     openExit(){
       this.exitWindows = true;
     },
+    //关闭退出账号窗口
     closeExit(){
       this.exitWindows = false;
     },
-
+    //退出账号
+    exit() {
+      localStorage.removeItem("token");
+      this.$router.push('/login');
+      this.$message.success("退出成功！")
+    }
   }
 };
 </script>
