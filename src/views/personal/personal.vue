@@ -3,79 +3,79 @@
       <div class="info">
         <div v-show="onlyReadInfo">
           <h3>个人资料</h3>
-          <el-form :model="userInfo" class="infoFrom">
+          <el-form class="infoFrom">
             <div class="form_left">
-              <el-form-item prop="userName" class="userName">
-                <label>用户名：</label>
-                <el-input v-model="userInfo.userName" class="input" readonly></el-input>
-              </el-form-item>
               <el-form-item prop="name" class="name">
-                <label>真实姓名：</label>
-                <el-input v-model="userInfo.name" class="input" readonly></el-input>
+                <label>姓名：</label>
+                <el-input v-model="userInfo[0].name" class="input" readonly></el-input>
+              </el-form-item>
+              <el-form-item prop="phone" class="phone">
+                <label>手机号：</label>
+                <el-input v-model="userInfo[0].phone" class="input" readonly></el-input>
               </el-form-item>
               <el-form-item prop="sex" class="sex">
                 <label>性别：</label>
-                <el-input v-model="userInfo.sex" class="select" readonly></el-input>
+                <el-input v-model="userInfo[0].sex" class="select" readonly></el-input>
               </el-form-item>
             </div>
             <div class="form_right">
-              <el-form-item prop="personalId" class="personalId">
+              <el-form-item prop="idNumber" class="idNumber">
                 <label>身份证号：</label>
-                <el-input v-model="userInfo.personalId" class="longInput input" readonly></el-input>
+                <el-input v-model="userInfo[0].idNumber" class="longInput input" readonly></el-input>
               </el-form-item>
-              <el-form-item prop="workId" class="workId">
+              <el-form-item prop="serviceId" class="serviceId">
                 <label>工作ID：</label>
-                <el-input v-model="userInfo.workId" class="input" readonly></el-input>
+                <el-input v-model="userInfo[0].serviceId" class="input" readonly></el-input>
               </el-form-item>
-              <el-form-item prop="location" class="location">
+              <el-form-item prop="address" class="address">
                 <label>地址：</label>
-                <el-input v-model="userInfo.location" class="longInput input" readonly></el-input>
+                <el-input v-model="userInfo[0].address" class="longInput input" readonly></el-input>
               </el-form-item>
             </div>
           </el-form>
           <div class="form_button">
             <el-button type="primary" @click="readToWriteInfo">修改</el-button>
-            <el-button type="primary">刷新</el-button>
+            <el-button type="primary" @click="getStaffInfo">刷新</el-button>
           </div>
         </div>
         <div v-show="onlyWriteInfo">
           <h3>个人资料</h3>
-          <el-form :model="userInfo" class="infoFrom">
+          <el-form class="infoFrom">
             <div class="form_left">
-              <el-form-item prop="userName" class="userName">
-                <label>用户名：</label>
-                <el-input v-model="userInfo.userName" class="input"></el-input>
-              </el-form-item>
               <el-form-item prop="name" class="name">
-                <label>真实姓名：</label>
-                <el-input v-model="userInfo.name" class="input"></el-input>
+                <label>姓名：</label>
+                <el-input v-model="userInfo[0].name" class="input" readonly></el-input>
+              </el-form-item>
+              <el-form-item prop="phone" class="phone">
+                <label>手机号：</label>
+                <el-input v-model="userInfo[0].phone" class="input"></el-input>
               </el-form-item>
               <el-form-item prop="sex" class="sex">
                 <label>性别：</label>
-                <el-select v-model="userInfo.sex" class="select">
+                <el-select v-model="userInfo[0].sex" class="select">
                   <el-option label="男" value="0"></el-option>
                   <el-option label="女" value="1"></el-option>
                 </el-select>
               </el-form-item>
             </div>
             <div class="form_right">
-              <el-form-item prop="personalId" class="personalId">
+              <el-form-item prop="idNumber" class="idNumber">
                 <label>身份证号：</label>
-                <el-input v-model="userInfo.personalId" class="longInput input"></el-input>
+                <el-input v-model="userInfo[0].idNumber" class="longInput input" readonly></el-input>
               </el-form-item>
-              <el-form-item prop="workId" class="workId">
+              <el-form-item prop="serviceId" class="serviceId">
                 <label>工作ID：</label>
-                <el-input v-model="userInfo.workId" class="input"></el-input>
+                <el-input v-model="userInfo[0].serviceId" class="input" readonly></el-input>
               </el-form-item>
-              <el-form-item prop="location" class="location">
+              <el-form-item prop="address" class="address">
                 <label>地址：</label>
-                <el-input v-model="userInfo.location" class="longInput input"></el-input>
+                <el-input v-model="userInfo[0].address" class="longInput input"></el-input>
               </el-form-item>
             </div>
           </el-form>
           <div class="form_button">
             <el-button type="primary" @click="writeToReadInfo">取消</el-button>
-            <el-button type="primary">保存</el-button>
+            <el-button type="primary" @click="updateStaffInfo">保存</el-button>
           </div>
         </div>
       </div>
@@ -127,7 +127,7 @@
           </el-form>
           <div class="form_button">
             <el-button type="primary" @click="writeToReadPwd">取消</el-button>
-            <el-button type="primary">保存</el-button>
+            <el-button type="primary" @click="updatePwd">保存</el-button>
           </div>
         </div>
       </div>
@@ -135,20 +135,28 @@
 </template>
 
 <script>
-import { sexChange } from "../../utils/sexUtil";
+  import {sexChange} from "../../utils/sexUtil";
 
 export default {
   name:"personal",
   data() {
     return {
-      userInfo: {
-        userName: "靓仔",
+      userInfo: [{
         name: "李华华",
+        phone: '12345678901',
         sex: 0,
-        personalId: "441900197609239999",
-        workId: "123443",
-        location: "广东省东莞市大岭山镇教育西路"
-      },
+        idNumber: "441900197609239999",
+        serviceId: "123443",
+        address: "广东省东莞市大岭山镇教育西路"
+      }],
+      /*userInfo: [{
+        name: "",
+        phone: '',
+        sex: '',
+        idNumber: "",
+        serviceId: "",
+        address: ""
+      }],*/
       passwordInfoRead: {
         oldPwd: '******',
         newPwd: '******',
@@ -170,6 +178,7 @@ export default {
     readToWriteInfo() {
       this.onlyReadInfo = false;
       this.onlyWriteInfo = true;
+      this.$message.warning("注意：部分信息不可修改");
     },
     //密码只读变为可修改
     readToWritePwd() {
@@ -180,16 +189,139 @@ export default {
     writeToReadInfo() {
       this.onlyReadInfo = true;
       this.onlyWriteInfo = false;
-      this.userInfo.sex = sexChange(this.userInfo.sex);
+      if(this.userInfo[0].sex === '0' || this.userInfo[0].sex === 0 || this.userInfo[0].sex === '1' || this.userInfo[0].sex === 1) {
+        this.userInfo[0].sex = sexChange(this.userInfo[0].sex);
+      }
     },
     //密码可修改变为只读
     writeToReadPwd() {
       this.onlyReadPwd = true;
       this.onlyWritePwd = false;
+    },
+    //比较旧密码是否正确，比较新密码和旧密码是否一致，比较两次新密码是否一样
+/*    correctPwd() {
+      let pwd = localStorage.getItem("pwd");
+      if(pwd === this.passwordInfoWrite.oldPwd) {
+        if(this.passwordInfoWrite.newPwd === this.passwordInfoWrite.againPwd) {
+          return 1;
+        }
+        else {
+          this.$message.warning("两次输入的新密码不一致，请重试！");
+          return 0;
+        }
+      }
+      else {
+        this.$message.warning("旧密码输入错误，请重试！");
+        return 0;
+      }
+    },*/
+    //字符串合理性判断
+    isValid(str) {
+      return /^[\u4e00-\u9fa5\w]{4,16}$/.test(str);
+    },
+    //新密码的合理性判断
+    pwdChange() {
+      let password = this.passwordInfoWrite.newPwd
+      if (password === '') {
+        this.$message.error('密码不得为空');
+      }
+      else if (password.length < 6 || password.length > 16) {
+        this.$message.warning('密码长度必须在6-16位');
+      }
+      else if (!this.isValid(password)) {
+        //排除特殊字符和空格
+        this.$message.warning('密码必须由中文字符、数字、字母和下划线组成');
+      }
+      else if (!isNaN(password)) {
+        //判断Pwd是不是一个值
+        this.$message.warning('密码不能为纯数字');
+      }
+    },
+    //获取管理员个人资料
+    getStaffInfo() {
+      this.$axios.get('/api/user/getStaffInfo',{
+        params: {
+          userId: localStorage.getItem("userId")
+        }
+      }).then((res) => {
+        /*let data = res.data;*/
+        if(res.code === 200) {
+          /*this.userInfo = data;*/
+        }
+        else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    },
+    //更新管理员个人资料
+    updateStaffInfo() {
+      this.$axios.post('/api/user/updateStaffInfo', {
+        id: localStorage.getItem("userId"),
+        phone: this.userInfo[0].phone,
+        sex: this.userInfo[0].sex,
+        address: this.userInfo[0].address
+      }).then((res) => {
+        if(res.code === 200) {
+          this.$message.success("修改成功！");
+        }
+        else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+      //信息可修改变为只读
+      this.writeToReadInfo();
+    },
+    //更新账户密码
+    updatePwd(){
+      let pwd = localStorage.getItem("pwd");
+      //比较旧密码是否正确
+      if(pwd === this.passwordInfoWrite.oldPwd) {
+        //比较新密码的合理性
+        this.pwdChange();
+        //比较新密码和旧密码是否一致
+        if(this.passwordInfoWrite.oldPwd === this.passwordInfoWrite.newPwd) {
+          this.$message.warning("新旧密码一致，请更换！");
+        }
+        else {
+          //比较两次新密码是否一样
+          if(this.passwordInfoWrite.newPwd === this.passwordInfoWrite.againPwd) {
+            this.$axios.post('/api/user/updateAccount',{
+              id: localStorage.getItem("userId"),
+              password: this.passwordInfoWrite.newPwd
+            }).then((res) => {
+              console.log(res);
+              if(res.code === 200) {
+                localStorage.setItem("pwd",this.passwordInfoWrite.newPwd)  //将password存入localStorage
+                this.$message.success('修改密码成功！');
+              }
+              else {
+                this.$message.error(res.message);
+              }
+            }).catch((err) => {
+              console.log(err);
+            })
+            //密码可修改变为只读
+            this.writeToReadPwd();
+          }
+          else {
+            this.$message.warning("两次输入的新密码不一致，请重试！");
+          }
+        }
+      }
+      else {
+        this.$message.warning("旧密码输入错误，请重试！");
+      }
+
     }
   },
   beforeMount() {
-    this.userInfo.sex = sexChange(this.userInfo.sex);
+    this.getStaffInfo();
+    //性别展示（数字变为文字）
+    this.userInfo[0].sex = sexChange(this.userInfo[0].sex);
   }
 };
 </script>

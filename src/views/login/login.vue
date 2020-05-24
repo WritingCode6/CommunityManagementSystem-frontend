@@ -20,19 +20,18 @@
                   show-password
                   @change="pwdChange"></el-input>
         </el-form-item>
-        <ul>
+        <!--<ul>
           <li class="forget">
-            <!--看情况修为router-link-->
-            <!-- 暂时将忘记密码设置为打开密码错误窗口 -->
-            <a href @click.prevent="openPasswordWrong">忘记密码</a>
+            &lt;!&ndash;看情况修为router-link&ndash;&gt;
+            <a href>忘记密码</a>
           </li>
           <li class="enroll">
-            <!--看情况修为router-link-->
+            &lt;!&ndash;看情况修为router-link&ndash;&gt;
             <a href>新住户注册</a>
           </li>
-        </ul>
+        </ul>-->
         <el-form-item class="button">
-          <el-button type="primary" @click="login">登录</el-button>
+          <el-button type="primary" @click="toLogin">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -49,12 +48,13 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
       userInfo: {
-        userName: "",
-        password: "",
+        userName: "root",
+        password: "123456",
       },
       passwordWrong:false
     };
@@ -98,8 +98,30 @@ export default {
       }
     },
     //登录接口
-    login() {
-      console.log('登录');
+    toLogin() {
+      let userName = this.userInfo.userName;
+      let password = this.userInfo.password;
+      this.$axios.post('/api/user/login',{
+        userName: userName,
+        password: password
+      }).then((res) => {
+        console.log(res);
+        let data = res.data;
+        if(res.code === 200) {
+          localStorage.setItem("token",data.token)   //将token存到localStorage里
+          localStorage.setItem("userId",data.userId)  //将username存入localStorage
+          localStorage.setItem("roleId",data.roleId)  //将roleId存入localStorage
+          localStorage.setItem("pwd",password)  //将password存入localStorage
+          this.$message.success('登录成功！');
+          this.$router.push('/index')
+        }
+        else {
+          /*this.$message.error(res.message);*/
+          this.passwordWrong = true;
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
     },
     //打开提示密码错误窗口
     openPasswordWrong(){

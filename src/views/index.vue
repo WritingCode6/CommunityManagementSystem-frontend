@@ -50,12 +50,12 @@
               <span class="arrows">></span>
             </router-link>
           </li>
-          <li>
+<!--          <li>
             <router-link to="/index/visitor" class="visitor">
               <span class="visitor_word">访客管理</span>
               <span class="arrows">></span>
             </router-link>
-          </li>
+          </li>-->
           <li>
             <router-link to="/index/repair" class="repair">
               <span class="repair_word">物业报修</span>
@@ -105,7 +105,7 @@
         <div class="exitContent">确定要退出吗？</div>
         <ul>
           <li class="yes">
-            <button type="button">是</button>
+            <button type="button" @click="exit">是</button>
           </li>
           <li class="no">
             <button type="button" @click="closeExit">否</button>
@@ -122,6 +122,7 @@ export default {
   data() {
     return {
       communityLocation: '东莞 · 碧桂园',
+      //渲染用户名，待做
       userName: '李华华',
       exitWindows: false
     };
@@ -131,10 +132,16 @@ export default {
     openExit(){
       this.exitWindows = true;
     },
+    //关闭退出账号窗口
     closeExit(){
       this.exitWindows = false;
     },
-
+    //退出账号
+    exit() {
+      localStorage.removeItem("token");
+      this.$router.push('/login');
+      this.$message.success("退出成功！")
+    }
   }
 };
 </script>
@@ -204,6 +211,7 @@ export default {
 }
 .list {
   margin-top: 30px;
+  padding-bottom: 65px;
   /*padding-bottom: 50px;*/
   /*padding-bottom: 30%;*/
 }
@@ -218,7 +226,7 @@ export default {
 .user,
 .parking,
 .staff,
-.visitor,
+/*.visitor,*/
 .repair,
 .notice,
 .activity,
@@ -245,10 +253,10 @@ export default {
   background: url("../assets/image/icon/icon_staff.png") no-repeat;
   background-position: 16%;
 }
-.visitor {
+/*.visitor {
   background: url("../assets/image/icon/icon_visitor.png") no-repeat;
   background-position: 16%;
-}
+}*/
 .repair {
   background: url("../assets/image/icon/icon_repair.png") no-repeat;
   background-position: 16%;
@@ -274,7 +282,7 @@ export default {
 .user_word,
 .parking_word,
 .staff_word,
-.visitor_word,
+/*.visitor_word,*/
 .repair_word,
 .notice_word,
 .activity_word,
@@ -286,7 +294,7 @@ export default {
 .user_word:hover,
 .parking_word:hover,
 .staff_word:hover,
-.visitor_word:hover,
+/*.visitor_word:hover,*/
 .repair_word:hover,
 .notice_word:hover,
 .activity_word:hover,
@@ -315,11 +323,11 @@ export default {
   background-position: 18%;
   color: #fff;
 }
-.visitor:hover {
+/*.visitor:hover {
   background: url("../assets/image/icon/icon_visitor_selected.png") no-repeat #9b8fca;
   background-position: 18%;
   color: #fff;
-}
+}*/
 .repair:hover {
   background: url("../assets/image/icon/icon_repair_selected.png") no-repeat #9b8fca;
   background-position: 18%;

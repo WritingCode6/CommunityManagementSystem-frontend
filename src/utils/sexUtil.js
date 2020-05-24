@@ -5,3 +5,11 @@ export function sexChange(sex) {
   else sex = '';
   return sex;
 }
+
+//性别从文字转换为数字
+export function sexChangeNum(sex) {
+  if (sex === '男')  sex = 0;
+  else if(sex === '女')  sex = 1;
+  else sex = '';
+  return sex;
+}
