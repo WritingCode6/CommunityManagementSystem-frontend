@@ -10,7 +10,6 @@
                 :data="feedbackData"
                 style="width: 95%;font-size:16px"
                 highlight-current-row>
-          <!-- 设置min-width来自适应宽度 -->
           <el-table-column prop="id" label="ID" min-width="10%" align="center"></el-table-column>
           <el-table-column prop="type" label="反馈类型" min-width="15%" align="center"></el-table-column>
           <el-table-column prop="userId" label="反馈用户ID" min-width="10%" align="center"></el-table-column>
@@ -18,7 +17,7 @@
           <el-table-column prop="creatTime" label="反馈时间" min-width="15%" align="center"></el-table-column>
           <el-table-column label="操作" min-width="35%" align="center">
             <a href>
-              <span class="check" @click.prevent="">查看</span>
+              <span class="check" @click.prevent="openCheck">查看</span>
             </a>
             <a href>
               <span class="modify" @click.prevent="openModify">修改</span>
@@ -75,7 +74,7 @@
             </el-form-item>
           </el-form>
         </div>
-        <div class="saveButton">
+        <div class="buttonBox">
             <button type="button" @click="saveAdd">确定新增</button>
           </div>
       </div>
@@ -115,9 +114,68 @@
             </el-form-item>
           </el-form>
         </div>
-        <div class="saveButton">
+        <div class="buttonBox">
             <button type="button" @click="saveModify">保存修改</button>
-          </div>
+        </div>
+      </div>
+    </div>
+    <div class="checkWindows" v-show="checkWindows">
+      <div class="checkBox">
+        <h4>查看投诉反馈</h4>
+        <div class="feedbackInfo">
+          <h5>具体信息</h5>
+          <ul>
+            <li class="id">
+              ID：
+              <span>{{ feedbackMsg.id }}</span>
+            </li>
+            <li class="userId">
+              反馈用户ID：
+              <span>{{ feedbackMsg.userId }}</span>
+            </li>
+            <li class="type">
+              反馈类型：
+              <span>{{ feedbackMsg.type }}</span>
+            </li>
+            <li class="userName">
+              反馈用户真实姓名：
+              <span>{{ feedbackMsg.userName }}</span>
+            </li>
+            <li class="received">
+              处理状态：
+              <span>{{ feedbackMsg.received }}</span>
+            </li>
+            <li class="creatTime">
+              反馈时间：
+              <span>{{ feedbackMsg.creatTime }}</span>
+            </li>
+            <li class="details">
+              反馈内容：
+              <p>{{ feedbackMsg.details }}</p>
+            </li>
+          </ul>
+        </div>
+        <div class="line"></div>
+        <div class="receivedInfo">
+          <h5>处理信息</h5>
+          <ul>
+            <li class="employeeId">
+              处理工作人员ID：
+              <span>{{ feedbackMsg.employeeId }}</span>
+            </li>
+            <li class="employeeName">
+              处理工作人员真实姓名：
+              <span>{{ feedbackMsg.employeeName }}</span>
+            </li>
+            <li class="result">
+              处理结果：
+              <span>{{ feedbackMsg.result }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="buttonBox">
+          <button type="button" @click="closeCheck">返回</button>
+        </div>
       </div>
     </div>
     <div class="deleteWindows" v-show="deleteWindows">
@@ -205,6 +263,18 @@
             creatTime:'2020-05-08',
           }
         ],
+        feedbackMsg:{
+          id:1,
+          userId:1,
+          type:'投诉',
+          userName:'刘星',
+          received:'未处理',
+          creatTime:'2020-05-08',
+          details:'住户刘胡苏高空抛物',
+          employeeId:'123456',
+          employeeName:'夏东海',
+          result:'已联系相应住户进行沟通'
+        },
 
         addContent:{
           type:"",
@@ -230,6 +300,7 @@
 
         addWindows:false,
         modifyWindows:false,
+        checkWindows:false,
         deleteWindows:false,
       }
     },
@@ -265,6 +336,14 @@
       /* 保存修改社区通知 */
       saveModify() {
         this.modifyWindows = false;
+      },
+      /* 打开查看社区通知窗口 */
+      openCheck() {
+        this.checkWindows = true;
+      },
+      /* 关闭修改社区通知窗口 */
+      closeCheck() {
+        this.checkWindows = false;
       },
       /* 打开删除投诉反馈窗口 */
       openDelete() {
@@ -360,6 +439,10 @@
   margin: 8% auto;
   overflow: hidden;
 }
+.checkBox {
+  margin-top: 6%;
+  height: 595px;
+}
 .deleteBox {
   width: 634px;
   height: 234px;
@@ -396,7 +479,8 @@
   left: 22px;
 }
 .addBox h4::after,
-.modifyBox h4::after {
+.modifyBox h4::after,
+.checkBox h4::after {
   content: "";
   width: 94%;
   height: 1px;
@@ -405,6 +489,14 @@
   top: 60px;
   left: 18px;
   z-index: 2;
+}
+.line {
+  width: 94%;
+  height: 0.6px;
+  background: #666;
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-bottom: -15px;
 }
 .addBox .back,
 .modifyBox .back {
@@ -425,21 +517,79 @@
 }
 .addContentBox label,
 .modifyContentBox label {
-  font-size: 20px;
+  font-size: 18px;
   color: #666;
+}
+.feedbackInfo,
+.receivedInfo {
+  margin-top: 35px;
+  margin-left: 40px;
+  font-size: 20px;
+}
+.checkBox h5 {
+  font-weight: bold;
+}
+.checkBox ul {
+  margin-top: 20px;
+  margin-left: 30px;
+  color: #666;
+}
+.checkBox p,
+.checkBox span {
+  color: #000;
+}
+.id {
+  margin-left: 60px;
+}
+.userId {
+  margin-left: 280px;
+  margin-top: -20px;
+}
+.type {
+  margin-top: 15px;
+}
+.userName {
+  margin-top: -20px;
+  margin-left: 224px;
+}
+.creatTime {
+  margin-top: -20px;
+  margin-left: 300px;
+}
+.received {
+  margin-top: 15px;
+}
+.details {
+  margin-top: 15px;
+}
+.details p {
+  margin-top: 10px;
+  width: 500px;
+  height: 50px;
+  text-indent: 40px;
+}
+.employeeName {
+  margin-top: 15px;
+}
+.result {
+  margin-top: 15px;
 }
 .deleteContent {
   margin: 80px 242px;
   font-size: 20px;
 }
-.saveButton {
+.buttonBox {
   margin-top: 40px;
   width: 100%;
   height: 66px;
   background: #bcbcbc;
 }
+.checkBox .buttonBox {
+  margin-top: 60.8px;
+}
 .addBox button,
-.modifyBox button {
+.modifyBox button,
+.checkBox button {
   float: left;
   width: 120px;
   height: 39px;

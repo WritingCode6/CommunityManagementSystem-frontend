@@ -58,12 +58,12 @@
                   style="width: 100%"
                   highlight-current-row>
             <!-- 设置min-width来自适应宽度 -->
-            <el-table-column prop="id" label="单号" min-width="10%"></el-table-column>
-            <el-table-column prop="facility" label="设施" min-width="15%"></el-table-column>
-            <el-table-column prop="place" label="所在地" min-width="15%"></el-table-column>
-            <el-table-column prop="isReceived" label="状态" min-width="12%"></el-table-column>
-            <el-table-column prop="createTime" label="创建时间" min-width="18%"></el-table-column>
-            <el-table-column label="操作" min-width="15%">
+            <el-table-column prop="id" label="单号" min-width="10%" align="center"></el-table-column>
+            <el-table-column prop="facility" label="设施" min-width="15%" align="center"></el-table-column>
+            <el-table-column prop="place" label="所在地" min-width="15%" align="center"></el-table-column>
+            <el-table-column prop="isReceived" label="状态" min-width="12%" align="center"></el-table-column>
+            <el-table-column prop="createTime" label="创建时间" min-width="18%" align="center"></el-table-column>
+            <el-table-column label="操作" min-width="15%" align="center">
               <a href>
                 <span class="operation">修改</span>
               </a>
