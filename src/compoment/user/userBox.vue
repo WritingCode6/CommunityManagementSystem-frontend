@@ -52,12 +52,13 @@
                 style="width: 100%"
                 highlight-current-row>
           <!-- 设置min-width来自适应宽度 -->
-          <el-table-column prop="name" label="姓名" min-width="12%"></el-table-column>
-          <el-table-column prop="buildingNumber" label="栋数" min-width="10%"></el-table-column>
-          <el-table-column prop="roomNumber" label="房间号" min-width="10%"></el-table-column>
-          <el-table-column prop="plateNumber" label="车牌号" min-width="15%"></el-table-column>
-          <el-table-column label="操作" min-width="25%">
-            <a href>
+          <el-table-column prop="name" label="姓名" min-width="12%" align="center"></el-table-column>
+          <el-table-column prop="buildingNumber" label="栋数" min-width="10%" align="center"></el-table-column>
+          <el-table-column prop="roomNumber" label="房间号" min-width="10%" align="center"></el-table-column>
+          <el-table-column prop="plateNumber" label="车牌号" min-width="15%" align="center"></el-table-column>
+          <el-table-column label="操作" min-width="25%" align="center">
+            <!-- 修改未做 -->
+            <!--<a href>
               <span class="operation" @click.prevent="openModify">修改</span>
             </a>
             <a href>

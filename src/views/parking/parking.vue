@@ -6,11 +6,37 @@
           <span>车位信息</span>
         </li>
         <li class="carMsg">
-          <a href="" @click.prevent="toCarMsg">车辆资料</a>
+          <a href @click.prevent="toCarMsg" class="car_href">车辆资料</a>
         </li>
       </ul>
       <div class="content">
-        <!-- 车位信息写这里 -->
+        <!--<div class="search_box">
+          <el-input
+                  v-model="name"
+                  class="search_input"
+                  placeholder="请输入车位号"></el-input>
+          <el-button type="primary">搜索</el-button>
+        </div>-->
+        <div class="parking_table">
+          <el-table :data="parkingData" style="width: 100%" highlight-current-row>
+            <!-- 设置min-width来自适应宽度 -->
+            <el-table-column prop="id" label="车位ID" min-width="25%" align="center"></el-table-column>
+            <el-table-column prop="spaceNumber" label="车位号" min-width="25%" align="center"></el-table-column>
+            <el-table-column label="操作" min-width="40%" align="center">
+              <a href>
+                <span class="operation" @click.prevent="openDeleteCar">删除</span>
+              </a>
+            </el-table-column>
+          </el-table>
+          <div class="page_block">
+            <el-pagination
+              :current-page="currentPage1"
+              :page-size="pageSize1"
+              :total="total1"
+              layout="prev, pager, next, total"
+            ></el-pagination>
+          </div>
+        </div>
       </div>
       <ul class="parkingButton">
         <li class="batchAdd">
@@ -31,14 +57,46 @@
     <div class="carMsgRead" v-show="carMsgRead">
       <ul class="switch">
         <li class="parkingMsg">
-          <a href="" @click.prevent="toParkingMsg">车位信息</a>
+          <a href @click.prevent="toParkingMsg" class="car_href">车位信息</a>
         </li>
         <li class="carMsg">
           <span>车辆资料</span>
         </li>
       </ul>
       <div class="content">
-        <!-- 车辆资料写这里 -->
+        <!--<div class="search_box">
+          <el-input
+                  v-model="name"
+                  class="search_input"
+                  placeholder="请输入车牌号"></el-input>
+          <el-button type="primary" class="search">搜索</el-button>
+        </div>-->
+        <div class="car_table">
+          <el-table :data="carData" style="width: 100%" highlight-current-row>
+            <!-- 设置min-width来自适应宽度 -->
+            <el-table-column prop="userId" label="车主ID" min-width="25%" align="center"></el-table-column>
+            <el-table-column prop="plateNumber" label="车牌号" min-width="25%" align="center"></el-table-column>
+            <el-table-column label="操作" min-width="40%" align="center">
+              <a href>
+                <span class="operation" @click.prevent="openCheckCar">查看</span>
+              </a>
+              <a href>
+                <span class="operation" @click.prevent="openModifyModify">修改</span>
+              </a>
+              <a href>
+                <span class="operation" @click.prevent="openDeleteCar">删除</span>
+              </a>
+            </el-table-column>
+          </el-table>
+          <div class="page_block">
+            <el-pagination
+              :current-page="currentPage2"
+              :page-size="pageSize2"
+              :total="total2"
+              layout="prev, pager, next, total"
+            ></el-pagination>
+          </div>
+        </div>
       </div>
       <div class="addCarButon">
         <button type="button" @click="openCarAdd">增加车辆信息</button>
@@ -55,12 +113,12 @@
       <div class="batchBox">
         <h4>批量增加车位</h4>
         <div class="back">
-          <a href @click.prevent="closeBatchAdd">
-            <img src="../../assets/image/icon/icon_back.png" alt />
+          <a href @click.prevent="closeBatchAdd" class="back_icon">
+            <img src="../../assets/image/icon/icon_back.png" alt>
           </a>
         </div>
         <div class="batchParkingNumber">车位号：</div>
-        <input type="text" class="batchinput">
+        <input type="text" class="batchInput" @click="inputMsg" v-model="inputAddBatch">
         <div class="batchAddButton">
           <button type="button" @click="saveBatchAdd">确定批量新增</button>
         </div>
@@ -70,12 +128,12 @@
       <div class="batchBox">
         <h4>批量删除车位</h4>
         <div class="back">
-          <a href @click.prevent="closeBatchDelete">
-            <img src="../../assets/image/icon/icon_back.png" alt />
+          <a href @click.prevent="closeBatchDelete" class="back_icon">
+            <img src="../../assets/image/icon/icon_back.png" alt>
           </a>
         </div>
         <div class="batchParkingNumber">车位号：</div>
-        <input type="text" class="batchinput">
+        <input type="text" class="batchInput" @click="inputMsg" v-model="inputDelBatch">
         <div class="batchDeleteButton">
           <button type="button" @click="saveBatchDelete">确定批量删除</button>
         </div>
@@ -85,35 +143,119 @@
       <div class="carAddBox">
         <h4>新增车辆信息</h4>
         <div class="back">
-          <a href @click.prevent="closeCarAdd">
-            <img src="../../assets/image/icon/icon_back.png" alt />
+          <a href @click.prevent="closeCarAdd" class="back_icon">
+            <img src="../../assets/image/icon/icon_back.png" alt>
           </a>
         </div>
-        <ul class="newCarMsg">
-          <li class="newName">
-            车主姓名：
-            <input type="text">
+        <ul class="carInfo">
+          <li class="userId">
+            车主ID：
+            <input type="text" v-model="carNewMsg.userId">
           </li>
-          <li class="newCarNumber">
+          <li class="carNumber">
             车牌号：
-            <input type="text">
+            <input type="text" v-model="carNewMsg.carNumber">
           </li>
-          <li class="newBrand">
+          <li class="brand">
             品牌：
-            <input type="text">
+            <input type="text" v-model="carNewMsg.brand">
           </li>
-          <li class="newType">
+          <li class="type">
             型号：
-            <input type="text">
+            <input type="text" v-model="carNewMsg.type">
           </li>
-          <li class="newColor">
+          <li class="color">
             颜色：
-            <input type="text">
+            <input type="text" v-model="carNewMsg.color">
           </li>
         </ul>
         <div class="carAddButton">
           <button type="button" @click="saveCarAdd">确定新增</button>
         </div>
+      </div>
+    </div>
+    <div class="carModifyWindows" v-show="carModifyWindows">
+      <div class="carModifyBox">
+        <h4>修改车辆信息</h4>
+        <div class="back">
+          <a href @click.prevent="closeModifyModify" class="back_icon">
+            <img src="../../assets/image/icon/icon_back.png" alt>
+          </a>
+        </div>
+        <ul class="carInfo">
+          <li class="userId">
+            车主ID：
+            <input type="text" v-model="carMsg.userId">
+          </li>
+          <li class="carNumber">
+            车牌号：
+            <input type="text" v-model="carMsg.carNumber">
+          </li>
+          <li class="brand">
+            品牌：
+            <input type="text" v-model="carMsg.brand">
+          </li>
+          <li class="type">
+            型号：
+            <input type="text" v-model="carMsg.type">
+          </li>
+          <li class="color">
+            颜色：
+            <input type="text" v-model="carMsg.color">
+          </li>
+        </ul>
+        <div class="carModifyButton">
+          <button type="button" @click="saveCarModify">保存修改</button>
+        </div>
+      </div>
+    </div>
+    <div class="carCheckWindows" v-show="carCheckWindows">
+      <div class="carCheckBox">
+        <h4>查看车辆信息</h4>
+        <ul class="carInfo">
+          <li class="userId">
+            车主ID：
+            <span>{{ carMsg.userId }}</span>
+          </li>
+          <li class="carNumber">
+            车牌号：
+            <span>{{ carMsg.carNumber }}</span>
+          </li>
+          <li class="brand">
+            品牌：
+            <span>{{ carMsg.brand }}</span>
+          </li>
+          <li class="type">
+            型号：
+            <span>{{ carMsg.type }}</span>
+          </li>
+          <li class="color">
+            颜色：
+            <span>{{ carMsg.color }}</span>
+          </li>
+        </ul>
+        <div class="carCheckButton">
+          <button type="button" @click="closeCheckCar">返回</button>
+        </div>
+      </div>
+    </div>
+    <div class="carDeleteWindows" v-show="carDeleteWindows">
+      <div class="carDeleteBox">
+        <h4>删除车辆信息</h4>
+        <div class="back">
+          <a href @click.prevent="closeDeleteCar">
+            <img src="../../assets/image/icon/icon_back.png" alt>
+          </a>
+        </div>
+        <div class="deleteContent">确定要删除吗？</div>
+        <ul>
+          <li class="yes">
+            <button type="button">是</button>
+          </li>
+          <li class="no">
+            <button type="button" @click="closeDeleteCar">否</button>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -124,59 +266,194 @@ export default {
   name: "parking",
   data() {
     return {
-      parkingMsgRead:true,
-      carMsgRead:false,
-      batchAddWindows:false,
-      batchDeleteWindows:false,
-      carAddWindows:false
+      parkingMsgRead: true,
+      carMsgRead: false,
+      batchAddWindows: false,
+      batchDeleteWindows: false,
+      carAddWindows: false,
+      carModifyWindows: false,
+      carCheckWindows: false,
+      carDeleteWindows: false,
+      parkingData: [
+        {
+          id: 1,
+          spaceNumber: 11
+        },
+        {
+          id: 2,
+          spaceNumber: 22
+        },
+        {
+          id: 3,
+          spaceNumber: 3
+        },
+        {
+          id: 4,
+          spaceNumber: 4
+        },
+        {
+          id: 5,
+          spaceNumber: 5
+        },
+        {
+          id: 6,
+          spaceNumber: 11
+        },
+        {
+          id: 7,
+          spaceNumber: 11
+        },
+        {
+          id: 8,
+          spaceNumber: 11
+        },
+        {
+          id: 9,
+          spaceNumber: 11
+        }
+      ],
+      carData: [
+        {
+          userId: 1,
+          plateNumber: "粤A99999"
+        },
+        {
+          userId: 2,
+          plateNumber: "粤A99999"
+        },
+        {
+          userId: 3,
+          plateNumber: "粤A99999"
+        },
+        {
+          userId: 4,
+          plateNumber: "粤A99999"
+        },
+        {
+          userId: 5,
+          plateNumber: "粤A99999"
+        },
+        {
+          userId: 6,
+          plateNumber: "粤A99999"
+        },
+        {
+          userId: 7,
+          plateNumber: "粤A99999"
+        },
+        {
+          userId: 8,
+          plateNumber: "粤A99999"
+        },
+        {
+          userId: 9,
+          plateNumber: "粤A99999"
+        }
+      ],
+      carNewMsg:{
+        userId:'',
+        carNumber:'',
+        brand:'',
+        type:'',
+        color:''
+      },
+      carMsg:{
+        userId:1,
+        carNumber:'粤A8888',
+        brand:'长安',
+        type:'SC7103',
+        color:'黑色'
+      },
+      currentPage1: 1,
+      pageSize1: 9,
+      total1: 100,
+      currentPage2: 1,
+      pageSize2: 9,
+      total2: 100,
+      inputAddBatch: "",
+      inputDelBatch: ""
     };
   },
-  methods:{
+  methods: {
     //切换到车辆资料板块
-    toCarMsg(){
+    toCarMsg() {
       this.parkingMsgRead = false;
       this.carMsgRead = true;
     },
     //切换到车位信息板块
-    toParkingMsg(){
+    toParkingMsg() {
       this.parkingMsgRead = true;
       this.carMsgRead = false;
     },
     //打开批量增加车位窗口
-    openBatchAdd(){
+    openBatchAdd() {
       this.batchAddWindows = true;
     },
     //关闭批量增加车位窗口
-    closeBatchAdd(){
+    closeBatchAdd() {
       this.batchAddWindows = false;
     },
     //确定批量增加车位
-    saveBatchAdd(){
+    saveBatchAdd() {
       this.batchAddWindows = false;
     },
     //打开批量删除车位窗口
-    openBatchDelete(){
+    openBatchDelete() {
       this.batchDeleteWindows = true;
     },
     //关闭批量删除车位窗口
-    closeBatchDelete(){
+    closeBatchDelete() {
       this.batchDeleteWindows = false;
     },
     //确定批量删除车位
-    saveBatchDelete(){
+    saveBatchDelete() {
       this.batchDeleteWindows = false;
     },
     //打开新增车辆信息窗口
-    openCarAdd(){
+    openCarAdd() {
       this.carAddWindows = true;
     },
     //关闭新增车辆信息窗口
-    closeCarAdd(){
+    closeCarAdd() {
       this.carAddWindows = false;
     },
     //确定新增车辆信息
-    saveCarAdd(){
+    saveCarAdd() {
       this.carAddWindows = false;
+    },
+    //打开修改车辆信息窗口
+    openModifyModify() {
+      this.carModifyWindows = true;
+    },
+    //关闭修改车辆信息窗口
+    closeModifyModify() {
+      this.carModifyWindows = false;
+    },
+    //确定修改车辆信息
+    saveCarModify() {
+      this.carModifyWindows = false;
+    },
+    /* 打开查看车辆信息窗口 */
+    openCheckCar() {
+      this.carCheckWindows = true;
+    },
+    /* 关闭查看车辆信息窗口 */
+    closeCheckCar() {
+      this.carCheckWindows = false;
+    },
+    /* 打开删除车辆信息窗口 */
+    openDeleteCar() {
+      this.carDeleteWindows = true;
+    },
+    /* 关闭删除车辆信息窗口 */
+    closeDeleteCar() {
+      this.carDeleteWindows = false;
+    },
+    //批量输入信息提醒
+    inputMsg() {
+      if (this.inputAddBatch === "" || this.inputDelBatch === "") {
+        this.$message("车位号请以空格隔开");
+      }
     }
   }
 };
@@ -223,39 +500,48 @@ a {
 .carMsgRead span {
   left: 101px;
 }
-a:hover {
+.car_href:hover {
   color: #fff;
 }
 .content {
   margin-top: -1px;
-  width: 70%;
-  height: 550px;
+  width: 75%;
+  height: 590px;
   border: 1px solid #bcbcbc;
-  overflow-y: scroll;
 }
 .parkingButton,
-.parkingPicture  {
+.parkingPicture {
   float: left;
-  margin-top: -550px;
-  margin-left: 75%;
+  margin-top: -570px;
+  margin-left: 79%;
 }
-.parkingButton button{
+.parkingButton button {
   width: 255px;
   height: 75px;
   font-size: 20px;
   font-weight: bold;
   color: #fff;
   outline: none;
-  border-width: 0px;
+  border-width: 0;
   border-radius: 15px;
   cursor: pointer;
 }
 .batchAdd button {
-  background: #D38CAD;
+  background: #d38cad;
 }
 .batchDelete button {
   margin-top: 30px;
-  background: #FDC38A;
+  background: #fdc38a;
+}
+.parkingPicture,
+.carPicture {
+  width: 300px;
+  height: 300px;
+  border: 1px solid #bcbcbc;
+  border-radius: 5px;
+  position: relative;
+  top: 245px;
+  right: 20px;
 }
 .parkingPicture {
   width: 300px;
@@ -280,8 +566,8 @@ h4 {
 .addCarButon,
 .carPicture {
   float: left;
-  margin-top: -500px;
-  margin-left: 75%;
+  margin-top: -550px;
+  margin-left: 79%;
 }
 .carMsgRead button {
   width: 255px;
@@ -307,7 +593,10 @@ h4 {
 }
 .batchAddWindows,
 .batchDeleteWindows,
-.carAddWindows {
+.carAddWindows,
+.carModifyWindows,
+.carCheckWindows,
+.carDeleteWindows {
   height: 100%;
   width: 100%;
   left: 0;
@@ -317,20 +606,34 @@ h4 {
   z-index: 100;
 }
 .batchBox,
-.carAddBox {
+.carAddBox,
+.carModifyBox,
+.carCheckBox {
   width: 634px;
   height: 236px;
   background: #fff;
   margin: 197px auto;
   position: relative;
 }
-.carAddBox {
+.carAddBox,
+.carModifyBox,
+.carCheckBox {
   height: 380px;
   margin: 150px auto;
 }
+.carDeleteBox {
+  width: 634px;
+  height: 234px;
+  background: #fff;
+  margin: 177px auto;
+  position: relative;
+}
 .batchAddWindows h4,
 .batchDeleteWindows h4,
-.carAddWindows h4 {
+.carAddWindows h4,
+.carModifyBox h4,
+.carCheckBox h4,
+.carDeleteBox h4 {
   font-size: 24px;
   font-weight: bold;
   padding-top: 24px;
@@ -338,23 +641,39 @@ h4 {
   display: inline-block;
   color: #000;
 }
+.carDeleteBox h4 {
+  margin-left: 50px;
+}
 .batchAddWindows h4::before,
 .batchDeleteWindows h4::before,
-.carAddWindows h4::before {
+.carAddWindows h4::before,
+.carModifyBox h4::before,
+.carCheckBox h4::before,
+.carDeleteBox h4::before {
   content: "";
   width: 7px;
   height: 26px;
-  background: #D38CAD;
+  background: #d38cad;
   position: absolute;
   left: 22px;
   z-index: 1;
 }
 .batchDeleteWindows h4::before {
-  background: #FDC38A;
+  background: #fdc38a;
+}
+.carModifyBox h4::before,
+.carCheckBox h4::before {
+  background: #8a79af;
+}
+.carDeleteBox h4::before {
+  background: #8a79af;
+  left: 22px;
 }
 .batchAddWindows h4::after,
 .batchDeleteWindows h4::after,
-.carAddWindows h4::after {
+.carAddWindows h4::after,
+.carModifyBox h4::after,
+.carCheckBox h4::after {
   content: "";
   width: 94%;
   height: 1px;
@@ -363,14 +682,24 @@ h4 {
   top: 70px;
   left: 18px;
   z-index: 2;
-} 
+}
 .batchAddWindows .back,
 .batchDeleteWindows .back,
-.carAddWindows .back {
+.carAddWindows .back,
+.carModifyBox .back {
   position: absolute;
   left: 550px;
   top: 24px;
   z-index: 9999;
+}
+.carDeleteBox .back {
+  position: absolute;
+  left: 580px;
+  top: 24px;
+}
+.deleteContent {
+  margin: 80px 242px;
+  font-size: 20px;
 }
 .batchParkingNumber {
   font-size: 20px;
@@ -378,7 +707,7 @@ h4 {
   margin-top: 55px;
   margin-left: 120px;
 }
-.batchinput {
+.batchInput {
   float: left;
   margin-top: -25px;
   margin-left: 200px;
@@ -389,24 +718,57 @@ h4 {
 }
 .batchAddButton,
 .batchDeleteButton,
-.carAddButton  {
+.carAddButton,
+.carModifyButton,
+.carCheckButton {
   margin-top: 50px;
   width: 100%;
   height: 58px;
   background: #bcbcbc;
 }
-.carAddButton {
+.carAddButton,
+.carModifyButton,
+.carCheckButton {
   margin-top: 266px;
 }
 .batchAddButton button,
 .batchDeleteButton button,
-.carAddButton button {
+.carAddButton button,
+.carModifyButton button,
+.carCheckButton button {
   float: left;
   width: 120px;
   height: 39px;
-  background: #D38CAD;
+  background: #d38cad;
   margin-left: 256px;
   margin-top: 10px;
+  font-size: 18px;
+  color: #fff;
+  outline: none;
+  border-width: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.batchDeleteButton button {
+  background: #fdc38a;
+}
+.carModifyButton button,
+.carCheckButton button {
+  background: #8a79af;
+}
+.carDeleteBox ul {
+  margin-top: -2px;
+  width: 100%;
+  height: 58px;
+  background: #bcbcbc;
+}
+.carDeleteBox .yes button {
+  float: left;
+  width: 120px;
+  height: 39px;
+  background: #8a79af;
+  margin-left: 128px;
+  margin-top: 9px;
   font-size: 18px;
   color: #fff;
   outline: none;
@@ -414,36 +776,101 @@ h4 {
   border-radius: 10px;
   cursor: pointer;
 }
-.batchDeleteButton button  {
-  background: #FDC38A;
+.carDeleteBox .no button {
+  float: right;
+  width: 120px;
+  height: 39px;
+  background: #fff;
+  margin-right: 166px;
+  margin-top: 9px;
+  font-size: 18px;
+  color: #000;
+  outline: none;
+  border-width: 0px;
+  border-radius: 10px;
+  cursor: pointer;
 }
-.carAddWindows ul {
+.carAddWindows ul,
+.carModifyWindows ul,
+.carCheckWindows ul {
   font-size: 20px;
   color: #666;
   margin-top: 79px;
 }
-.carAddWindows li {
+.carAddWindows li,
+.carModifyWindows li,
+.carCheckWindows li {
   float: left;
   margin-bottom: 20px;
 }
-.newCarMsg input{
+.carInfo span {
+  display: flex;
+  float: right;
+}
+.carInfo input,
+.carInfo span {
   height: 25px;
   padding-left: 5px;
   padding-right: 5px;
   font-size: 20px;
   width: 120px;
 }
-.newName {
-  margin-left: 70px;
+.userId {
+  margin-left: 90px;
 }
-.newCarNumber {
+.carNumber {
   margin-left: 20px;
 }
-.newBrand,
-.newColor {
+.brand,
+.color {
   margin-left: 110px;
 }
-.newType {
+.type {
   margin-left: 40px;
+}
+
+/*fxy*/
+.parkingMsgRead .content,
+.carMsgRead .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/*.search_box {
+  position: relative;
+  top: 30px;
+}
+.search_input {
+  width: 450px;
+  border-radius: 5px;
+}
+.el-button--primary {
+  width: 130px;
+  background: #8a79af;
+  border-color: #8a79af;
+  margin-left: 30px;
+  position: relative;
+  z-index: 1;
+}*/
+.parking_table,
+.car_table {
+  margin: 50px 0 0 40px;
+  width: 93%;
+}
+.parking_table a {
+  display: block;
+  width: 100%;
+  padding-left: 3.5%;
+}
+.car_table a {
+  margin-left: 20px;
+}
+.operation {
+  display: inline-block;
+  margin-right: 25px;
+}
+.page_block {
+  float: right;
+  margin-top: 20px;
 }
 </style>
