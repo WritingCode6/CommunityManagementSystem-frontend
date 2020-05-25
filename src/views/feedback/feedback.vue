@@ -76,7 +76,7 @@
         </div>
         <div class="buttonBox">
             <button type="button" @click="saveAdd">确定新增</button>
-          </div>
+        </div>
       </div>
     </div>
     <div class="modifyWindows" v-show="modifyWindows">
@@ -98,7 +98,7 @@
               <el-select placeholder="请选择处理状态" v-model="modifyContent.isReceived">
                 <el-option label="未处理" value="unreceived"></el-option>
                 <el-option label="已处理" value="received"></el-option>
-            </el-select>
+              </el-select>
             </el-form-item>
             <el-form-item class="addContent" prop="details">
               <label>处理结果：</label>
@@ -138,7 +138,7 @@
               <span>{{ feedbackMsg.type }}</span>
             </li>
             <li class="userName">
-              反馈用户真实姓名：
+              反馈用户姓名：
               <span>{{ feedbackMsg.userName }}</span>
             </li>
             <li class="received">
@@ -160,11 +160,11 @@
           <h5>处理信息</h5>
           <ul>
             <li class="employeeId">
-              处理工作人员ID：
+              工作人员ID：
               <span>{{ feedbackMsg.employeeId }}</span>
             </li>
             <li class="employeeName">
-              处理工作人员真实姓名：
+              工作人员姓名：
               <span>{{ feedbackMsg.employeeName }}</span>
             </li>
             <li class="result">
@@ -341,7 +341,7 @@
       openCheck() {
         this.checkWindows = true;
       },
-      /* 关闭修改社区通知窗口 */
+      /* 关闭查看社区通知窗口 */
       closeCheck() {
         this.checkWindows = false;
       },
@@ -550,7 +550,7 @@
 }
 .userName {
   margin-top: -20px;
-  margin-left: 224px;
+  margin-left: 260px;
 }
 .creatTime {
   margin-top: -20px;
