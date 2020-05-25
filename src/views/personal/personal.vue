@@ -205,7 +205,7 @@ export default {
   align-items: center;
 }
 .info,
-.password{
+.password {
   margin-top: 20px;
   width: 100%;
   height: 350px;
