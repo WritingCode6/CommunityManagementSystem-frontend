@@ -6,7 +6,7 @@ Vue.use(VueRouter)
   const routes = [
     {
       path: "/",
-      redirect: '/index/personal',
+      redirect: '/index/property',
       meta: {
         needLogin: true
       }

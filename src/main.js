@@ -40,6 +40,11 @@ axios.interceptors.response.use((config) => {
   /*const message = config.data.message;*/
   return data;
 }, function (error) {
-  //console.log(error)
+  //console.log(error.response);
+  const code = error.response.data.code;
+  if(code === 401) {
+    alert("登录已过期，请重新登录！");
+    location.href = '/login';
+  }
   return Promise.reject(error);
 });

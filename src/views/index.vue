@@ -152,7 +152,7 @@ export default {
       userName: '李华华',
       exitWindows: false,
       //true是管理员，false是住户
-      role: false
+      role: true
     };
   },
   methods: {
