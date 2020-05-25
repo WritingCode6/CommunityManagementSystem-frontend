@@ -198,23 +198,6 @@ export default {
       this.onlyReadPwd = true;
       this.onlyWritePwd = false;
     },
-    //比较旧密码是否正确，比较新密码和旧密码是否一致，比较两次新密码是否一样
-/*    correctPwd() {
-      let pwd = localStorage.getItem("pwd");
-      if(pwd === this.passwordInfoWrite.oldPwd) {
-        if(this.passwordInfoWrite.newPwd === this.passwordInfoWrite.againPwd) {
-          return 1;
-        }
-        else {
-          this.$message.warning("两次输入的新密码不一致，请重试！");
-          return 0;
-        }
-      }
-      else {
-        this.$message.warning("旧密码输入错误，请重试！");
-        return 0;
-      }
-    },*/
     //字符串合理性判断
     isValid(str) {
       return /^[\u4e00-\u9fa5\w]{4,16}$/.test(str);
@@ -245,6 +228,7 @@ export default {
         }
       }).then((res) => {
         /*let data = res.data;*/
+        console.log(res);
         if(res.code === 200) {
           /*this.userInfo = data;*/
         }

@@ -5,15 +5,15 @@
       <div class="search_form">
         <div class="search_box1">
           <el-input
-                  v-model="name"
+                  v-model="userSearch.name"
                   class="search_input"
                   placeholder="请输入住户姓名"></el-input>
-          <el-button type="primary">搜索</el-button>
+          <el-button type="primary" @click="conditionSearch">搜索</el-button>
         </div>
         <div class="search_box2">
           <div class="select_box1">
             <label>栋数：</label>
-            <el-select v-model="buildingNumber" class="select">
+            <el-select v-model="userSearch.buildingNumber" class="select">
               <el-option value="1"></el-option>
               <el-option value="2"></el-option>
               <el-option value="3"></el-option>
@@ -28,7 +28,7 @@
           </div>
           <div class="select_box2">
             <label>房间号：</label>
-            <el-select v-model="roomNumber" class="select">
+            <el-select v-model="userSearch.roomNumber" class="select">
               <el-option value="100"></el-option>
               <el-option value="101"></el-option>
               <el-option value="102"></el-option>
@@ -45,37 +45,38 @@
       </div>
       <div class="user_table">
         <div class="add_user">
-          <el-button type="primary" class="add_button" @click="openAdd">新增用户</el-button>
+          <el-button type="primary" class="add_button" @click="openAdd">新增住户用户</el-button>
         </div>
         <el-table
                 :data="userData"
                 style="width: 100%"
+                :default-sort = "{prop: 'buildingNumber', order: 'ascending'}"
                 highlight-current-row>
           <!-- 设置min-width来自适应宽度 -->
           <el-table-column prop="name" label="姓名" min-width="12%" align="center"></el-table-column>
-          <el-table-column prop="buildingNumber" label="栋数" min-width="10%" align="center"></el-table-column>
+          <el-table-column prop="buildingNumber" label="栋数" min-width="10%" align="center" sortable></el-table-column>
           <el-table-column prop="roomNumber" label="房间号" min-width="10%" align="center"></el-table-column>
           <el-table-column prop="plateNumber" label="车牌号" min-width="15%" align="center"></el-table-column>
           <el-table-column label="操作" min-width="25%" align="center">
+            <span slot-scope="scope">
             <!-- 修改未做 -->
             <!--<a href>
               <span class="operation" @click.prevent="openModify">修改</span>
             </a>-->
-            <a href>
-              <span class="operation" @click.prevent="openDelete">删除</span>
-            </a>
-            <router-link to="/index/user/userInfo">
-              <span class="operation" @click="toUserInfo">查看详情</span>
-            </router-link>
+              <a href>
+                <span class="operation" @click.prevent="openDelete(scope.row)">删除</span>
+              </a>
+              <a href>
+                <span class="operation" @click.prevent="getDetail(scope.row)">查看详情</span>
+              </a>
+            </span>
           </el-table-column>
         </el-table>
-        <div class="page_block">
+        <div class="page_block" v-show="listNull">
           <el-pagination
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="currentPage"
-                  :page-size="pageSize"
-                  :total="total"
+                  :current-page="pageBlock.currentPage"
+                  :page-size="pageBlock.pageSize"
+                  :total="pageBlock.total"
                   layout="prev, pager, next, total">
           </el-pagination>
         </div>
@@ -92,7 +93,7 @@
         <div class="deleteContent">确定要删除吗？</div>
         <ul>
           <li class="yes">
-            <button type="button">是</button>
+            <button type="button" @click="deleteUser">是</button>
           </li>
           <li class="no">
             <button type="button" @click="closeDelete">否</button>
@@ -113,11 +114,11 @@
             <h5>个人信息</h5>
             <label class="userName">
               用户名：
-              <input type="text" v-model="addUserData.basicInfo.userName">
+              <input type="text" v-model="addUserData.userName">
             </label>
             <label class="password">
               密码：
-              <input type="password" v-model="addUserData.basicInfo.password">
+              <input type="password" v-model="addUserData.password">
             </label>
           </form>
           <div class="line1"></div>
@@ -125,25 +126,25 @@
             <h5>户主信息</h5>
             <label class="name">
               姓名：
-              <input type="text" v-model="addUserData.personalInfo.name">
+              <input type="text" v-model="addUserData.name">
             </label>
             <label class="sex">性别：
-              <select v-model="addUserData.personalInfo.sex">
+              <select v-model="addUserData.sex">
                 <option value="0">男</option>
                 <option value="1">女</option>
               </select>
             </label>
             <label class="personalId">
               身份证号：
-              <input type="text" v-model="addUserData.personalInfo.personalID">
+              <input type="text" v-model="addUserData.personalID">
             </label>
             <label class="nativePlace">
               籍贯：
-              <input type="text" v-model="addUserData.personalInfo.ancestralHome">
+              <input type="text" v-model="addUserData.ancestralHome">
             </label>
             <label class="household">
               户口所在地：
-              <input type="text" v-model="addUserData.personalInfo.residenceAddress">
+              <input type="text" v-model="addUserData.residenceAddress">
             </label>
           </form>
           <div class="line2"></div>
@@ -151,15 +152,15 @@
             <h5>房屋信息</h5>
             <label class="apartmentNumber">
               栋数：
-              <input type="text" v-model="addUserData.houseInfo.buildingNumber">
+              <input type="text" v-model="addUserData.buildingNumber">
             </label>
             <label class="houseNumber">
               房号：
-              <input type="text" v-model="addUserData.houseInfo.roomNumber">
+              <input type="text" v-model="addUserData.roomNumber">
             </label>
           </form>
           <div class="saveButton">
-            <button type="button" @click="saveAdd">确定新增</button>
+            <button type="button" @click="addUser">确定新增</button>
           </div>
         </div>
       </div>
@@ -251,105 +252,130 @@
 /*
   import { sexChange } from "../../utils/sexUtil";
 */
+  import bus from "../../api/bus";
 
   export default {
+    inject:['reload'],  //注入App里的reload方法，刷新
     name: "userBox",
     data() {
       return {
-        name: '',
-        buildingNumber: '',
-        roomNumber: '',
-        userData: [
-          {
-            name: '黄一月',
-            buildingNumber: '1',
-            roomNumber: '101',
-            plateNumber: '粤A8888'
-          },{
-            name: '黄一月',
-            buildingNumber: '1',
-            roomNumber: '101',
-            plateNumber: '粤A8888'
-          },{
-            name: '黄一月',
-            buildingNumber: '1',
-            roomNumber: '101',
-            plateNumber: '粤A8888'
-          },{
-            name: '黄一月',
-            buildingNumber: '1',
-            roomNumber: '101',
-            plateNumber: '粤A8888'
-          },{
-            name: '黄一月',
-            buildingNumber: '1',
-            roomNumber: '101',
-            plateNumber: '粤A8888'
-          },{
-            name: '黄一月',
-            buildingNumber: '1',
-            roomNumber: '101',
-            plateNumber: '粤A8888'
-          },{
-            name: '黄一月',
-            buildingNumber: '1',
-            roomNumber: '101',
-            plateNumber: '粤A8888'
-          }/*,{
-            name: '黄一月',
-            buildingNumber: '1',
-            roomNumber: '101',
-            plateNumber: '粤A8888'
-          }*/
-        ],
-        //新增住户信息数据，仅作测试用途，到时候接收后台数据覆盖默认数据
-        addUserData: {
-          basicInfo: {
-            userName: 'hyy',
-            password: '123456a'
-          },
-          personalInfo: {
-            name: '黄一月',
-            personalID: '3302345666698097653',
-            sex: 0,
-            ancestralHome: '广东揭阳',
-            residenceAddress: '广东省东莞市大岭山镇教育西路'
-          },
-          houseInfo: {
-            buildingNumber: 1,
-            roomNumber: 101
-          }
+        //住户搜索的数据
+        userSearch: {
+          name: '',
+          buildingNumber: '',
+          roomNumber: '',
         },
-        pageSize: 6,
-        total: 100,
-        currentPage: 1,
+        //住户的列表数据
+        /*userData: [
+  {
+    name: '黄一月',
+    buildingNumber: '1',
+    roomNumber: '101',
+    plateNumber: '粤A8888'
+  },{
+    name: '黄一月',
+    buildingNumber: '1',
+    roomNumber: '101',
+    plateNumber: '粤A8888'
+  },{
+    name: '黄一月',
+    buildingNumber: '1',
+    roomNumber: '101',
+    plateNumber: '粤A8888'
+  },{
+    name: '黄一月',
+    buildingNumber: '1',
+    roomNumber: '101',
+    plateNumber: '粤A8888'
+  },{
+    name: '黄一月',
+    buildingNumber: '1',
+    roomNumber: '101',
+    plateNumber: '粤A8888'
+  },{
+    name: '黄一月',
+    buildingNumber: '1',
+    roomNumber: '101',
+    plateNumber: '粤A8888'
+  },{
+    name: '黄一月',
+    buildingNumber: '1',
+    roomNumber: '101',
+    plateNumber: '粤A8888'
+  }/!*,{
+    name: '黄一月',
+    buildingNumber: '1',
+    roomNumber: '101',
+    plateNumber: '粤A8888'
+  }*!/
+],*/
+        userData: [],
+        //新增住户信息数据
+        addUserData: {
+          userName: 'hxy',
+          password: '123456a',
+          name: '郑云龙',
+          personalID: '330234566669809765',
+          sex: 0,
+          ancestralHome: '广东揭阳',
+          residenceAddress: '广东省东莞市大岭山镇教育西路',
+          buildingNumber: 2,
+          roomNumber: 101
+        },
+        /*addUserData: {
+          userName: '',
+          password: '',
+          name: '',
+          personalID: '',
+          sex: '',
+          ancestralHome: '',
+          residenceAddress: '',
+          buildingNumber: '',
+          roomNumber: ''
+        },*/
+        //分页器
+        pageBlock: {
+          pageSize: 6,
+          total: 100,
+          currentPage: 1,
+        },
+        //要删除的userId
+        delUserId: '',
         userList: true,
         deleteWindows: false,
         modifyWindows: false,
         addWindows: false,
+        listNull: false
       }
     },
     methods: {
-      handleSizeChange(val) {
-        this.pageSize = val;
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        this.currentPage = val;
-        console.log(`当前页: ${val}`);
-      },
-      //父子组件传值
-      toUserInfo() {
-        this.userList = false;
-        this.$emit('userBoxData', this.userList);
-      },
-      //打开删除提示窗口
-      openDelete() {
+      //打开删除提示窗口，获取UserID
+      openDelete(row) {
         this.deleteWindows = true;
+        //存储选中行的userId
+        this.delUserId = row.userId;
       },
       //关闭删除提示窗口
       closeDelete() {
         this.deleteWindows = false;
+      },
+      //删除住户用户
+      deleteUser() {
+        this.$axios.get('/api/user/deleteUser',{
+          params: {
+            userId: this.delUserId
+          }
+        }).then((res) => {
+          if(res.code === 200) {
+            this.$message.success("删除成功");
+            this.reload();
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       /* //打开修改用户窗口
       openModify(){
@@ -367,17 +393,80 @@
       closeAdd(){
         this.addWindows = false;
       },
-      //新增用户窗口保存修改按钮
-      saveAdd(){
-        this.addWindows = false;
-      },
       //修改用户窗口保存修改按钮
       saveModify(){
         this.modifyWindows = false;
+      },
+      //获取住户相关的列表
+      getList() {
+        let name = '';
+        let buildingNumber = '';
+        let roomNumber = '';
+        this.searchUser(name, buildingNumber, roomNumber);
+      },
+      //根据条件查询指定住户
+      conditionSearch() {
+        let name = this.userSearch.name;
+        let buildingNumber = this.userSearch.buildingNumber;
+        let roomNumber = this.userSearch.roomNumber;
+        this.searchUser(name, buildingNumber, roomNumber);
+      },
+      //查询住户接口
+      searchUser(n, b, r) {
+        this.$axios.get('/api/user/searchUser',{
+          name: n,
+          buildingNumber: b,
+          roomNumber: r
+        }).then((res) => {
+          let data = res.data;
+          if(data.length === 0) {
+            this.listNull = false;
+          }
+          else {
+            this.listNull = true;
+            this.userData = data;
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      //新增住户用户
+      addUser() {
+        this.$axios.post('/api/user/addUser',{
+          userName: this.addUserData.userName,
+          password: this.addUserData.password,
+          name: this.addUserData.name,
+          idNumber: this.addUserData.personalID,
+          sex: this.addUserData.sex,
+          ancestralHome: this.addUserData.ancestralHome,
+          residenceAddress: this.addUserData.residenceAddress,
+          buildingNumber: this.addUserData.buildingNumber,
+          roomNumber: this.addUserData.roomNumber
+        }).then((res) => {
+          if(res.code === 200) {
+            this.$message.success('添加用户成功');
+            this.addWindows = false;
+            this.reload();
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      //获取住户的详细信息，获取UserID
+      getDetail(row) {
+        console.log(row);
+        bus.$emit('userId', row.userId);
+        this.$router.push('/index/user/userInfo');
+        this.userList = false;
+        this.$emit('userBoxData', this.userList);
       }
     },
-    created() {
-      this.pagination();
+    beforeMount() {
+      //获取初始住户列表
+      this.getList();
 /*
       this.addUserData.personalInfo.sex = sexChange(this.addUserData.personalInfo.sex)
 */

@@ -25,6 +25,7 @@ export default {
       this.userInfo = true;
     },
     getUserInfo(childData) {
+      console.log(childData);
       this.userInfo = childData;
       this.userList = true;
     }

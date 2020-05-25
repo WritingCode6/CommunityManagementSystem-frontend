@@ -33,13 +33,13 @@
                 @select='getStaffInfo(row)'
                 highlight-current-row>
           <!-- 设置min-width来自适应宽度 -->
-          <el-table-column prop="employee_id" label="工号" min-width="10%" sortable></el-table-column>
-          <el-table-column prop="name" label="姓名" min-width="15%"></el-table-column>
-          <el-table-column prop="type" label="值班类型" min-width="15%"></el-table-column>
-          <el-table-column prop="place" label="值班区域" min-width="15%"></el-table-column>
-          <el-table-column prop="date" label="值班时间" min-width="20%"></el-table-column>
-          <el-table-column label="操作" min-width="25%">
-            <span  slot-scope="scope">
+          <el-table-column prop="employee_id" label="工号" min-width="10%" align="center" sortable></el-table-column>
+          <el-table-column prop="name" label="姓名" min-width="15%" align="center"></el-table-column>
+          <el-table-column prop="type" label="值班类型" min-width="15%" align="center"></el-table-column>
+          <el-table-column prop="place" label="值班区域" min-width="15%" align="center"></el-table-column>
+          <el-table-column prop="date" label="值班时间" min-width="20%" align="center"></el-table-column>
+          <el-table-column label="操作" min-width="25%" align="center">
+            <span slot-scope="scope">
               <a href>
                 <span class="operation" @click.prevent="delDutyInfo">删除值班</span>
               </a>

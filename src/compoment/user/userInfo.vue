@@ -98,12 +98,34 @@
 
 <script>
   import { sexChange } from "../../utils/sexUtil";
+  import bus from "../../api/bus";
 
   export default {
     name: "userInfo",
     data() {
       return {
+        //住户详细信息
         liverData: {
+          userInfo: {
+            name: '',
+            userName: '',
+            sex: '',
+            idNumber: '',
+            ancestralHome: '',
+            residenceAddress: ''
+          },
+          carInfo: {
+            plateNumber: '',
+            brand: '',
+            model: '',
+            color: ''
+          },
+          houseInfo: {
+            buildingNumber: '',
+            roomNumber: ''
+          }
+        },
+        /*liverData: {
           userInfo: {
             name: '黄一月',
             userName: '黄一月',
@@ -122,7 +144,7 @@
             buildingNumber: '1',
             roomNumber: '101'
           }
-        },
+        },*/
         houseRead: true,
         carRead: false,
         userInfo: true
@@ -143,10 +165,63 @@
       toUserBox() {
         this.userInfo = false;
         this.$emit('userInfoData', this.userInfo);
+      },
+      //获取住户详细信息
+      getUserInfo(id) {
+        this.$axios.get('/api/user/getUserInfo',{
+          params: {
+            userId: id
+          }
+        }).then((res) => {
+          if(res.code === 200) {
+            console.log(res.data);
+            this.liverData.userInfo.name = res.data.userInfo.name;
+            this.liverData.userInfo.userName = res.data.userInfo.userName;
+            this.liverData.userInfo.sex = sexChange(res.data.userInfo.sex);
+            this.liverData.userInfo.idNumber = res.data.userInfo.idNumber;
+            this.liverData.userInfo.ancestralHome = res.data.userInfo.ancestralHome;
+            this.liverData.userInfo.residenceAddress = res.data.userInfo.residenceAddress;
+            if(res.data.carInfo) {
+              this.liverData.carInfo.plateNumber = res.data.carInfo.plateNumber;
+              this.liverData.carInfo.brand = res.data.carInfo.brand;
+              this.liverData.carInfo.model = res.data.carInfo.model;
+              this.liverData.carInfo.color = res.data.carInfo.color;
+            }
+            else {
+              this.liverData.carInfo.plateNumber = '暂无信息';
+              this.liverData.carInfo.brand = '暂无信息';
+              this.liverData.carInfo.model = '暂无信息';
+              this.liverData.carInfo.color = '暂无信息';
+            }
+            if(res.data.houseInfo) {
+              this.liverData.houseInfo.buildingNumber = res.data.houseInfo.buildingNumber;
+              this.liverData.houseInfo.roomNumber = res.data.houseInfo.roomNumber;
+            }
+            else {
+              this.liverData.houseInfo.buildingNumber = '暂无信息';
+              this.liverData.houseInfo.roomNumber = '暂无信息';
+            }
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       }
     },
     beforeMount() {
       this.liverData.userInfo.sex = sexChange(this.liverData.userInfo.sex);
+    },
+    mounted() {
+      bus.$on('userId', (res) => {
+        //获取列表页传来的userId
+        /*this.userId = res
+        console.log(res);*/
+        this.getUserInfo(res);
+      })
+      console.log(this.userId);
+     /* this.getUserInfo();*/
     }
   }
 </script>
