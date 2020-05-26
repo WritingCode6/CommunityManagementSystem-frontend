@@ -28,7 +28,7 @@
               </a>
             </el-table-column>
           </el-table>
-          <div class="page_block">
+          <div class="page_block" v-if="listNullParking">
             <el-pagination
                     :current-page="currentPage1"
                     :page-size="pageSize1"
@@ -88,7 +88,7 @@
               </a>
             </el-table-column>
           </el-table>
-          <div class="page_block">
+          <div class="page_block" v-if="listNullCar">
             <el-pagination
                     :current-page="currentPage2"
                     :page-size="pageSize2"
@@ -264,6 +264,7 @@
 <script>
 export default {
   name: "parking",
+  inject: ['reload'],  //注入App里的reload方法，刷新
   data() {
     return {
       parkingMsgRead: true,
@@ -274,7 +275,11 @@ export default {
       carModifyWindows: false,
       carCheckWindows: false,
       carDeleteWindows: false,
-      parkingData: [
+      listNullParking: false,
+      listNullCar: false,
+      //车位信息
+      parkingData: [],
+      /*parkingData: [
         {
           id: 1,
           spaceNumber: 11
@@ -311,7 +316,9 @@ export default {
           id: 9,
           spaceNumber: 11
         }
-      ],
+      ],*/
+      //车辆信息
+      /*carData: [],*/
       carData: [
         {
           userId: 1,
@@ -371,7 +378,9 @@ export default {
       pageSize2: 9,
       total2: 100,
       inputAddBatch: "",
-      inputDelBatch: ""
+      inputAddBatchArr: [],
+      inputDelBatch: "",
+      inputDelBatchArr: []
     };
   },
   methods: {
@@ -385,6 +394,26 @@ export default {
       this.parkingMsgRead = true;
       this.carMsgRead = false;
     },
+    //获取车位信息列表
+    getParkingList() {
+      this.$axios.get('/api/car/getParkingInfo')
+      .then((res) => {
+        console.log(res);
+        let data = res.data;
+        if(data.length === 0) {
+          /*this.listNullParking = false;*/
+        }
+        else {
+          /*this.listNullParking = true;*/
+          this.parkingData = data;
+          /*this.pageBlock.pageSize = data.pageSize;
+          this.pageBlock.total = data.total;
+          this.pageBlock.currentPage = data.currentPage;*/
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    },
     //打开批量增加车位窗口
     openBatchAdd() {
       this.batchAddWindows = true;
@@ -395,7 +424,22 @@ export default {
     },
     //确定批量增加车位
     saveBatchAdd() {
-      this.batchAddWindows = false;
+      this.inputAddBatchArr = this.inputAddBatch.split(' ');
+      //传json数据，花括号都不用套= =
+       this.$axios.post('/api/parking/addParking',this.inputAddBatchArr)
+         .then((res) => {
+         console.log(res);
+         if(res.code === 200) {
+           this.$message.success('批量新增成功');
+           this.batchAddWindows = false;
+           this.reload();
+         }
+         else {
+           this.$message.error(res.message);
+         }
+       }).catch((err) => {
+         console.log(err);
+       })
     },
     //打开批量删除车位窗口
     openBatchDelete() {
@@ -407,7 +451,22 @@ export default {
     },
     //确定批量删除车位
     saveBatchDelete() {
-      this.batchDeleteWindows = false;
+      this.inputDelBatchArr = this.inputDelBatch.split(' ');
+      //传json数据，花括号都不用套= =
+      this.$axios.post('/api/parking/deleteParking',this.inputDelBatchArr)
+        .then((res) => {
+          console.log(res);
+          if(res.code === 200) {
+            this.$message.success('批量删除成功');
+            this.batchDeleteWindows = false;
+            this.reload();
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+        console.log(err);
+      })
     },
     //打开新增车辆信息窗口
     openCarAdd() {
@@ -455,6 +514,10 @@ export default {
         this.$message("车位号请以空格隔开");
       }
     }
+  },
+  beforeMount() {
+    //获取车位列表
+    this.getParkingList();
   }
 };
 </script>

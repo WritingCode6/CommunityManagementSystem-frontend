@@ -414,17 +414,22 @@
       //查询住户接口
       searchUser(n, b, r) {
         this.$axios.get('/api/user/searchUser',{
-          name: n,
-          buildingNumber: b,
-          roomNumber: r
+          params: {
+            name: n,
+            buildingNumber: b,
+            roomNumber: r
+          }
         }).then((res) => {
           let data = res.data;
-          if(data.length === 0) {
+          if(data.records.length === 0) {
             this.listNull = false;
           }
           else {
             this.listNull = true;
-            this.userData = data;
+            this.userData = data.records;
+            this.pageBlock.pageSize = data.pageSize;
+            this.pageBlock.total = data.total;
+            this.pageBlock.currentPage = data.currentPage;
           }
         }).catch((err) => {
           console.log(err);

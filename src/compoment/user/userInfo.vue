@@ -175,7 +175,7 @@
         }).then((res) => {
           if(res.code === 200) {
             console.log(res.data);
-            this.liverData.userInfo.name = res.data.userInfo.name;
+            /*this.liverData.userInfo.name = res.data.userInfo.name;
             this.liverData.userInfo.userName = res.data.userInfo.userName;
             this.liverData.userInfo.sex = sexChange(res.data.userInfo.sex);
             this.liverData.userInfo.idNumber = res.data.userInfo.idNumber;
@@ -200,7 +200,7 @@
             else {
               this.liverData.houseInfo.buildingNumber = '暂无信息';
               this.liverData.houseInfo.roomNumber = '暂无信息';
-            }
+            }*/
           }
           else {
             this.$message.error(res.message);
@@ -216,12 +216,8 @@
     mounted() {
       bus.$on('userId', (res) => {
         //获取列表页传来的userId
-        /*this.userId = res
-        console.log(res);*/
         this.getUserInfo(res);
       })
-      console.log(this.userId);
-     /* this.getUserInfo();*/
     }
   }
 </script>
