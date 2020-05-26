@@ -57,7 +57,6 @@
                   :data="formData"
                   style="width: 100%"
                   highlight-current-row>
-            <!-- 设置min-width来自适应宽度 -->
             <el-table-column prop="id" label="单号" min-width="10%" align="center"></el-table-column>
             <el-table-column prop="facility" label="设施" min-width="15%" align="center"></el-table-column>
             <el-table-column prop="place" label="所在地" min-width="15%" align="center"></el-table-column>
@@ -197,7 +196,7 @@
     <div class="checkWindows" v-show="checkWindows">
       <div class="checkBox">
         <h4>查看报修单</h4>
-        <div class="CheckContentBox">
+        <div class="checkContentBox">
           <div class="repairInfo">
             <h5>具体信息</h5>
             <ul>
@@ -610,7 +609,6 @@ h4::before {
 .checkBox {
   margin-top: 3.5%;
   height: 640px;
-  position: relative;
 }
 .modifyProcessBox h4,
 .addBox h4,
@@ -667,14 +665,14 @@ h4::before {
 }
 .addContentBox,
 .modifyContentBox,
-.CheckContentBox {
+.checkContentBox {
   margin-top: 30px;
   margin-left: 30px;
   width: 90%;
 }
 .addContentBox h5,
 .modifyContentBox h5,
-.CheckContentBox h5 {
+.checkContentBox h5 {
   font-size: 20px;
   font-weight: bold;
 }
