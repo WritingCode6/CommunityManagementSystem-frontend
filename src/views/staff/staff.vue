@@ -17,7 +17,7 @@
                       type="date"
                       placeholder="选择值班日期">
               </el-date-picker>
-              <button class="search_btn">搜索</button>
+              <button class="search_btn" @click="searchDuty">搜索</button>
               <div class="add_staff">
                 <el-button type="primary" class="add_button1" @click="addDutyInfo">新增值班信息</el-button>
                 <el-button type="primary" class="add_button2" @click="addStaffInfo">新增工作人员用户</el-button>
@@ -28,12 +28,10 @@
         <el-table
                 :data="staffData"
                 style="width: 100%"
-                :default-sort = "{prop: 'employee_id', order: 'ascending'}"
-                ref="singleTable"
-                @select='getStaffInfo(row)'
+                :default-sort = "{prop: 'employeeId', order: 'ascending'}"
                 highlight-current-row>
           <!-- 设置min-width来自适应宽度 -->
-          <el-table-column prop="employee_id" label="工号" min-width="10%" align="center" sortable></el-table-column>
+          <el-table-column prop="employeeId" label="工号" min-width="10%" align="center" sortable></el-table-column>
           <el-table-column prop="name" label="姓名" min-width="15%" align="center"></el-table-column>
           <el-table-column prop="type" label="值班类型" min-width="15%" align="center"></el-table-column>
           <el-table-column prop="place" label="值班区域" min-width="15%" align="center"></el-table-column>
@@ -41,18 +39,18 @@
           <el-table-column label="操作" min-width="25%" align="center">
             <span slot-scope="scope">
               <a href>
-                <span class="operation" @click.prevent="delDutyInfo">删除值班</span>
+                <span class="operation" @click.prevent="delDutyInfo(scope.row)">删除值班</span>
               </a>
               <a href>
-                <span class="operation" @click.prevent="delStaffInfo">删除用户</span>
+                <span class="operation" @click.prevent="delStaffInfo(scope.row)">删除用户</span>
               </a>
               <a href>
-                <span class="operation" @click.prevent="getStaffInfo(scope.$index, scope.row)">查看详情</span>
+                <span class="operation" @click.prevent="openStaffInfo(scope.row)">查看详情</span>
               </a>
             </span>
           </el-table-column>
         </el-table>
-        <div class="page_block">
+        <div class="page_block" v-if="listNull">
           <el-pagination
                   :current-page="pagingData.currentPage"
                   :page-size="pagingData.pageSize"
@@ -151,9 +149,9 @@
                     class="staff_input"></el-input>
             <label class="staff_word">职位：</label>
             <el-select v-model="addStaffData.userType" class="staff_select">
-              <el-option label="巡查" value="巡查"></el-option>
-              <el-option label="安保" value="安保"></el-option>
-              <el-option label="清洁" value="清洁"></el-option>
+              <el-option label="巡查" value="5"></el-option>
+              <el-option label="安保" value="6"></el-option>
+              <el-option label="清洁" value="3"></el-option>
             </el-select>
           </div>
           <div class="staff_form">
@@ -254,9 +252,11 @@
 
 <script>
   import {sexChange} from "../../utils/sexUtil";
+  import {typeJudge, typeJudgeNum} from "../../utils/duty";
 
   export default {
     name: "staff",
+    inject: ['reload'],
     data() {
       return {
         //分页器数据
@@ -271,7 +271,7 @@
           type: '',
         },
         //表格数据
-        staffData: [
+        /*staffData: [
           {
             employee_id: 1,
             name: '梨花',
@@ -321,56 +321,111 @@
             place: '走廊',
             date: '2020-20-20'
           }
-        ],
+        ],*/
+        staffData: [],
         //新增值班框数据
         addDutyData: {
           options: [
             {
-              value: '巡查',
+              value: '0',
               label: '巡查'
             },
             {
-              value: '安保',
+              value: '2',
               label: '安保'
             },
             {
-              value: '清洁',
+              value: '1',
               label: '清洁'
             }
           ],
           type: '',
-          date: '',
-          employeeId: '',
-          place: ''
+          date: '2020-05-06',
+          employeeId: '1',
+          place: '未知'
         },
         //新增工作人员数据
         addStaffData: {
-          name: '',
-          service_id: '',
+          name: '11',
+          service_id: '123456',
           sex: '',
-          idNumber: '',
-          address: '',
-          phone: '',
+          idNumber: '123456789012345678',
+          address: '未知',
+          phone: '12345678901',
           userType: '',
-          userName: '',
-          password: ''
+          userName: '11',
+          password: '123456a'
         },
         //工作人员详细信息
-        staffDetail: {
+        /*staffDetail: {
           name: '菊花',
           serviceId: '001',
           sex: 1,
           phone: '19909090909'
+        },*/
+        staffDetail: {
+          name: '',
+          serviceId: '',
+          sex: '',
+          phone: ''
         },
         addDuty: false,
         addWindows1: false,
         addWindows2: false,
         delWindows1: false,
         delWindows2: false,
-        checkWindows: false
+        checkWindows: false,
+        listNull: false,
+        delDutyId: '',
+        delStaffId: '',
+        getStaffId: ''
       }
     },
     methods: {
+      //查看值班信息
+      getDutyList() {
+        this.getList(this.searchData.date, this.searchData.type, this.pagingData.currentPage, this.pagingData.pageSize);
+      },
+      //搜索值班信息
+      searchDuty() {
+        this.getList(this.searchData.date, typeJudgeNum(this.searchData.type), this.pagingData.currentPage, this.pagingData.pageSize);
+      },
+      //值班信息接口
+      getList(d, t, c, p) {
+        this.$axios.get('/api/property/getDutyInfo',{
+          params: {
+            date: d,
+            type: t,
+            current: c,
+            pageSize: p
+          }
+        }).then((res) => {
+          console.log(res)
+          let data = res.data;
+          if(data.records.length === 0) {
+            this.staffData = data.records;
+            this.listNull = false;
+          }
+          else {
+            this.listNull = true;
+            this.staffData = data.records;
+            this.change(this.staffData);
+            this.pagingData.pageSize = data.pageSize;
+            this.pagingData.total = data.total;
+            this.pagingData.currentPage = data.currentPage;
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      //处理值班类型和时间的转换
+      change(arr) {
+        let i = 0;
+        for(i; i<arr.length; i++) {
+          arr[i].type = typeJudge(arr[i].type);
+          /*arr[i].date = timeChange(arr[i].date);*/
+        }
+      },
       //打开新增值班信息窗口
       addDutyInfo() {
         this.addWindows1 = true;
@@ -381,7 +436,25 @@
       },
       //新增值班信息
       addDutyPost() {
-        this.addWindows1 = false;
+        console.log(this.addDutyData);
+        this.$axios.post('/api/property/addDutyForm',{
+          date: this.addDutyData.date,
+          employeeId: this.addDutyData.employeeId,
+          type: this.addDutyData.type,
+          place: this.addDutyData.place
+        }).then((res) => {
+          console.log(res);
+          if(res.code === 200) {
+            this.$message.success('新增成功');
+            this.addWindows1 = false;
+            this.reload();
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       //打开新增工作人员信息窗口
       addStaffInfo() {
@@ -393,12 +466,34 @@
       },
       //新增工作人员信息
       addStaffPost() {
-        this.addWindows2 = false;
+        this.$axios.post('/api/user/addStaff',{
+          userName: this.addStaffData.userName,
+          password: this.addStaffData.password,
+          name: this.addStaffData.name,
+          idNumber: this.addStaffData.idNumber,
+          serviceId: this.addStaffData.service_id,
+          sex: this.addStaffData.sex,
+          address: this.addStaffData.address,
+          userType: this.addStaffData.userType,
+          phone: this.addStaffData.phone
+        }).then((res) => {
+          if(res.code === 200) {
+            this.$message.success('新增成功');
+            this.addWindows2 = false;
+            this.reload();
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       //打开删除值班信息窗口
-      delDutyInfo() {
+      delDutyInfo(row) {
         this.delWindows1 = true;
-        console.log(this.delWindows1)
+        console.log(row.id)
+        this.delDutyId = row.id.toString();
       },
       //关闭删除值班信息窗口
       closeDelDuty() {
@@ -406,11 +501,26 @@
       },
       //删除值班信息
       delDutyPost() {
-        this.delWindows1 = false;
+        let arr = [];
+        arr.push(this.delDutyId);
+        //json数据
+        this.$axios.post('/api/property/deleteDuty',arr).then((res) => {
+          if(res.code === 200) {
+            this.$message.success('删除值班信息成功');
+            this.delWindows1 = false;
+            this.reload();
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       //打开删除工作人员信息窗口
-      delStaffInfo() {
+      delStaffInfo(row) {
         this.delWindows2 = true;
+        this.delStaffId = row.employeeId;
       },
       //关闭删除工作人员信息窗口
       closeDelStaff() {
@@ -418,19 +528,52 @@
       },
       //删除工作人员账号信息
       delStaffPost() {
-        this.delWindow2 = false;
+        this.$axios.get('/api/user/deleteUser',{
+          params: {
+            userId: this.delStaffId
+          }
+        }).then((res) => {
+          if(res.code === 200) {
+            this.delWindow2 = false;
+            this.$message.success("删除成功");
+            this.reload();
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       //打开查看工作人员详情信息窗口
-      getStaffInfo(index, row) {
-        console.log(index, row);
-        this.checkWindows = true;
-        this.staffDetail.sex = sexChange(this.staffDetail.sex);
-
+      openStaffInfo(row) {
+        this.$axios.get('/api/user/getStaffInfo',{
+          params: {
+            userId: row.employeeId
+          }
+        }).then((res) => {
+          if(res.code === 200) {
+            this.checkWindows = true;
+            this.staffDetail.name = res.data[0].name;
+            this.staffDetail.serviceId = res.data[0].serviceId;
+            this.staffDetail.sex = sexChange(res.data[0].sex);
+            this.staffDetail.phone = res.data[0].phone;
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       //关闭查看工作人员详情信息窗口
       closeStaffInfo() {
         this.checkWindows = false;
       }
+    },
+    beforeMount() {
+      //获取值班列表
+      this.getDutyList();
     }
   }
 </script>

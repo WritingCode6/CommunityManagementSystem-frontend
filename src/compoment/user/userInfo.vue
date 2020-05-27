@@ -216,12 +216,8 @@
     mounted() {
       bus.$on('userId', (res) => {
         //获取列表页传来的userId
-        /*this.userId = res
-        console.log(res);*/
         this.getUserInfo(res);
       })
-      console.log(this.userId);
-     /* this.getUserInfo();*/
     }
   }
 </script>

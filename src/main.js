@@ -11,6 +11,7 @@ Vue.use(ElementUI);  //全局使用element-ui
 Vue.config.productionTip = false;
 
 Vue.prototype.$axios = axios;  //全局配置axios
+/*axios.defaults.headers.post['Content-Type'] = 'application/json';*/
 /*axios.defaults.baseURL = 'http://community.chavy.top';*/
 
 new Vue({
