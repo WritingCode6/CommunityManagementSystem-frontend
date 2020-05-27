@@ -35,7 +35,7 @@
           </el-form>
           <div class="form_button">
             <el-button type="primary" @click="readToWriteInfo">修改</el-button>
-            <el-button type="primary" @click="getStaffInfo">刷新</el-button>
+            <el-button type="primary" @click="refresh">刷新</el-button>
           </div>
         </div>
         <div v-show="onlyWriteInfo">
@@ -102,7 +102,7 @@
           </el-form>
           <div class="form_button">
             <el-button type="primary" @click="readToWritePwd">修改</el-button>
-            <el-button type="primary">刷新</el-button>
+            <el-button type="primary" @click="refresh">刷新</el-button>
           </div>
         </div>
         <div v-show="onlyWritePwd">
@@ -139,6 +139,7 @@
 
 export default {
   name:"personal",
+  inject: ['reload'],
   data() {
     return {
       userInfo: [{
@@ -300,6 +301,10 @@ export default {
         this.$message.warning("旧密码输入错误，请重试！");
       }
 
+    },
+    //刷新函数
+    refresh() {
+      this.reload();
     }
   },
   beforeMount() {
