@@ -40,30 +40,31 @@
         </div>
         <div v-show="onlyWriteInfo">
           <h3>个人资料</h3>
-          <el-form class="infoFrom">
+          <el-form :model="userInfo[0]" ref="userInfo[0]" class="infoFrom" :rules="infoRules">
             <div class="form_left">
-              <el-form-item prop="name" class="name">
+              <el-form-item class="name">
                 <label>姓名：</label>
                 <el-input v-model="userInfo[0].name" class="input" readonly></el-input>
               </el-form-item>
               <el-form-item prop="phone" class="phone">
                 <label>手机号：</label>
-                <el-input v-model="userInfo[0].phone" class="input" clearable></el-input>
+				//bug
+                <el-input v-model.number="userInfo[0].phone" class="input" clearable></el-input>
               </el-form-item>
-              <el-form-item prop="sex" class="sex">
+              <el-form-item class="sex">
                 <label>性别：</label>
-                <el-select v-model="userInfo[0].sex" class="select">
+                <el-select v-model="userInfo[0].sex" class="select" disabled>
                   <el-option label="男" value="0"></el-option>
                   <el-option label="女" value="1"></el-option>
                 </el-select>
               </el-form-item>
             </div>
             <div class="form_right">
-              <el-form-item prop="idNumber" class="idNumber">
+              <el-form-item class="idNumber">
                 <label>身份证号：</label>
                 <el-input v-model="userInfo[0].idNumber" class="longInput input" readonly></el-input>
               </el-form-item>
-              <el-form-item prop="serviceId" class="serviceId">
+              <el-form-item class="serviceId">
                 <label>工作ID：</label>
                 <el-input v-model="userInfo[0].serviceId" class="input" readonly></el-input>
               </el-form-item>
@@ -144,7 +145,7 @@ export default {
     return {
       userInfo: [{
         name: "李华华",
-        phone: '12345678901',
+        phone: '12345678910',
         sex: 0,
         idNumber: "441900197609239999",
         serviceId: "123443",
@@ -160,6 +161,15 @@ export default {
         oldPwd: '',
         newPwd: '',
         againPwd: ''
+      },
+      infoRules:{
+        phone:[
+          { required: true, message: '手机号不能为空', trigger: 'blur'},
+          { type: 'number', message: '手机号必须为数字值', trigger: 'blur'}
+        ],
+        address:[
+          { required: true, message: '地址不能为空', trigger: 'blur'},
+        ]
       },
       onlyReadInfo: true,
       onlyReadPwd: true,
@@ -391,5 +401,11 @@ label {
   background: #8a79af;
   border-color: #8a79af;
   margin-left: 30px;
+}
+</style>
+<style>
+.el-form-item__error {
+  position: absolute;
+  left: 80px;
 }
 </style>

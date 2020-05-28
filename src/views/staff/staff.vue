@@ -71,41 +71,52 @@
         </div>
         <div class="duty_content">
           <h5>个人值班信息</h5>
-          <div class="duty_form">
-            <div class="duty_form1">
-              <label class="duty_word">值班类型：</label>
-              <el-select v-model="addDutyData.type" placeholder="请选择" class="duty_input">
-                <el-option
-                        v-for="item in addDutyData.options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
+          <el-form :model="addDutyData" ref="addDutyData" :rules="dutyRules">
+            <div class="duty_form">
+              <div class="duty_form1">
+                <el-form-item prop="type">
+                  <label class="duty_word">值班类型：</label>
+                  <el-select v-model="addDutyData.type" placeholder="请选择" class="duty_input">
+                    <el-option
+                            v-for="item in addDutyData.options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
+              <div class="duty_form1">
+                <el-form-item prop="date">
+                  <label class="duty_word">值班时间：</label>
+                  <el-date-picker
+                          v-model="addDutyData.date"
+                          type="date"
+                          class="duty_input"
+                          placeholder="选择值班日期">
+                  </el-date-picker>
+                </el-form-item>
+              </div>
             </div>
-            <div class="duty_form1">
-              <label class="duty_word">值班时间：</label>
-              <el-date-picker
-                      v-model="addDutyData.date"
-                      type="date"
-                      class="duty_input"
-                      placeholder="选择值班日期">
-              </el-date-picker></div>
-          </div>
-          <div class="duty_form">
-            <div class="duty_form1">
-              <label class="duty_word">工作人员ID：</label>
-              <el-input
-                      v-model="addDutyData.employeeId"
-                      class="duty_input"></el-input>
+            <div class="duty_form">
+              <div class="duty_form1">
+                <el-form-item prop="employeeId">
+                  <label class="duty_word">工作人员ID：</label>
+                  <el-input
+                          v-model="addDutyData.employeeId"
+                          class="duty_input"></el-input>
+                </el-form-item>
+              </div>
+              <div class="duty_form1">
+                <el-form-item prop="place">
+                  <label class="duty_word">值班区域：</label>
+                  <el-input
+                          v-model="addDutyData.place"
+                          class="duty_input"></el-input>
+                </el-form-item>
+              </div>
             </div>
-            <div class="duty_form1">
-              <label class="duty_word">值班区域：</label>
-              <el-input
-                      v-model="addDutyData.place"
-                      class="duty_input"></el-input>
-            </div>
-          </div>
+          </el-form>
           <div class="saveButton">
             <button type="button" @click="addDutyPost">确定新增</button>
           </div>
@@ -122,61 +133,81 @@
         </div>
         <div class="staff_content">
           <h5>个人资料</h5>
-          <div class="staff_form">
-            <label class="staff_word">姓名：</label>
-            <el-input
-                    v-model="addStaffData.name"
-                    class="staff_input"></el-input>
-            <label class="staff_word">工号：</label>
-            <el-input
-                    v-model="addStaffData.service_id"
-                    class="staff_input"></el-input>
-          </div>
-          <div class="staff_form">
-            <label class="staff_word">性别：</label>
-            <el-select v-model="addStaffData.sex" class="staff_select">
-              <el-option label="男" value="0"></el-option>
-              <el-option label="女" value="1"></el-option>
-            </el-select>
-            <label class="staff_word">身份证：</label>
-            <el-input
-                    v-model="addStaffData.idNumber"
-                    class="staff_input"></el-input>
-          </div>
-          <div class="staff_form">
-            <label class="staff_word">手机号：</label>
-            <el-input
-                    v-model="addStaffData.phone"
-                    class="staff_input"></el-input>
-            <label class="staff_word">职位：</label>
-            <el-select v-model="addStaffData.userType" class="staff_select">
-              <el-option label="巡查" value="5"></el-option>
-              <el-option label="安保" value="6"></el-option>
-              <el-option label="清洁" value="3"></el-option>
-            </el-select>
-          </div>
-          <div class="staff_form">
-            <label class="staff_word">居住地址：</label>
-            <el-input
-                    class="staff_text"
-                    v-model="addStaffData.address"></el-input>
-          </div>
-          <div class="line1"></div>
-          <h5>账户信息</h5>
-          <div class="staff_form">
-            <label class="staff_word">用户名：</label>
-            <el-input
-                    v-model="addStaffData.userName"
-                    class="staff_input"></el-input>
-            <label class="staff_word">密码：</label>
-            <el-input
-                    v-model="addStaffData.password"
-                    show-password
-                    class="staff_input"></el-input>
-          </div>
-          <div class="saveButton_staff">
-            <button type="button" @click="addStaffPost">确定新增</button>
-          </div>
+          <el-form :model="addStaffData" ref="addStaffData" :rules="staffRules">
+            <div class="staff_form">
+              <el-form-item prop="name" class="name">
+                <label class="staff_word">姓名：</label>
+                <el-input
+                        v-model="addStaffData.name"
+                        class="staff_input"></el-input>
+              </el-form-item>
+              <el-form-item prop="service_id" class="service_id">
+                <label class="staff_word">工号：</label>
+                <el-input
+                        v-model="addStaffData.service_id"
+                        class="staff_input"></el-input>
+              </el-form-item>
+            </div>
+            <div class="staff_form">
+              <el-form-item prop="sex" class="sex">
+                <label class="staff_word">性别：</label>
+                <el-select v-model="addStaffData.sex" class="staff_select">
+                  <el-option label="男" value="0"></el-option>
+                  <el-option label="女" value="1"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item prop="idNumber" class="idNumber">
+                <label class="staff_word">身份证：</label>
+                <el-input
+                        v-model="addStaffData.idNumber"
+                        class="staff_input"></el-input>
+              </el-form-item>
+            </div>
+            <div class="staff_form">
+              <el-form-item prop="phone" class="phone">
+                <label class="staff_word">手机号：</label>
+                <el-input
+                        v-model="addStaffData.phone"
+                        class="staff_input"></el-input>
+              </el-form-item>
+              <el-form-item prop="userType" class="userType">
+                <label class="staff_word">职位：</label>
+                <el-select v-model="addStaffData.userType" class="staff_select">
+                  <el-option label="巡查" value="5"></el-option>
+                  <el-option label="安保" value="6"></el-option>
+                  <el-option label="清洁" value="3"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="staff_form">
+              <el-form-item prop="address" class="address">
+                <label class="staff_word">居住地址：</label>
+                <el-input
+                        class="staff_text"
+                        v-model="addStaffData.address"></el-input>
+              </el-form-item>
+            </div>
+            <div class="line1"></div>
+            <h5>账户信息</h5>
+            <div class="staff_form">
+              <el-form-item prop="userName" class="userName">
+                <label class="staff_word">用户名：</label>
+                <el-input
+                        v-model="addStaffData.userName"
+                        class="staff_input"></el-input>
+              </el-form-item>
+              <el-form-item prop="password" class="password">
+                <label class="staff_word">密码：</label>
+                <el-input
+                      v-model="addStaffData.password"
+                      show-password
+                      class="staff_input"></el-input>
+              </el-form-item>
+            </div>
+            <div class="saveButton_staff">
+              <button type="button" @click="addStaffPost">确定新增</button>
+            </div>
+          </el-form>
         </div>
       </div>
     </div>
@@ -354,7 +385,7 @@
           address: '未知',
           phone: '12345678901',
           userType: '',
-          userName: '11',
+          userName: '1111',
           password: '123456a'
         },
         //工作人员详细信息
@@ -370,9 +401,57 @@
           sex: '',
           phone: ''
         },
+        dutyRules:{
+          type:[
+            { required: true, message: '值班类型不能为空', trigger: 'change'}
+          ],
+          date:[
+            { required: true, message: '值班时间不能为空', trigger: 'change'}
+          ],
+          employeeId:[
+            { required: true, message: '工作人员ID不能为空', trigger: 'blur'}
+          ],
+          place:[
+            { required: true, message: '值班区域不能为空', trigger: 'blur'}
+          ]
+        },
+        staffRules:{
+          name:[
+            { required: true, message: '姓名不能为空', trigger: 'blur'}
+          ],
+          service_id:[
+            { required: true, message: '工号不能为空', trigger: 'blur'},
+            { len: 6, message: '工号为 6 位', trigger: 'blur' }
+          ],
+          sex:[
+            { required: true, message: '性别不能为空', trigger: 'change'}
+          ],
+          idNumber:[
+            { required: true, message: '身份证不能为空', trigger: 'blur'},
+            { len: 18, message: '身份证号为 18 位', trigger: 'blur' }
+          ],
+          phone:[
+            { required: true, message: '手机号不能为空', trigger: 'blur'},
+            { len: 11, message: '手机号为 11 位', trigger: 'blur' }
+          ],
+          userType:[
+            { required: true, message: '职位不能为空', trigger: 'change'}
+          ],
+          address:[
+            { required: true, message: '居住地址不能为空', trigger: 'blur'}
+          ],
+          userName:[
+            { required: true, message: '用户名不能为空', trigger: 'blur'},
+            { min: 4, max: 16, message: '长度在 4 到 16 个字符', trigger: 'blur' }
+          ],
+          password:[
+            { required: true, message: '密码不能为空', trigger: 'blur'},
+            { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
+          ]
+        },
         addDuty: false,
         addWindows1: false,
-        addWindows2: false,
+        addWindows2: true,
         delWindows1: false,
         delWindows2: false,
         checkWindows: false,
@@ -686,9 +765,9 @@ h3::before {
 }
 .add_staff_info {
   width: 632px;
-  height: 520px;
+  height: 560px;
   background: #fff;
-  margin: 100px auto;
+  margin: 80px auto;
   position: relative;
   font-size: 20px;
   color: #666;
@@ -828,15 +907,23 @@ h5 {
   text-align: right;
 }
 .staff_word {
+  position: relative;
+  margin-left: -50px;
+  margin-top: -50px;
+  left: -40px;
   width: 150px;
   line-height: 35px;
   color: rgba(0,0,0,0.7);
+  z-index: 3;
 }
 .duty_input {
   width: 150px;
 }
 .staff_input,
 .staff_select {
+  position: absolute;
+  top: 0px;
+  left: 60px;
   width: 180px;
 }
 .staff_text {
@@ -849,7 +936,7 @@ h5 {
   width: 94%;
   height: 1px;
   background: #666;
-  margin-top: 30px;
+  margin-top: 190px;
   margin-left: 18px;
 }
 .saveButton,
@@ -861,7 +948,7 @@ h5 {
   background: #bcbcbc;
 }
 .saveButton_staff {
-  margin-top: 30px;
+  margin-top: 61px;
 }
 .backButton {
   margin-top: 25px;
@@ -914,5 +1001,60 @@ h5 {
   border-width: 0;
   border-radius: 10px;
   cursor: pointer;
+}
+.el-form-item {
+  position: absolute;
+}
+.name {
+  left: 80px;
+}
+.service_id {
+  left: 350px;
+}
+.sex {
+  top: 40px;
+  left: 80px;
+}
+.idNumber {
+  top: 40px;
+  left: 350px;
+}
+.phone {
+  top: 80px;
+  left: 80px;
+}
+.userType {
+  top: 80px;
+  left: 350px;
+}
+.address {
+  top: 120px;
+  left: 80px;
+}
+.address .staff_text {
+  top: -40px;
+  left: 60px;
+}
+.userName {
+  top: -10px;
+  left: 80px;
+}
+.password {
+  top: -10px;
+  left: 350px;
+}
+</style>
+<style>
+.duty_content .el-form-item__error {
+  position: absolute;
+  left: 110px;
+}
+.staff_content .el-form-item__error {
+  width: 200px;
+  position: absolute;
+  left: 70px;
+}
+.address .el-form-item__error {
+  top: 40px;
 }
 </style>

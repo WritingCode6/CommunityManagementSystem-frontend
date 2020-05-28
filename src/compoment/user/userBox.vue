@@ -111,55 +111,58 @@
           </a>
         </div>
         <div class="addContent">
-          <form class="personal">
-            <h5>个人信息</h5>
-            <label class="userName">
-              用户名：
-              <input type="text" v-model="addUserData.userName">
-            </label>
-            <label class="password">
-              密码：
-              <input type="password" v-model="addUserData.password">
-            </label>
-          </form>
-          <div class="line1"></div>
-          <form class="liver">
-            <h5>户主信息</h5>
-            <label class="name">
-              姓名：
-              <input type="text" v-model="addUserData.name">
-            </label>
-            <label class="sex">性别：
-              <select v-model="addUserData.sex">
-                <option value="0">男</option>
-                <option value="1">女</option>
-              </select>
-            </label>
-            <label class="personalId">
-              身份证号：
-              <input type="text" v-model="addUserData.personalID">
-            </label>
-            <label class="nativePlace">
-              籍贯：
-              <input type="text" v-model="addUserData.ancestralHome">
-            </label>
-            <label class="household">
-              户口所在地：
-              <input type="text" v-model="addUserData.residenceAddress">
-            </label>
-          </form>
-          <div class="line2"></div>
-          <form class="house">
-            <h5>房屋信息</h5>
-            <label class="apartmentNumber">
-              栋数：
-              <input type="text" v-model="addUserData.buildingNumber">
-            </label>
-            <label class="houseNumber">
-              房号：
-              <input type="text" v-model="addUserData.roomNumber">
-            </label>
-          </form>
+          <el-form :model="addUserData" ref="addUserData" :rules="formRules" class="form_table">
+            <div class="personal">
+              <h5>个人信息</h5>
+              <el-form-item class="userName" prop="userName">
+                <label>用户名：</label>
+                <el-input type="text" class="input" v-model="addUserData.userName"></el-input>
+              </el-form-item>
+              <el-form-item class="password" prop="password">
+                <label>密码：</label>
+                <el-input type="password" class="input" v-model="addUserData.password" show-password></el-input>
+              </el-form-item>
+            </div>
+            <div class="line1"></div>
+            <div class="liver">
+              <h5>户主信息</h5>
+              <el-form-item class="name" prop="name">
+                <label>姓名：</label>
+                <el-input type="text" class="input" v-model="addUserData.name"></el-input>
+              </el-form-item>
+              <el-form-item class="sex" prop="sex">
+                <label>性别：</label>
+                <el-select v-model="addUserData.sex" class="select">
+                  <el-option value="0">男</el-option>
+                  <el-option value="1">女</el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item class="personalID" prop="personalID">
+                <label>身份证号：</label>
+                <el-input type="text" class="input" v-model="addUserData.personalID"></el-input>
+              </el-form-item>
+              <el-form-item class="ancestralHome" prop="ancestralHome">
+                <label>籍贯：</label>
+                <el-input type="text" class="input" v-model="addUserData.ancestralHome"></el-input>
+              </el-form-item>
+              <el-form-item class="residenceAddress" prop="residenceAddress">
+                <label>户口所在地：</label>
+                <el-input type="text" class="input" v-model="addUserData.residenceAddress"></el-input>
+              </el-form-item>
+            </div>
+            <div class="line2"></div>
+            <div class="house">
+              <h5>房屋信息</h5>
+              <el-form-item class="buildingNumber" prop="buildingNumber">
+                <label>栋数：</label>
+                <el-input type="text" class="input" v-model="addUserData.buildingNumber"></el-input>
+              </el-form-item>
+              <el-form-item class="roomNumber" prop="roomNumber">
+                <label>房号：</label>
+                <el-input type="text" class="input" v-model="addUserData.roomNumber"></el-input>
+              </el-form-item>
+            </div>
+          </el-form>
           <div class="saveButton">
             <button type="button" @click="addUser">确定新增</button>
           </div>
@@ -197,7 +200,7 @@
               住户ID：
               <input type="text">
             </label>
-            <label class="personalId">
+            <label class="personalID">
               身份证号：
               <input type="text">
             </label>
@@ -207,11 +210,11 @@
                 <option value="woman">女</option>
               </select>
             </label>
-            <label class="household">
+            <label class="residenceAddress">
               户口所在地：
               <input type="text">
             </label>
-            <label class="nativePlace">
+            <label class="ancestralHome">
               籍贯：
               <input type="text">
             </label>
@@ -313,12 +316,12 @@
         userData: [],
         //新增住户信息数据
         addUserData: {
-          userName: 'hxy',
+          userName: 'ycfszd',
           password: '123456a',
           name: '郑云龙',
           personalID: '330234566669809765',
-          sex: 0,
-          ancestralHome: '广东揭阳',
+          sex: '0',
+          ancestralHome: '山东青岛',
           residenceAddress: '广东省东莞市大岭山镇教育西路',
           buildingNumber: 2,
           roomNumber: 101
@@ -346,7 +349,41 @@
         deleteWindows: false,
         modifyWindows: false,
         addWindows: false,
-        listNull: false
+        listNull: false,
+        formRules:{
+          userName:[
+            { required: true, message: '用户名不得为空'},
+            { min: 4, max: 16, message: '长度在 4 到 16 个字符', trigger: 'blur' }
+          ],
+          password:[
+            { required: true, message: '密码不得为空'},
+            { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
+          ],
+          name:[
+            { required: true, message: '姓名不得为空', trigger: 'blur'},
+          ],
+          sex:[
+            { required: true, message: '性别不得为空', trigger: 'blur'},
+          ],
+          personalID:[
+            { required: true, message: '身份证号不得为空', trigger: 'blur'},
+            { len: 18, message: '身份证号为 18 位', trigger: 'blur' }
+          ],
+          nativenPlace:[
+            { required: true, message: '籍贯不得为空', trigger: 'blur'},
+          ],
+          residenceAddress:[
+            { required: true, message: '户口所在地不得为空', trigger: 'blur'},
+          ],
+          buildingNumber:[
+            { required: true, message: '栋数不得为空', trigger: 'blur'},
+            { len: 1, message: '栋数为 1 位', trigger: 'blur' }
+          ],
+          roomNumber:[
+            { required: true, message: '房号不得为空', trigger: 'blur'},
+            { len: 3, message: '房号为 3 位', trigger: 'blur' }
+          ]
+        }
       }
     },
     methods: {
@@ -639,9 +676,9 @@ h3::before {
 .addBox,
 .modifyBox {
   width: 632px;
-  height: 500px;
+  height: 580px;
   background: #fff;
-  margin: 8% auto;
+  margin: 5% auto;
   position: relative;
   font-size: 20px;
   color: #666;
@@ -693,15 +730,17 @@ h5 {
   margin-top: 10px;
   color: #000;
 }
-.addBox input,
-.modifyBox input {
-  width: 137px;
-  height: 26px;
-  padding-left: 8px;
+.form_table label {
+  font-size: 20px;
 }
-.addBox select,
-.modifyBox select{
-  width: 66px;
+.form_table .input {
+  margin-top: 10px;
+  width: 137px;
+  height: 20px;
+}
+.form_table .select {
+  margin-top: 10px;
+  width: 70px;
   height: 30px;
 }
 .line1,
@@ -712,10 +751,10 @@ h5 {
   margin-left: 18px;
 }
 .line1 {
-  margin-top: 55px;
+  margin-top: 26px;
 }
 .line2 {
-  margin-top: 143px;
+  margin-top: 23px;
 }
 label {
   display: block;
@@ -726,37 +765,49 @@ label {
   margin-left: 70px;
 }
 .personal .password {
-  margin-left: 30px;
+  float: right;
+  margin-top: -72px;
+  margin-right: 90px;
 }
 .liver .name {
   margin-left: 90px;
 }
 .liver .sex {
-  margin-left: 28px;
+  float: right;
+  margin-top: -72px;
+  margin-right: 160px;
 }
-.liver .personalId input {
-  width: 160px;
+.liver .personalID .input {
+  margin-top: -30px;
+  width: 190px;
 }
-.liver .household input {
+.liver .residenceAddress .input {
+  margin-top: -30px;
   width: 280px;
 }
-.liver .personalId {
+.liver .personalID label {
+  margin-top: 0;
   margin-left: 50px;
 }
-.liver .household {
+.liver .residenceAddress label{
+  margin-top: 0;
   margin-left: 30px;
 }
-.liver .nativePlace {
-  margin-left: 7px;
+.liver .ancestralHome {
+  float: right;
+  margin-top: -70px;
+  margin-right: 60px;
 }
-.house .apartmentNumber {
+.house .buildingNumber {
   margin-left: 90px;
 }
-.house .houseNumber {
-  margin-left: 30px;
+.house .roomNumber {
+  float: right;
+  margin-top: -72px;
+  margin-right: 100px;
 }
 .saveButton {
-  margin-top: 75px;
+  margin-top: 25px;
   width: 100%;
   height: 60px;
   background: #bcbcbc;
@@ -775,5 +826,24 @@ label {
   border-width: 0px;
   border-radius: 10px;
   cursor: pointer;
+}
+</style>
+<style>
+.el-form-item__error {
+  position: absolute;
+}
+.personal .el-form-item__error {
+  left: 80px;
+}
+.password .el-form-item__error,
+.name .el-form-item__error,
+.ancestralHome .el-form-item__error,
+.buildingNumber .el-form-item__error,
+.roomNumber .el-form-item__error {
+  left: 60px;
+}
+.personalID .el-form-item__error,
+.residenceAddress .el-form-item__error {
+  left: 150px;
 }
 </style>

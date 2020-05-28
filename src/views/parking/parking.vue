@@ -56,8 +56,15 @@
       <div class="parkingPicture">
         <h4>车位数量</h4>
         <div class="picture">
-          <!-- 曲线画在这里 -->
-          大概这么大（请把我删除）
+          <el-progress 
+                type="circle" 
+                :percentage="25" 
+                class="pakingProgress"
+                :width="210"
+                :height="210"
+                :stroke-width="15"
+                color="#D7676E">
+          </el-progress>
         </div>
       </div>
     </div>
@@ -117,8 +124,15 @@
       <div class="carPicture">
         <h4>车辆数量</h4>
         <div class="picture">
-          <!-- 曲线画在这里 -->
-          大概这么大（请把我删除）
+          <el-progress 
+                type="circle" 
+                :percentage="25" 
+                class="pakingProgress"
+                :width="210"
+                :height="210"
+                :stroke-width="15"
+                color="#D7676E">
+          </el-progress>
         </div>
       </div>
     </div>
@@ -131,7 +145,7 @@
           </a>
         </div>
         <div class="batchParkingNumber">车位号：</div>
-        <input type="text" class="batchInput" @click="inputMsg" v-model="inputAddBatch">
+        <el-input type="text" class="batchInput" v-model="inputAddBatch" placeholder="车位号请以空格隔开"></el-input>
         <div class="batchAddButton">
           <button type="button" @click="saveBatchAdd">确定批量新增</button>
         </div>
@@ -146,7 +160,7 @@
           </a>
         </div>
         <div class="batchParkingNumber">车位ID：</div>
-        <input type="text" class="batchInput" @click="inputMsg" v-model="inputDelBatch">
+        <el-input type="text" class="batchInput" v-model="inputDelBatch" placeholder="车位号请以空格隔开"></el-input>
         <div class="batchDeleteButton">
           <button type="button" @click="saveBatchDelete">确定批量删除</button>
         </div>
@@ -179,28 +193,28 @@
             <img src="../../assets/image/icon/icon_back.png" alt>
           </a>
         </div>
-        <ul class="carInfo">
-          <li class="userId">
-            车主ID：
-            <input type="text" v-model="carNewMsg.userId">
-          </li>
-          <li class="carNumber">
-            车牌号：
-            <input type="text" v-model="carNewMsg.carNumber">
-          </li>
-          <li class="brand">
-            品牌：
-            <input type="text" v-model="carNewMsg.brand">
-          </li>
-          <li class="type">
-            型号：
-            <input type="text" v-model="carNewMsg.type">
-          </li>
-          <li class="color">
-            颜色：
-            <input type="text" v-model="carNewMsg.color">
-          </li>
-        </ul>
+        <el-form :model="carNewMsg" ref="carNewMsg" :rules="formRules" class="carInfo"> 
+          <el-form-item class="userId" prop="userId">
+            <label>车主ID：</label>
+            <el-input type="text" class="input" v-model="carNewMsg.userId"></el-input>
+          </el-form-item>
+          <el-form-item class="plateNumber" prop="plateNumber">
+            <label>车牌号：</label>
+            <el-input type="text" class="input" v-model="carNewMsg.plateNumber"></el-input>
+          </el-form-item>
+          <el-form-item class="brand" prop="brand">
+            <label>品牌：</label>
+            <el-input type="text" class="input" v-model="carNewMsg.brand"></el-input>
+          </el-form-item>
+          <el-form-item class="model" prop="model">
+            <label>型号：</label>
+            <el-input type="text" class="input" v-model="carNewMsg.model"></el-input>
+          </el-form-item>
+          <el-form-item class="color" prop="color">
+            <label>颜色：</label>
+            <el-input type="text" class="input" v-model="carNewMsg.color"></el-input>
+          </el-form-item>
+        </el-form>
         <div class="carAddButton">
           <button type="button" @click="saveCarAdd">确定新增</button>
         </div>
@@ -214,28 +228,28 @@
             <img src="../../assets/image/icon/icon_back.png" alt>
           </a>
         </div>
-        <ul class="carInfo">
-          <li class="userId">
-            车主ID：
-            <input type="text" v-model="carMsg.userId">
-          </li>
-          <li class="carNumber">
-            车牌号：
-            <input type="text" v-model="carMsg.carNumber">
-          </li>
-          <li class="brand">
-            品牌：
-            <input type="text" v-model="carMsg.brand">
-          </li>
-          <li class="type">
-            型号：
-            <input type="text" v-model="carMsg.type">
-          </li>
-          <li class="color">
-            颜色：
-            <input type="text" v-model="carMsg.color">
-          </li>
-        </ul>
+        <el-form :model="carMsg" ref="carMsg" :rules="formRules" class="carInfo">
+          <el-form-item class="userId" prop="userId">
+            <label>车主ID：</label>
+            <el-input type="text" class="input" v-model="carMsg.userId"></el-input>
+          </el-form-item>
+          <el-form-item class="plateNumber" prop="plateNumber">
+            <label>车牌号：</label>
+            <el-input type="text" class="input" v-model="carMsg.plateNumber"></el-input>
+          </el-form-item>
+          <el-form-item class="brand" prop="brand">
+            <label>品牌：</label>
+            <el-input type="text" class="input" v-model="carMsg.brand"></el-input>
+          </el-form-item>
+          <el-form-item class="model" prop="model">
+            <label>型号：</label>
+            <el-input type="text" class="input" v-model="carMsg.model"></el-input>
+          </el-form-item>
+          <el-form-item class="color" prop="color">
+            <label>颜色：</label>
+            <el-input type="text" class="input" v-model="carMsg.color"></el-input>
+          </el-form-item>
+        </el-form>
         <div class="carModifyButton">
           <button type="button" @click="saveCarModify">保存修改</button>
         </div>
@@ -249,17 +263,17 @@
             车主ID：
             <span>{{ carMsg.userId }}</span>
           </li>
-          <li class="carNumber">
+          <li class="plateNumber">
             车牌号：
-            <span>{{ carMsg.carNumber }}</span>
+            <span>{{ carMsg.plateNumber }}</span>
           </li>
           <li class="brand">
             品牌：
             <span>{{ carMsg.brand }}</span>
           </li>
-          <li class="type">
+          <li class="model">
             型号：
-            <span>{{ carMsg.type }}</span>
+            <span>{{ carMsg.model }}</span>
           </li>
           <li class="color">
             颜色：
@@ -392,17 +406,34 @@ export default {
       ],
       carNewMsg:{
         userId:'',
-        carNumber:'',
+        plateNumber:'',
         brand:'',
-        type:'',
+        model:'',
         color:''
       },
       carMsg:{
         userId:1,
-        carNumber:'粤A8888',
+        plateNumber:'粤A8888',
         brand:'长安',
-        type:'SC7103',
+        model:'SC7103',
         color:'黑色'
+      },
+      formRules:{
+        userId:[
+          { required: true, message: '车主ID不得为空'}
+        ],
+        plateNumber:[
+          { required: true, message: '车牌号不得为空'}
+        ],
+        brand:[
+          { required: true, message: '品牌不得为空'}
+        ],
+        model:[
+          { required: true, message: '型号不得为空'}
+        ],
+        color:[
+          { required: true, message: '颜色不得为空'}
+        ]
       },
       currentPage1: 1,
       pageSize1: 9,
@@ -537,9 +568,9 @@ export default {
     saveCarAdd() {
       this.$axios.post('/api/car/addCarInfo',{
         userId: this.carNewMsg.userId,
-        plateNumber: this.carNewMsg.carNumber,
+        plateNumber: this.carNewMsg.plateNumber,
         brand: this.carNewMsg.brand,
-        model: this.carNewMsg.type,
+        model: this.carNewMsg.model,
         color: this.carNewMsg.color
       }).then((res) => {
         console.log(res);
@@ -585,12 +616,12 @@ export default {
     closeDeleteCar() {
       this.carDeleteWindows = false;
     },
-    //批量输入信息提醒
+    /* //批量输入信息提醒
     inputMsg() {
       if (this.inputAddBatch === "" || this.inputDelBatch === "") {
         this.$message("车位号请以空格隔开");
       }
-    }
+    } */
   },
   beforeMount() {
     //获取车位列表
@@ -678,7 +709,6 @@ export default {
 .carPicture {
   width: 300px;
   height: 300px;
-  border: 1px solid #bcbcbc;
   border-radius: 5px;
   position: relative;
   top: 245px;
@@ -698,16 +728,15 @@ export default {
   position: relative;
   top: 195px;
 }
+.pakingProgress {
+  position: absolute;
+  top: 60px;
+  left: 45px;
+}
 h4 {
  font-size: 18px;
  margin-left: 8px;
  margin-top: 8px;
-}
-.picture {
- width: 270px;
- height: 250px;
- margin: 10px auto;
- border: 1px solid #666;
 }
 .addCarButton,
 .carPicture {
@@ -846,7 +875,7 @@ h4 {
 }
 .batchInput {
   float: left;
-  margin-top: -25px;
+  margin-top: -30px;
   margin-left: 200px;
   font-size: 20px;
   width: 50%;
@@ -863,8 +892,6 @@ h4 {
   height: 58px;
   background: #bcbcbc;
 }
-.carAddButton,
-.carModifyButton,
 .carCheckButton {
   margin-top: 268px;
 }
@@ -929,7 +956,9 @@ h4 {
 }
 .carAddWindows ul,
 .carModifyWindows ul,
-.carCheckWindows ul {
+.carCheckWindows ul,
+.carAddWindows label,
+.carModifyWindows label {
   font-size: 20px;
   color: #666;
   margin-top: 79px;
@@ -944,7 +973,7 @@ h4 {
   display: flex;
   float: right;
 }
-.carInfo input,
+.carInfo .input,
 .carInfo span {
   height: 25px;
   padding-left: 5px;
@@ -952,20 +981,43 @@ h4 {
   font-size: 20px;
   width: 120px;
 }
+.carAddBox .userId,
+.carModifyBox .userId {
+  margin-top: 79px;
+}
 .userId {
   margin-left: 90px;
 }
-.carNumber {
+.carAddBox .plateNumber,
+.carModifyBox .plateNumber,
+.carAddBox .color,
+.carModifyBox .color {
+  float: right;
+  margin-top: -65px;
+  margin-right: 110px;
+}
+.carAddBox .color,
+.carModifyBox .color {
+  margin-top: -130px;
+}
+.carCheckBox .plateNumber {
   margin-left: 20px;
 }
+.carAddBox .brand,
+.carModifyBox .brand {
+  margin-top: 20px;
+}
 .brand,
-.color {
+.carCheckBox .color {
   margin-left: 110px;
 }
-.type {
+.carAddBox .model,
+.carModifyBox .model {
+  margin-left: 110px;
+}
+.carCheckBox .model {
   margin-left: 40px;
 }
-
 /*fxy*/
 .parkingMsgRead .content,
 .carMsgRead .content {
@@ -1009,5 +1061,17 @@ h4 {
 .page_block {
   float: right;
   margin-top: 20px;
+}
+</style>
+<style>
+.carAddBox .el-form-item__error, 
+.carModifyBox .el-form-item__error {
+  position: absolute;
+  left: 90px;
+}
+.brand .el-form-item__error,
+.color .el-form-item__error,
+.model .el-form-item__error {
+  left: 70px;
 }
 </style>
