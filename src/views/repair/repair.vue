@@ -40,44 +40,47 @@
         </li>
       </ul>
       <div class="content">
-        <div class="function_box">
+        <!--<div class="function_box">
           <div class="search_box1">
             <el-input
-                    v-model="name"
+                    v-model="searchName"
                     class="search_input"
+                    clearable
                     placeholder="请输入住户姓名"></el-input>
             <el-button type="primary">搜索</el-button>
           </div>
           <div class="add_form">
             <el-button type="primary" class="add_button" @click="openAdd">新增报修单</el-button>
           </div>
-        </div>
+        </div>-->
         <div class="form_table">
           <el-table
                   :data="formData"
                   style="width: 100%"
                   highlight-current-row>
-            <el-table-column prop="id" label="单号" min-width="10%" align="center"></el-table-column>
+            <el-table-column prop="id" label="单号" min-width="7%" align="center"></el-table-column>
             <el-table-column prop="facility" label="设施" min-width="15%" align="center"></el-table-column>
             <el-table-column prop="place" label="所在地" min-width="15%" align="center"></el-table-column>
             <el-table-column prop="isReceived" label="状态" min-width="12%" align="center"></el-table-column>
             <el-table-column prop="createTime" label="创建时间" min-width="18%" align="center"></el-table-column>
-            <el-table-column label="操作" min-width="15%" align="center">
-              <a href>
-                <span class="operation" @click.prevent="openModify">修改</span>
+            <el-table-column label="操作" min-width="20%" align="center">
+              <span slot-scope="scope">
+                <a href>
+                <span class="operation" @click.prevent="openModify(scope.row)">修改</span>
               </a>
               <a href>
-                <span class="operation" @click.prevent="openCheck">查看详情</span>
+                <span class="operation" @click.prevent="openCheck(scope.row)">查看详情</span>
               </a>
+              </span>
             </el-table-column>
           </el-table>
-          <div class="page_block">
+          <div class="page_block" v-if="listNull">
             <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage"
-                    :page-size="pageSize"
-                    :total="total"
+                    @prev-click = "prevChange"
+                    @next-click = "nextChange"
+                    :current-page="paging.currentPage"
+                    :page-size="paging.pageSize"
+                    :total="paging.total"
                     layout="prev, pager, next, total">
             </el-pagination>
           </div>
@@ -100,7 +103,7 @@
         </div>
       </div>
     </div>
-    <div class="addWindows" v-show="addWindows">
+    <!--<div class="addWindows" v-show="addWindows">
       <div class="addBox">
         <h4>新增报修单</h4>
         <div class="back">
@@ -110,36 +113,34 @@
         </div>
         <div class="addContentBox">
           <h5>具体信息</h5>
-          <el-form 
-                ref="form" 
+          <el-form
+                ref="form"
                 :v-model="addContent"
                 :rules="repairWordRules"
                 :show-message="false">
             <el-form-item class="facility" prop="facility">
               <label>设施：</label>
               <el-input
-                  type="text" 
-                  class="input" 
-                  style="font-size:20px"
+                  type="text"
+                  class="input"
                   v-model="addContent.facility">
               </el-input>
             </el-form-item>
             <el-form-item class="place" prop="place">
               <label>所在地：</label>
               <el-input
-                  type="text" 
-                  class="input" 
-                  style="font-size:20px"
+                  type="text"
+                  class="input"
                   v-model="addContent.place">
               </el-input>
             </el-form-item>
             <el-form-item class="reason" prop="reason">
-              <label>原因：</label>
+              <label class="reason_word">原因：</label>
               <el-input
-                  type="textarea" 
-                  style="font-size:20px"
-                  resize="none" 
-                  :rows="3"
+                  type="textarea"
+                  resize="none"
+                  :rows="6"
+                  class="reason_text"
                   v-model="addContent.reason">
               </el-input>
             </el-form-item>
@@ -149,7 +150,7 @@
           <button type="button" @click="saveAdd">确定新增</button>
         </div>
       </div>
-    </div>
+    </div>-->
     <div class="modifyWindows" v-show="modifyWindows">
       <div class="modifyBox">
         <h4>修改报修单</h4>
@@ -160,28 +161,34 @@
         </div>
         <div class="modifyContentBox">
           <h5>处理信息</h5>
-          <el-form 
-                ref="form" 
-                :v-model="modifyCotent"
-                :show-message="false">
+          <el-form
+                ref="form"
+                :v-model="modifyCotent">
             <el-form-item class="isReceived">
               <label>处理状态：</label>
-              <el-select placeholder="请选择处理状态" v-model="modifyCotent.isReceived">
-                <!-- 下拉框有问题 -->
-                <el-option label="未处理" value="unreceived"></el-option>
-                <el-option label="已处理" value="received"></el-option>
+              <el-select
+                      placeholder="请选择处理状态"
+                      v-model="modifyCotent.isReceived"
+                      class="receive_input">
+                 <!--0是未处理，1是已处理-->
+                <el-option label="未处理" value="0"></el-option>
+                <el-option label="已处理" value="1"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item class="handleTime">
               <label>处理时间：</label>
-              <el-date-picker type="date" placeholder="选择日期" v-model="modifyCotent.handleTime"></el-date-picker>
+              <el-date-picker
+                      type="date"
+                      placeholder="选择日期"
+                      v-model="modifyCotent.handleTime"
+                      class="time_input"></el-date-picker>
             </el-form-item>
             <el-form-item class="result">
               <label>处理结果：</label>
               <el-input
-                  type="textarea" 
+                  type="textarea"
                   style="font-size:20px"
-                  resize="none" 
+                  resize="none"
                   :rows="4"
                   v-model="modifyCotent.result">
               </el-input>
@@ -230,7 +237,7 @@
               </li>
               <li class="reason">
                 原因：
-                <p>{{ repairMsg.reason }}</p>
+                <span>{{ repairMsg.reason }}</span>
               </li>
             </ul>
           </div>
@@ -270,8 +277,11 @@
 </template>
 
 <script>
+/*import {timeChange2} from "../../utils/time";*/
+
 export default {
   name: "repair",
+  inject: ['reload'],
   data() {
     return {
       repairProcessRead: true,
@@ -280,6 +290,7 @@ export default {
       addWindows:false,
       modifyWindows:false,
       checkWindows:false,
+      listNull: true,
       msg:
         " 为保证社区正常运营，提升后勤服务质量及管理水平，规范运作维修、报修流程，现将物业维修及报修相关流程通知如下：\n" +
         "1、 巡查人员在发现需维修情况后，认真填写报修单报修，并送至物业维修部门。\n" +
@@ -394,20 +405,16 @@ export default {
           { required: true, trigger: "blur" }
         ]
       },
-      pageSize: 10,
-      total: 100,
-      currentPage: 1
+      paging: {
+        pageSize: 9,
+        total: 100,
+        currentPage: 1,
+      },
+      /*searchName: '',*/
+      modifyId: ''
     };
   },
   methods: {
-    handleSizeChange(val) {
-      this.pageSize = val;
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      console.log(`当前页: ${val}`);
-    },
     //切换到报修单板块
     toRepairFormRead() {
       this.repairFormRead = true;
@@ -430,20 +437,40 @@ export default {
     saveModifyProcess() {
       this.modifyProcess = false;
     },
-    /* 打开新增报修单窗口 */
+   /* /!* 打开新增报修单窗口 *!/
     openAdd() {
       this.addWindows = true;
     },
-    /* 关闭新增报修单窗口 */
+    /!* 关闭新增报修单窗口 *!/
     closeAdd() {
       this.addWindows = false;
     },
-    /* 确认新增报修单 */
+    /!* 确认新增报修单 *!/
     saveAdd() {
       this.addWindows = false;
-    },
+      //住户才能新增报修单
+      /!*this.$axios.post('/api/repair/addRepair',{
+        facility: this.addContent.facility,
+        place: this.addContent.place,
+        reason: this.addContent.reason,
+        userId: localStorage.getItem("userId")
+      }).then((res) => {
+        console.log(res);
+        if(res.code === 200) {
+          this.addWindows = false;
+          this.$message.success('新增成功');
+          this.reload();
+        }
+        else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })*!/
+    },*/
     /* 打开修改报修单窗口 */
-    openModify() {
+    openModify(row) {
+      this.modifyId = row.id;
       this.modifyWindows = true;
     },
     /* 关闭修改报修单窗口 */
@@ -452,18 +479,84 @@ export default {
     },
     /* 保存修改报修单 */
     saveModify() {
-      this.modifyWindows = false;
+      /*this.$axios.post('/api/repair/updateRepair',{
+        id: this.modifyId,
+        isReceived: this.modifyCotent.isReceived,
+        employeeId: localStorage.getItem('userId'),
+        handleTime: timeChange2(this.modifyCotent.handleTime),
+        result: this.modifyCotent.result
+      }).then((res) => {
+        if(res.code === 200) {
+          this.modifyWindows = false;
+          this.$message.success('修改成功！');
+          this.reload();
+        }
+        else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })*/
     },
     /* 打开查看报修单窗口 */
-    openCheck() {
+    openCheck(row) {
+      let i = 0;
+      for(i; i<this.formData.length; i++) {
+        if(this.formData[i].id === row.id) {
+          this.repairMsg = this.formData[i];
+        }
+      }
       this.checkWindows = true;
     },
     /* 关闭查看报修单窗口 */
     closeCheck() {
       this.checkWindows = false;
     },
+    //查询报修单列表
+    getRepairList() {
+      this.getRepair(this.paging.currentPage);
+    },
+    //查询报修单的接口
+    getRepair(current) {
+      this.$axios.get('/api/repair/getRepair',{
+        params: {
+          userId: localStorage.getItem("userId"),
+          current: current,
+          size: this.paging.pageSize
+        }
+      }).then((res) => {
+        console.log(res);
+        /*let data = res.data;
+        if(res.code === 200) {
+          this.formData = data.records;
+          this.paging.total = data.total;
+          if(this.formData.length === 0 || this.paging.currentPage !== 1) {
+            this.listNull = false;
+          }
+        }
+        else {
+          this.$message.error(res.message);
+        }*/
+      }).catch((err) => {
+        console.log(err);
+      })
+    },
+    //前一页
+    prevChange(val) {
+      //val是当前页
+      this.getRepair(val);
+    },
+    //后一页
+    nextChange(val) {
+      //val是当前页
+      this.getRepair(val);
+    }
+  },
+  beforeMount() {
+    //获取报修单列表
+    this.getRepairList();
   }
-};
+}
 </script>
 
 <style scoped>
@@ -644,18 +737,16 @@ h4::before {
   z-index: 2;
 }
 .line {
-  width: 94%;
-  height: 0.6px;
+  width: 98%;
+  height: 1px;
   background: #666;
-  margin-top: 265px;
-  margin-left: 20px;
-  margin-bottom: -15px;
+  margin: 265px 0 -15px -10px;
 }
 .modifyProcessBox .back,
 .addBox .back,
 .modifyBox .back {
   position: absolute;
-  left: 550px;
+  left: 580px;
   top: 20px;
 }
 .modifycontent {
@@ -673,7 +764,7 @@ h4::before {
 .checkContentBox {
   margin-top: 30px;
   margin-left: 30px;
-  width: 90%;
+  /*width: 90%;*/
 }
 .addContentBox h5,
 .modifyContentBox h5,
@@ -697,7 +788,16 @@ h4::before {
   width: 350px;
 }
 .addContentBox .reason {
-  margin: -15px 30px;
+  margin: -15px 30px -30px 50px;
+}
+.reason_word {
+  display: block;
+}
+.addContentBox .reason .reason_text {
+  width: 350px;
+  position: relative;
+  left: 58px;
+  bottom: 30px;
 }
 .addBox .input {
   width: 200px;
@@ -706,6 +806,10 @@ h4::before {
 .modifyContentBox .isReceived {
   margin-top: 20px;
   margin-left: 30px;
+}
+.receive_input,
+.time_input {
+  width: 160px;
 }
 .modifyContentBox .handleTime {
   margin-top: -10px;
@@ -732,54 +836,54 @@ h4::before {
 .checkBox span {
   color: #000;
 }
-.id {
+.checkBox .id {
   left: 120px;
 }
-.userId {
+.checkBox .userId {
   left: 300px;
 }
-.facility {
+.checkBox .facility {
   top: 160px;
   left: 99px;
 }
-.userName {
+.checkBox .userName {
   top: 160px;
   left: 280px;
 }
-.isReceived {
+.checkBox .isReceived {
   top: 195px;
   left: 60px;
 }
-.createTime {
+.checkBox .createTime {
   top: 195px;
   left: 300px;
 }
-.place {
+.checkBox .place {
   top: 230px;
   left: 80px;
 }
-.reason {
+.checkBox .reason {
   top: 265px;
 }
-.employeeId {
-  left: 60px;
+.checkBox .employeeId {
+  left: 45px;
 }
-.employeeName {
+.checkBox .employeeName {
   left: 330px;
 }
-.handleTime {
+.checkBox .handleTime {
   top: 470px;
-  left: 80px;
+  left: 65px;
 }
-.employeePhone {
+.checkBox .employeePhone {
   top: 470px;
   left: 310px;
 }
-.result {
+.checkBox .result {
   top: 510px;
-  left: 80px;
+  left: 65px;
 }
-.reason p {
+.checkBox .reason p {
   position: absolute;
   top: 5px;
   left: -70px;
@@ -830,10 +934,13 @@ h4::before {
   height: 590px;
   border: 1px solid #bcbcbc;
 }
-.function_box {
+/*.function_box {
   display: flex;
   justify-content: space-around;
   margin-top: 30px;
+}*/
+.function_box {
+  margin: 40px 0 0 75%;
 }
 .search_box1 {
   line-height: 50px;
@@ -861,7 +968,7 @@ h4::before {
   border-radius: 10px;
 }
 .form_table {
-  margin: 20px 0 0 40px;
+  margin: 50px 0 0 40px;
   width: 93%;
 }
 .operation {

@@ -2,9 +2,9 @@
   <div id="feedback">
     <div class="feedbackBox">
       <h3>投诉反馈</h3>
-      <div class="addOptionBox">
+      <!--<div class="addOptionBox">
         <button type="button" @click="openAdd">新增投诉反馈</button>
-      </div>
+      </div>-->
       <div class="feedback_table">
         <el-table
                 :data="feedbackData"
@@ -31,15 +31,15 @@
           <el-pagination
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"
-                  :current-page="currentPage"
-                  :page-size="pageSize"
-                  :total="total"
+                  :current-page="paging.currentPage"
+                  :page-size="paging.pageSize"
+                  :total="paging.total"
                   layout="prev, pager, next, total">
           </el-pagination>
         </div>
       </div>
     </div>
-    <div class="addWindows" v-show="addWindows">
+    <!--<div class="addWindows" v-show="addWindows">
       <div class="addBox">
         <h4>新增投诉反馈</h4>
         <div class="back">
@@ -48,26 +48,27 @@
           </a>
         </div>
         <div class="addContentBox">
-          <el-form 
-                ref="form" 
-                :model="addContent" 
+          <el-form
+                ref="form"
+                :model="addContent"
                 :rules="formRules"
                 :show-message="false">
             <el-form-item class="type" prop="type">
               <label>反馈类型：</label>
               <el-select placeholder="请选择反馈类型" v-model="addContent.type">
-                <el-option label="建议" value="advice"></el-option>
-                <el-option label="投诉" value="complaint"></el-option>
+                &lt;!&ndash;0建议，1投诉&ndash;&gt;
+                <el-option label="建议" value="0"></el-option>
+                <el-option label="投诉" value="1"></el-option>
             </el-select>
             </el-form-item>
             <el-form-item class="addContent" prop="details">
               <label>反馈内容：</label>
               <br>
               <el-input
-                  type="textarea" 
+                  type="textarea"
                   placeholder="请输入反馈内容"
                   style="font-size:18px;width:92%"
-                  resize="none" 
+                  resize="none"
                   :rows="8"
                   v-model="addContent.details">
               </el-input>
@@ -78,7 +79,7 @@
             <button type="button" @click="saveAdd">确定新增</button>
         </div>
       </div>
-    </div>
+    </div>-->
     <div class="modifyWindows" v-show="modifyWindows">
       <div class="modifyBox">
         <h4>修改投诉反馈</h4>
@@ -88,9 +89,9 @@
           </a>
         </div>
         <div class="modifyContentBox">
-          <el-form 
-                ref="form" 
-                :model="modifyContent" 
+          <el-form
+                ref="form"
+                :model="modifyContent"
                 :rules="formRules"
                 :show-message="false">
             <el-form-item class="type" prop="type">
@@ -104,10 +105,10 @@
               <label>处理结果：</label>
               <br>
               <el-input
-                  type="textarea" 
+                  type="textarea"
                   placeholder="请输入处理结果"
                   style="font-size:18px;width:92%"
-                  resize="none" 
+                  resize="none"
                   :rows="8"
                   v-model="modifyContent.details">
               </el-input>
@@ -293,11 +294,11 @@
             { required: true, trigger: "blur" }
           ]
         },
-
-        pageSize: 10,
-        total: 100,
-        currentPage: 1,
-
+        paging: {
+          pageSize: 10,
+          total: 100,
+          currentPage: 1,
+        },
         addWindows:false,
         modifyWindows:false,
         checkWindows:false,
@@ -388,7 +389,7 @@
 }
 .addOptionBox button{
   width: 300px;
-  height: 40px;
+  height: 55px;
   background: #d38cad;
   font-size: 20px;
   font-weight: bold;
@@ -398,7 +399,7 @@
   border-radius: 15px;
   cursor: pointer;
   margin-top: 10px;
-  margin-left: 68%;
+  margin-left: 70%;
 }
 .feedback_table {
   margin-top: 35px;

@@ -56,9 +56,9 @@
       <div class="parkingPicture">
         <h4>车位数量</h4>
         <div class="picture">
-          <el-progress 
-                type="circle" 
-                :percentage="25" 
+          <el-progress
+                type="circle"
+                :percentage="25"
                 class="pakingProgress"
                 :width="210"
                 :height="210"
@@ -124,9 +124,9 @@
       <div class="carPicture">
         <h4>车辆数量</h4>
         <div class="picture">
-          <el-progress 
-                type="circle" 
-                :percentage="25" 
+          <el-progress
+                type="circle"
+                :percentage="25"
                 class="pakingProgress"
                 :width="210"
                 :height="210"
@@ -160,7 +160,7 @@
           </a>
         </div>
         <div class="batchParkingNumber">车位ID：</div>
-        <el-input type="text" class="batchInput" v-model="inputDelBatch" placeholder="车位号请以空格隔开"></el-input>
+        <el-input type="text" class="batchInput" v-model="inputDelBatch" placeholder="车位ID请以空格隔开"></el-input>
         <div class="batchDeleteButton">
           <button type="button" @click="saveBatchDelete">确定批量删除</button>
         </div>
@@ -193,7 +193,7 @@
             <img src="../../assets/image/icon/icon_back.png" alt>
           </a>
         </div>
-        <el-form :model="carNewMsg" ref="carNewMsg" :rules="formRules" class="carInfo"> 
+        <el-form :model="carNewMsg" ref="carNewMsg" :rules="formRules" class="carInfo">
           <el-form-item class="userId" prop="userId">
             <label>车主ID：</label>
             <el-input type="text" class="input" v-model="carNewMsg.userId"></el-input>
@@ -1064,7 +1064,7 @@ h4 {
 }
 </style>
 <style>
-.carAddBox .el-form-item__error, 
+.carAddBox .el-form-item__error,
 .carModifyBox .el-form-item__error {
   position: absolute;
   left: 90px;

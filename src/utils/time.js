@@ -25,8 +25,8 @@ export function timeChange2(date) {
   else {
     newDate = newDate + '-' + d;
   }
-  //拼接字符串
-  newDate = newDate + ' ' + '00:00:00';
+  /*//拼接字符串
+  newDate = newDate + ' ' + '00:00:00';*/
   return newDate;
 }
 

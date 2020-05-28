@@ -104,6 +104,7 @@
                   <label class="duty_word">工作人员ID：</label>
                   <el-input
                           v-model="addDutyData.employeeId"
+                          clearable
                           class="duty_input"></el-input>
                 </el-form-item>
               </div>
@@ -112,6 +113,7 @@
                   <label class="duty_word">值班区域：</label>
                   <el-input
                           v-model="addDutyData.place"
+                          clearable
                           class="duty_input"></el-input>
                 </el-form-item>
               </div>
@@ -139,12 +141,14 @@
                 <label class="staff_word">姓名：</label>
                 <el-input
                         v-model="addStaffData.name"
+                        clearable
                         class="staff_input"></el-input>
               </el-form-item>
               <el-form-item prop="service_id" class="service_id">
                 <label class="staff_word">工号：</label>
                 <el-input
                         v-model="addStaffData.service_id"
+                        clearable
                         class="staff_input"></el-input>
               </el-form-item>
             </div>
@@ -160,6 +164,7 @@
                 <label class="staff_word">身份证：</label>
                 <el-input
                         v-model="addStaffData.idNumber"
+                        clearable
                         class="staff_input"></el-input>
               </el-form-item>
             </div>
@@ -168,6 +173,7 @@
                 <label class="staff_word">手机号：</label>
                 <el-input
                         v-model="addStaffData.phone"
+                        clearable
                         class="staff_input"></el-input>
               </el-form-item>
               <el-form-item prop="userType" class="userType">
@@ -184,6 +190,7 @@
                 <label class="staff_word">居住地址：</label>
                 <el-input
                         class="staff_text"
+                        clearable
                         v-model="addStaffData.address"></el-input>
               </el-form-item>
             </div>
@@ -194,6 +201,7 @@
                 <label class="staff_word">用户名：</label>
                 <el-input
                         v-model="addStaffData.userName"
+                        clearable
                         class="staff_input"></el-input>
               </el-form-item>
               <el-form-item prop="password" class="password">
@@ -451,7 +459,7 @@
         },
         addDuty: false,
         addWindows1: false,
-        addWindows2: true,
+        addWindows2: false,
         delWindows1: false,
         delWindows2: false,
         checkWindows: false,
@@ -924,10 +932,10 @@ h5 {
   position: absolute;
   top: 0px;
   left: 60px;
-  width: 180px;
+  width: 190px;
 }
 .staff_text {
-  width: 505px;
+  width: 473px;
 }
 .check_info {
   color: #000;
@@ -948,7 +956,7 @@ h5 {
   background: #bcbcbc;
 }
 .saveButton_staff {
-  margin-top: 61px;
+  margin-top: 65px;
 }
 .backButton {
   margin-top: 25px;
@@ -1002,14 +1010,26 @@ h5 {
   border-radius: 10px;
   cursor: pointer;
 }
-.el-form-item {
+/*绝对定位带来的点击bug，待修复*/
+/*.el-form-item {
+  position: absolute;
+}*/
+.name,
+.service_id,
+.sex,
+.idNumber,
+.phone,
+.userType,
+.address,
+.userName,
+.password {
   position: absolute;
 }
 .name {
   left: 80px;
 }
 .service_id {
-  left: 350px;
+  left: 360px;
 }
 .sex {
   top: 40px;
@@ -1017,7 +1037,7 @@ h5 {
 }
 .idNumber {
   top: 40px;
-  left: 350px;
+  left: 360px;
 }
 .phone {
   top: 80px;
@@ -1025,7 +1045,7 @@ h5 {
 }
 .userType {
   top: 80px;
-  left: 350px;
+  left: 360px;
 }
 .address {
   top: 120px;
@@ -1052,7 +1072,7 @@ h5 {
 .staff_content .el-form-item__error {
   width: 200px;
   position: absolute;
-  left: 70px;
+  left: 60px;
 }
 .address .el-form-item__error {
   top: 40px;

@@ -48,12 +48,11 @@
               </el-form-item>
               <el-form-item prop="phone" class="phone">
                 <label>手机号：</label>
-				//bug
-                <el-input v-model.number="userInfo[0].phone" class="input" clearable></el-input>
+                <el-input v-model="userInfo[0].phone" class="input" clearable></el-input>
               </el-form-item>
               <el-form-item class="sex">
                 <label>性别：</label>
-                <el-select v-model="userInfo[0].sex" class="select" disabled>
+                <el-select v-model="userInfo[0].sex" class="select">
                   <el-option label="男" value="0"></el-option>
                   <el-option label="女" value="1"></el-option>
                 </el-select>
@@ -165,7 +164,12 @@ export default {
       infoRules:{
         phone:[
           { required: true, message: '手机号不能为空', trigger: 'blur'},
-          { type: 'number', message: '手机号必须为数字值', trigger: 'blur'}
+          /*v-model.number="userInfo[0].phone"*/
+          /*{ type: 'number', message: '手机号必须为数字值', trigger: 'blur'},*/
+          {
+            pattern: /^1[3|4|5|7|8][0-9]\d{8}$/,
+            message: "请输入正确的11位手机号码"
+          }
         ],
         address:[
           { required: true, message: '地址不能为空', trigger: 'blur'},

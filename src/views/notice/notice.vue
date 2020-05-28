@@ -54,15 +54,15 @@
           </a>
         </div>
         <div class="addContentBox">
-          <el-form 
-                ref="form" 
-                :model="noticeContent" 
+          <el-form
+                ref="form"
+                :model="noticeContent"
                 :rules="formRules"
                 :show-message="false">
             <el-form-item class="title" prop="title">
               <el-input
-                  type="text" 
-                  class="input" 
+                  type="text"
+                  class="input"
                   placeholder="请输入通知标题"
                   style="font-size:20px"
                   v-model="noticeContent.title">
@@ -70,10 +70,10 @@
             </el-form-item>
             <el-form-item class="addContent" prop="content">
               <el-input
-                  type="textarea" 
+                  type="textarea"
                   placeholder="请输入通知内容"
                   style="font-size:18px"
-                  resize="none" 
+                  resize="none"
                   :rows="16"
                   v-model="noticeContent.content">
               </el-input>
@@ -94,15 +94,15 @@
           </a>
         </div>
         <div class="modifyContentBox">
-          <el-form 
-                ref="form" 
-                :model="noticeMsg" 
+          <el-form
+                ref="form"
+                :model="noticeMsg"
                 :rules="formRules"
                 :show-message="false">
             <el-form-item class="title" prop="title">
               <el-input
-                  type="text" 
-                  class="input" 
+                  type="text"
+                  class="input"
                   placeholder="请输入通知标题"
                   style="font-size:20px"
                   v-model="noticeMsg.title">
@@ -110,10 +110,10 @@
             </el-form-item>
             <el-form-item class="addContent" prop="content">
               <el-input
-                  type="textarea" 
+                  type="textarea"
                   placeholder="请输入通知内容"
                   style="font-size:18px"
-                  resize="none" 
+                  resize="none"
                   :rows="16"
                   v-model="noticeMsg.content">
               </el-input>

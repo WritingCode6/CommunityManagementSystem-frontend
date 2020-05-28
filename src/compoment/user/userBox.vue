@@ -116,7 +116,7 @@
               <h5>个人信息</h5>
               <el-form-item class="userName" prop="userName">
                 <label>用户名：</label>
-                <el-input type="text" class="input" v-model="addUserData.userName"></el-input>
+                <el-input type="text" class="input" v-model="addUserData.userName" clearable></el-input>
               </el-form-item>
               <el-form-item class="password" prop="password">
                 <label>密码：</label>
@@ -128,18 +128,18 @@
               <h5>户主信息</h5>
               <el-form-item class="name" prop="name">
                 <label>姓名：</label>
-                <el-input type="text" class="input" v-model="addUserData.name"></el-input>
+                <el-input type="text" class="input" v-model="addUserData.name" clearable></el-input>
               </el-form-item>
               <el-form-item class="sex" prop="sex">
                 <label>性别：</label>
                 <el-select v-model="addUserData.sex" class="select">
-                  <el-option value="0">男</el-option>
-                  <el-option value="1">女</el-option>
+                  <el-option value="0" label="男"></el-option>
+                  <el-option value="1" label="女"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item class="personalID" prop="personalID">
                 <label>身份证号：</label>
-                <el-input type="text" class="input" v-model="addUserData.personalID"></el-input>
+                <el-input type="text" class="input" v-model="addUserData.personalID" clearable></el-input>
               </el-form-item>
               <el-form-item class="ancestralHome" prop="ancestralHome">
                 <label>籍贯：</label>
@@ -762,12 +762,12 @@ label {
   margin-top: 10px;
 }
 .personal .userName{
-  margin-left: 70px;
+  margin-left: 65px;
 }
 .personal .password {
   float: right;
   margin-top: -72px;
-  margin-right: 90px;
+  margin-right: 65px;
 }
 .liver .name {
   margin-left: 90px;
@@ -775,7 +775,7 @@ label {
 .liver .sex {
   float: right;
   margin-top: -72px;
-  margin-right: 160px;
+  margin-right: 130px;
 }
 .liver .personalID .input {
   margin-top: -30px;
@@ -783,7 +783,7 @@ label {
 }
 .liver .residenceAddress .input {
   margin-top: -30px;
-  width: 280px;
+  width: 425px;
 }
 .liver .personalID label {
   margin-top: 0;
@@ -804,10 +804,10 @@ label {
 .house .roomNumber {
   float: right;
   margin-top: -72px;
-  margin-right: 100px;
+  margin-right: 65px;
 }
 .saveButton {
-  margin-top: 25px;
+  margin-top: 30px;
   width: 100%;
   height: 60px;
   background: #bcbcbc;
