@@ -56,8 +56,15 @@
       <div class="parkingPicture">
         <h4>车位数量</h4>
         <div class="picture">
-          <!-- 曲线画在这里 -->
-          大概这么大（请把我删除）
+          <el-progress 
+                type="circle" 
+                :percentage="25" 
+                class="pakingProgress"
+                :width="210"
+                :height="210"
+                :stroke-width="15"
+                color="#D7676E">
+          </el-progress>
         </div>
       </div>
     </div>
@@ -117,8 +124,15 @@
       <div class="carPicture">
         <h4>车辆数量</h4>
         <div class="picture">
-          <!-- 曲线画在这里 -->
-          大概这么大（请把我删除）
+          <el-progress 
+                type="circle" 
+                :percentage="25" 
+                class="pakingProgress"
+                :width="210"
+                :height="210"
+                :stroke-width="15"
+                color="#D7676E">
+          </el-progress>
         </div>
       </div>
     </div>
@@ -695,7 +709,6 @@ export default {
 .carPicture {
   width: 300px;
   height: 300px;
-  border: 1px solid #bcbcbc;
   border-radius: 5px;
   position: relative;
   top: 245px;
@@ -715,16 +728,15 @@ export default {
   position: relative;
   top: 195px;
 }
+.pakingProgress {
+  position: absolute;
+  top: 60px;
+  left: 45px;
+}
 h4 {
  font-size: 18px;
  margin-left: 8px;
  margin-top: 8px;
-}
-.picture {
- width: 270px;
- height: 250px;
- margin: 10px auto;
- border: 1px solid #666;
 }
 .addCarButton,
 .carPicture {

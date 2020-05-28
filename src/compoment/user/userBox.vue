@@ -366,7 +366,7 @@
           ],
           personalID:[
             { required: true, message: '身份证号不得为空', trigger: 'blur'},
-            { len: 18, message: '身份证号为18位', trigger: 'blur' }
+            { len: 18, message: '身份证号为 18 位', trigger: 'blur' }
           ],
           nativenPlace:[
             { required: true, message: '籍贯不得为空', trigger: 'blur'},
@@ -376,11 +376,11 @@
           ],
           buildingNumber:[
             { required: true, message: '栋数不得为空', trigger: 'blur'},
-            { len: 1, message: '栋数为1位', trigger: 'blur' }
+            { len: 1, message: '栋数为 1 位', trigger: 'blur' }
           ],
           roomNumber:[
             { required: true, message: '房号不得为空', trigger: 'blur'},
-            { len: 3, message: '房号为3位', trigger: 'blur' }
+            { len: 3, message: '房号为 3 位', trigger: 'blur' }
           ]
         }
       }
