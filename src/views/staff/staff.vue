@@ -9,6 +9,7 @@
               <el-input
                       v-model="searchData.type"
                       class="search_input"
+                      clearable
                       placeholder="请输入值班类型"></el-input>
             </div>
             <div class="search_box2">

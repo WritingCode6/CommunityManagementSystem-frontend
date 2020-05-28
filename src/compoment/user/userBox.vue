@@ -7,6 +7,7 @@
           <el-input
                   v-model="userSearch.name"
                   class="search_input"
+                  clearable
                   placeholder="请输入住户姓名"></el-input>
           <el-button type="primary" @click="conditionSearch">搜索</el-button>
         </div>

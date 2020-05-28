@@ -48,7 +48,7 @@
               </el-form-item>
               <el-form-item prop="phone" class="phone">
                 <label>手机号：</label>
-                <el-input v-model="userInfo[0].phone" class="input"></el-input>
+                <el-input v-model="userInfo[0].phone" class="input" clearable></el-input>
               </el-form-item>
               <el-form-item prop="sex" class="sex">
                 <label>性别：</label>
@@ -69,7 +69,7 @@
               </el-form-item>
               <el-form-item prop="address" class="address">
                 <label>地址：</label>
-                <el-input v-model="userInfo[0].address" class="longInput input"></el-input>
+                <el-input v-model="userInfo[0].address" class="longInput input" clearable></el-input>
               </el-form-item>
             </div>
           </el-form>
@@ -150,14 +150,7 @@ export default {
         serviceId: "123443",
         address: "广东省东莞市大岭山镇教育西路"
       }],
-      /*userInfo: [{
-        name: "",
-        phone: '',
-        sex: '',
-        idNumber: "",
-        serviceId: "",
-        address: ""
-      }],*/
+      /*userInfo: [],*/
       passwordInfoRead: {
         oldPwd: '******',
         newPwd: '******',
@@ -229,7 +222,6 @@ export default {
         }
       }).then((res) => {
         /*let data = res.data;*/
-        console.log(res);
         if(res.code === 200) {
           /*this.userInfo = data;*/
         }
