@@ -6,7 +6,7 @@
         <el-input v-model="title" class="search_input" placeholder="请输入活动名称"></el-input>
         <el-button type="primary">搜索</el-button>
       </div>
-      <div class="option">
+      <div class="option" v-if="role">
         <h4>操作</h4>
         <button type="button" @click="openAdd">新增社区活动</button>
       </div>
@@ -19,10 +19,10 @@
             <a href>
               <span class="operation" @click.prevent>查看</span>
             </a>
-            <a href>
+            <a href v-if="role">
               <span class="operation" @click.prevent="openModify">修改</span>
             </a>
-            <a href>
+            <a href v-if="role">
               <span class="operation" @click.prevent="openDelete">删除</span>
             </a>
           </el-table-column>
@@ -168,6 +168,8 @@
 </template>
 
 <script>
+import {roleJudge} from "../../utils/roleUtil";
+
 export default {
   name: "activity",
   data() {
@@ -267,6 +269,7 @@ export default {
       addWindows: false,
       modifyWindows:false,
       deleteWindows:false,
+      role: false
     };
   },
   methods: {
@@ -310,6 +313,9 @@ export default {
     closeDelete() {
       this.deleteWindows = false;
     },
+  },
+  beforeMount() {
+    this.role = roleJudge();
   }
 };
 </script>
@@ -344,7 +350,7 @@ export default {
 }
 .search_input {
   width: 500px;
-  border: 1px rgba(0, 0, 0, 0.5) solid;
+  /*border: 1px rgba(0, 0, 0, 0.5) solid;*/
   border-radius: 5px;
 }
 .el-button--primary {

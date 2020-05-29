@@ -67,10 +67,10 @@
               <span slot-scope="scope">
                 <a href>
                 <span class="operation" @click.prevent="openModify(scope.row)">修改</span>
-              </a>
-              <a href>
-                <span class="operation" @click.prevent="openCheck(scope.row)">查看详情</span>
-              </a>
+                </a>
+                <a href>
+                  <span class="operation" @click.prevent="openCheck(scope.row)">查看详情</span>
+                </a>
               </span>
             </el-table-column>
           </el-table>

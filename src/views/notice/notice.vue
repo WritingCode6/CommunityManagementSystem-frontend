@@ -9,7 +9,7 @@
                   placeholder="请输入通知标题/发布时间"></el-input>
           <el-button type="primary">搜索</el-button>
       </div>
-      <div class="option">
+      <div class="option" v-if="role">
         <h4>操作</h4>
         <button type="button" @click="openAdd">新增社区通知</button>
       </div>
@@ -25,10 +25,10 @@
             <a href>
               <span class="operation" @click.prevent="openCheck">查看</span>
             </a>
-            <a href>
+            <a href v-if="role">
               <span class="operation" @click.prevent="openModify">修改</span>
             </a>
-            <a href>
+            <a href v-if="role">
               <span class="operation" @click.prevent="openDelete">删除</span>
             </a>
           </el-table-column>
@@ -161,6 +161,8 @@
 </template>
 
 <script>
+  import {roleJudge} from "../../utils/roleUtil";
+
   export default {
     name: "notice",
     data() {
@@ -241,6 +243,7 @@
         modifyWindows:false,
         checkWindows:false,
         deleteWindows:false,
+        role: false
       }
     },
     methods:{
@@ -292,6 +295,9 @@
       closeDelete() {
         this.deleteWindows = false;
       },
+    },
+    beforeMount() {
+      this.role = roleJudge();
     }
   }
 </script>
@@ -326,7 +332,7 @@
 }
 .search_input {
   width: 500px;
-  border: 1px rgba(0, 0, 0, 0.5) solid;
+  /*border: 1px rgba(0, 0, 0, 0.5) solid;*/
   border-radius: 5px;
 }
 .el-button--primary {

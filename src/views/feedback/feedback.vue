@@ -2,35 +2,38 @@
   <div id="feedback">
     <div class="feedbackBox">
       <h3>投诉反馈</h3>
-      <!--<div class="addOptionBox">
+      <div class="addOptionBox" v-if="!role">
         <button type="button" @click="openAdd">新增投诉反馈</button>
-      </div>-->
+      </div>
       <div class="feedback_table">
         <el-table
                 :data="feedbackData"
                 style="width: 95%;font-size:16px"
+                :default-sort = "{prop: 'createTime', order: 'ascending'}"
                 highlight-current-row>
           <el-table-column prop="id" label="ID" min-width="10%" align="center"></el-table-column>
           <el-table-column prop="type" label="反馈类型" min-width="15%" align="center"></el-table-column>
           <el-table-column prop="userId" label="反馈用户ID" min-width="10%" align="center"></el-table-column>
           <el-table-column prop="isReceived" label="反馈状态" min-width="12%" align="center"></el-table-column>
-          <el-table-column prop="creatTime" label="反馈时间" min-width="15%" align="center"></el-table-column>
+          <el-table-column prop="createTime" label="反馈时间" min-width="15%" align="center" sortable></el-table-column>
           <el-table-column label="操作" min-width="35%" align="center">
-            <a href>
-              <span class="check" @click.prevent="openCheck">查看</span>
-            </a>
-            <a href>
-              <span class="modify" @click.prevent="openModify">修改</span>
-            </a>
-            <a href>
-              <span class="delete" @click.prevent="openDelete">删除</span>
-            </a>
+            <span slot-scope="scope">
+              <a href>
+                <span class="check" @click.prevent="openCheck(scope.row)">查看</span>
+              </a>
+              <a href>
+                <span class="modify" @click.prevent="openModify(scope.row)">修改</span>
+              </a>
+             <!-- <a href>
+                <span class="delete" @click.prevent="openDelete(scope.row)">删除</span>
+              </a>-->
+            </span>
           </el-table-column>
         </el-table>
-        <div class="page_block">
+        <div class="page_block" v-if="!listNull">
           <el-pagination
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
+                  @prev-click = "prevChange"
+                  @next-click = "nextChange"
                   :current-page="paging.currentPage"
                   :page-size="paging.pageSize"
                   :total="paging.total"
@@ -39,7 +42,7 @@
         </div>
       </div>
     </div>
-    <!--<div class="addWindows" v-show="addWindows">
+    <div class="addWindows" v-show="addWindows">
       <div class="addBox">
         <h4>新增投诉反馈</h4>
         <div class="back">
@@ -56,7 +59,7 @@
             <el-form-item class="type" prop="type">
               <label>反馈类型：</label>
               <el-select placeholder="请选择反馈类型" v-model="addContent.type">
-                &lt;!&ndash;0建议，1投诉&ndash;&gt;
+                <!--0建议，1投诉-->
                 <el-option label="建议" value="0"></el-option>
                 <el-option label="投诉" value="1"></el-option>
             </el-select>
@@ -79,7 +82,7 @@
             <button type="button" @click="saveAdd">确定新增</button>
         </div>
       </div>
-    </div>-->
+    </div>
     <div class="modifyWindows" v-show="modifyWindows">
       <div class="modifyBox">
         <h4>修改投诉反馈</h4>
@@ -97,8 +100,8 @@
             <el-form-item class="type" prop="type">
               <label>处理状态：</label>
               <el-select placeholder="请选择处理状态" v-model="modifyContent.isReceived">
-                <el-option label="未处理" value="unreceived"></el-option>
-                <el-option label="已处理" value="received"></el-option>
+                <el-option label="未处理" value="0"></el-option>
+                <el-option label="已处理" value="1"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item class="addContent" prop="details">
@@ -110,7 +113,7 @@
                   style="font-size:18px;width:92%"
                   resize="none"
                   :rows="8"
-                  v-model="modifyContent.details">
+                  v-model="modifyContent.result">
               </el-input>
             </el-form-item>
           </el-form>
@@ -144,11 +147,11 @@
             </li>
             <li class="received">
               处理状态：
-              <span>{{ feedbackMsg.received }}</span>
+              <span>{{ feedbackMsg.isReceived }}</span>
             </li>
             <li class="creatTime">
               反馈时间：
-              <span>{{ feedbackMsg.creatTime }}</span>
+              <span>{{ feedbackMsg.createTime }}</span>
             </li>
             <li class="details">
               反馈内容：
@@ -160,14 +163,14 @@
         <div class="receivedInfo">
           <h5>处理信息</h5>
           <ul>
-            <li class="employeeId">
+            <!--<li class="employeeId">
               工作人员ID：
               <span>{{ feedbackMsg.employeeId }}</span>
             </li>
             <li class="employeeName">
               工作人员姓名：
               <span>{{ feedbackMsg.employeeName }}</span>
-            </li>
+            </li>-->
             <li class="result">
               处理结果：
               <span>{{ feedbackMsg.result }}</span>
@@ -179,7 +182,7 @@
         </div>
       </div>
     </div>
-    <div class="deleteWindows" v-show="deleteWindows">
+    <!--<div class="deleteWindows" v-show="deleteWindows">
       <div class="deleteBox">
         <h4>删除投诉反馈</h4>
         <div class="back">
@@ -197,95 +200,102 @@
           </li>
         </ul>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 
 <script>
+  import {roleJudge} from "../../utils/roleUtil";
+  import {fbTypeJudge, receiveJudge} from "../../utils/feedback";
+  import {timeChange} from "../../utils/time";
+
   export default {
     name: "feedback",
+    inject: ['reload'],
     data() {
       return {
-        feedbackData:[
+        //反馈列表数据
+        /*feedbackData:[
           {
             id:1,
             type:'建议',
             userId:1,
             isReceived:'未处理',
-            creatTime:'2020-05-08',
+            createTime:'2020-05-08',
           },
           {
             id:2,
             type:'建议',
             userId:1,
             isReceived:'未处理',
-            creatTime:'2020-05-08',
+            createTime:'2020-05-08',
           },
           {
             id:3,
             type:'建议',
             userId:1,
             isReceived:'未处理',
-            creatTime:'2020-05-08',
+            createTime:'2020-05-08',
           },
           {
             id:4,
             type:'建议',
             userId:1,
             isReceived:'未处理',
-            creatTime:'2020-05-08',
+            createTime:'2020-05-08',
           },
           {
             id:5,
             type:'建议',
             userId:1,
             isReceived:'未处理',
-            creatTime:'2020-05-08',
+            createTime:'2020-05-08',
           },
           {
             id:6,
             type:'建议',
             userId:1,
             isReceived:'未处理',
-            creatTime:'2020-05-08',
+            createTime:'2020-05-08',
           },
           {
             id:7,
             type:'建议',
             userId:1,
             isReceived:'未处理',
-            creatTime:'2020-05-08',
+            createTime:'2020-05-08',
           },
           {
             id:8,
             type:'建议',
             userId:1,
             isReceived:'未处理',
-            creatTime:'2020-05-08',
+            createTime:'2020-05-08',
           }
-        ],
-        feedbackMsg:{
+        ],*/
+        feedbackData: [],
+        //反馈详情信息
+        /*feedbackMsg:{
           id:1,
           userId:1,
           type:'投诉',
           userName:'刘星',
-          received:'未处理',
-          creatTime:'2020-05-08',
+          isReceived:'未处理',
+          createTime:'2020-05-08',
           details:'住户刘胡苏高空抛物',
           employeeId:'123456',
           employeeName:'夏东海',
           result:'已联系相应住户进行沟通'
-        },
-
+        },*/
+        feedbackMsg: {},
         addContent:{
-          type:"",
-          details:""
+          type: '',
+          details: ''
         },
         modifyContent:{
-          isReceived:"",
-          result:""
+          isReceived: '',
+          result: ''
         },
-
         formRules:{
           type:[
             { required: true, trigger: "change" }
@@ -303,17 +313,12 @@
         modifyWindows:false,
         checkWindows:false,
         deleteWindows:false,
+        listNull: false,
+        role: false,
+        modifyId: ''
       }
     },
     methods:{
-      handleSizeChange(val) {
-        this.pageSize = val;
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        this.currentPage = val;
-        console.log(`当前页: ${val}`);
-      },
       /* 打开新增投诉反馈窗口 */
       openAdd() {
         this.addWindows = true;
@@ -324,11 +329,27 @@
       },
       /* 确认新增投诉反馈 */
       saveAdd() {
-        this.addWindows = false;
+        this.$axios.post('/api/feedback/addFeedback',{
+          userId: localStorage.getItem('userId'),
+          type: this.addContent.type,
+          details: this.addContent.details
+        }).then((res) => {
+          if(res.code === 200) {
+            this.addWindows = false;
+            this.$message.success('新增成功');
+            this.reload();
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       /* 打开修改社区通知窗口 */
-      openModify() {
+      openModify(row) {
         this.modifyWindows = true;
+        this.modifyId = row.id;
       },
       /* 关闭修改社区通知窗口 */
       closeModify() {
@@ -336,24 +357,93 @@
       },
       /* 保存修改社区通知 */
       saveModify() {
-        this.modifyWindows = false;
+        this.$axios.post('/api/feedback/updateFeedback',{
+          id: this.modifyId,
+          isReceived: this.modifyContent.isReceived,
+          result: this.modifyContent.result,
+          employeeId: localStorage.getItem('userId')
+        }).then((res) => {
+          if(res.code === 200) {
+            this.modifyWindows = false;
+            this.$message.success('修改成功');
+            this.reload();
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       /* 打开查看社区通知窗口 */
-      openCheck() {
+      openCheck(row) {
         this.checkWindows = true;
+        let i = 0;
+        for(i; i < this.feedbackData.length; i++) {
+          if(row.id === this.feedbackData[i].id) {
+            this.feedbackMsg = this.feedbackData[i];
+            console.log(this.feedbackMsg.isReceived);
+          }
+        }
       },
       /* 关闭查看社区通知窗口 */
       closeCheck() {
         this.checkWindows = false;
       },
-      /* 打开删除投诉反馈窗口 */
-      openDelete() {
+      /*/!* 打开删除投诉反馈窗口 *!/
+      openDelete(row) {
         this.deleteWindows = true;
       },
-      /* 关闭删除投诉反馈窗口 */
+      /!* 关闭删除投诉反馈窗口 *!/
       closeDelete() {
         this.deleteWindows = false;
+      },*/
+      //获取反馈列表
+      getFeedback(c) {
+        this.$axios.get('/api/feedback/getFeedback',{
+          params: {
+            current: c,
+            size: this.paging.pageSize
+          }
+        }).then((res) => {
+          let data = res.data;
+          if(res.code === 200) {
+            this.feedbackData = data.records;
+            this.paging.total = data.total;
+            this.paging.currentPage = data.current;
+            for(let i = 0; i < this.feedbackData.length; i++) {
+              this.feedbackData[i].isReceived = receiveJudge(this.feedbackData[i].isReceived);
+              this.feedbackData[i].createTime = timeChange(this.feedbackData[i].createTime);
+              this.feedbackData[i].type = fbTypeJudge(this.feedbackData[i].type);
+              if(!this.feedbackData[i].result) {
+                this.feedbackData[i].result = '暂无处理结果'
+              }
+            }
+            if(data.records.length === 0)  {
+              this.listNull = true;
+            }
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
+      //前一页
+      prevChange(val) {
+        //val是当前页
+        this.getFeedback(val);
+      },
+      //后一页
+      nextChange(val) {
+        //val是当前页
+        this.getFeedback(val);
+      }
+    },
+    beforeMount() {
+      this.role = roleJudge();
+      this.getFeedback(this.paging.currentPage);
     }
   }
 </script>
@@ -405,13 +495,17 @@
   margin-top: 35px;
   margin-left: 4%;
 }
-.feedback_table .check {
+/*.feedback_table .check {
   float: left;
   margin-left: 20%;
 }
 .feedback_table .delete {
   float:right;
   margin-right: 20%;
+}*/
+.feedback_table .modify,
+.feedback_table .delete {
+  margin-left: 20px;
 }
 .page_block {
   margin-top: 15px;
@@ -440,10 +534,10 @@
   margin: 8% auto;
   overflow: hidden;
 }
-.checkBox {
+/*.checkBox {
   margin-top: 6%;
-  height: 595px;
-}
+  height: 550px;
+}*/
 .deleteBox {
   width: 634px;
   height: 234px;
@@ -564,7 +658,7 @@
   margin-top: 15px;
 }
 .details p {
-  margin-top: 10px;
+  margin-top: 20px;
   width: 500px;
   height: 50px;
   text-indent: 40px;
@@ -586,7 +680,7 @@
   background: #bcbcbc;
 }
 .checkBox .buttonBox {
-  margin-top: 60.8px;
+ /* margin-top: 50px;*/
 }
 .addBox button,
 .modifyBox button,

@@ -19,7 +19,7 @@
         <p>{{ msg4 }}</p>
       </div>
       <br>
-      <button type="button" value="修改公司简介" @click="openModifyIntro" class="modifyButton">修改公司简介</button>
+      <button type="button" value="修改公司简介" @click="openModifyIntro" class="modifyButton" v-if="role">修改公司简介</button>
     </div>
     <div class="honorRead" v-show="honorRead">
       <ul>
@@ -63,6 +63,8 @@
 </template>
 
 <script>
+import {roleJudge} from "../../utils/roleUtil";
+
 export default {
   name: "property",
   data() {
@@ -86,7 +88,8 @@ export default {
         "众和为按照市场化、专业化、集团化的管理模式，建立了良好的运作机制，确定了科学规范、竭诚高效、安全文明、持续发展、依法管理的质量方针。集团已形成了“以客为尊、追求完美、举贤用能、诚信敬业、精诚团结”的企业文化理念，以“专业管理、亲情服务”服务理念为宗旨，努力营造安全、文明、整洁、舒适、充满亲情的服务氛围，为企业的健康发展打下了坚实的基础。",
       introRead: true,
       honorRead: false,
-      modifyIntro: false
+      modifyIntro: false,
+      role: false
     };
   },
   methods: {
@@ -112,8 +115,11 @@ export default {
     save(){
       this.modifyIntro = false;
     }
+  },
+  beforeMount() {
+    this.role = roleJudge();
   }
-};
+}
 </script>
 
 <style scoped>

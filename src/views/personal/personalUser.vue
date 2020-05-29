@@ -72,31 +72,30 @@
               <el-button type="primary">刷新</el-button>
             </div>
           </div>
-        
-        <div v-show="onlyWritePwd">
-          <el-form class="passwordForm">
-            <div class="form_left">
-              <el-form-item class="old">
-                <label>旧密码：</label>
-                <el-input class="input" readonly></el-input>
-              </el-form-item>
+          <div v-show="onlyWritePwd">
+            <el-form class="passwordForm">
+              <div class="form_left">
+                <el-form-item class="old">
+                  <label>旧密码：</label>
+                  <el-input class="input"></el-input>
+                </el-form-item>
+              </div>
+              <div class="form_right">
+                <el-form-item class="new">
+                  <label>新密码：</label>
+                  <el-input class="input"></el-input>
+                </el-form-item>
+                <el-form-item class="again">
+                  <label>确认密码：</label>
+                  <el-input class="input"></el-input>
+                </el-form-item>
+              </div>
+            </el-form>
+            <div class="form_button">
+              <el-button type="primary" @click="writeToReadPwd">取消</el-button>
+              <el-button type="primary" @click="updatePwd">保存</el-button>
             </div>
-            <div class="form_right">
-              <el-form-item class="new">
-                <label>新密码：</label>
-                <el-input class="input" readonly></el-input>
-              </el-form-item>
-              <el-form-item class="again">
-                <label>确认密码：</label>
-                <el-input class="input" readonly></el-input>
-              </el-form-item>
-            </div>
-          </el-form>
-          <div class="form_button">
-            <el-button type="primary" @click="writeToReadPwd">取消</el-button>
-            <el-button type="primary" @click="updatePwd">保存</el-button>
           </div>
-        </div>
         </div>
       </div>
       <div class="houseRead" v-show="houseRead">

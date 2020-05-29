@@ -141,7 +141,7 @@
 </template>
 
 <script>
-/*import {roleJudge} from "../utils/roleUtil";*/
+import {roleJudge} from "../utils/roleUtil";
 
 export default {
   name: "index",
@@ -172,7 +172,7 @@ export default {
     }
   },
   beforeMount() {
-    /*this.role = roleJudge();*/
+    this.role = roleJudge();
   }
 };
 </script>
