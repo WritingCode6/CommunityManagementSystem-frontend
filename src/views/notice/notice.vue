@@ -2,13 +2,13 @@
   <div id="notice">
     <div class="notice_box">
       <h3>社区通知</h3>
-      <div class="search">
+      <!--<div class="search">
           <el-input
                   v-model="title"
                   class="search_input"
                   placeholder="请输入通知标题/发布时间"></el-input>
           <el-button type="primary">搜索</el-button>
-      </div>
+      </div>-->
       <div class="option" v-if="role">
         <h4>操作</h4>
         <button type="button" @click="openAdd">新增社区通知</button>
@@ -16,11 +16,11 @@
       <div class="notice_table">
         <el-table
                 :data="noticeData"
-                style="width: 100%"
+                style="width: 100%; margin-top: 45px;"
                 highlight-current-row>
           <!-- 设置min-width来自适应宽度 -->
           <el-table-column prop="title" min-width="45%"></el-table-column>
-          <el-table-column prop="date" min-width="18%"></el-table-column>
+          <el-table-column prop="createTime" min-width="18%"></el-table-column>
           <el-table-column min-width="20%">
             <a href>
               <span class="operation" @click.prevent="openCheck">查看</span>
@@ -28,18 +28,16 @@
             <a href v-if="role">
               <span class="operation" @click.prevent="openModify">修改</span>
             </a>
-            <a href v-if="role">
+           <!-- <a href v-if="role">
               <span class="operation" @click.prevent="openDelete">删除</span>
-            </a>
+            </a>-->
           </el-table-column>
         </el-table>
-        <div class="page_block">
+        <div class="page_block" v-if="!listNull">
           <el-pagination
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="currentPage"
-                  :page-size="pageSize"
-                  :total="pageCount"
+                  :current-page="paging.currentPage"
+                  :page-size="paging.pageSize"
+                  :total="paging.total"
                   layout="prev, pager, next, total">
           </el-pagination>
         </div>
@@ -162,14 +160,17 @@
 
 <script>
   import {roleJudge} from "../../utils/roleUtil";
+  import {timeChange} from "../../utils/time";
 
   export default {
     name: "notice",
+    inject: ['reload'],
     data() {
       return {
         title:'',
 
-        noticeData:[
+        noticeData: [],
+        /*noticeData:[
           {
             title:"“喜迎羊年，共贺新春”通知",
             date:"2020/05/08",
@@ -202,7 +203,7 @@
             title:"“喜迎羊年，共贺新春”通知",
             date:"2020/05/08",
           }
-        ],
+        ],*/
 
         noticeContent:{
           title:"",
@@ -235,26 +236,21 @@
           ]
         },
 
-        pageSize: 4,
-        pageCount:400,
-        currentPage: 1,
+        paging: {
+          pageSize: 10,
+          total: 100,
+          currentPage: 1
+        },
 
         addWindows:false,
         modifyWindows:false,
         checkWindows:false,
         deleteWindows:false,
-        role: false
+        role: false,
+        listNull: false
       }
     },
     methods:{
-      handleSizeChange(val) {
-        this.pageSize = val;
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        this.currentPage = val;
-        console.log(`当前页: ${val}`);
-      },
       /* 打开新增社区通知窗口 */
       openAdd() {
         this.addWindows = true;
@@ -265,7 +261,23 @@
       },
       /* 确认新增社区通知 */
       saveAdd() {
-        this.addWindows = false;
+        this.$axios.post('/api/community/addCommunityNotice',{
+          employeeId: localStorage.getItem('userId'),
+          title: this.noticeContent.title,
+          content: this.noticeContent.content
+        }).then((res) => {
+          if(res.code === 200) {
+            this.addWindows = false;
+            this.$message.success('新增成功');
+            this.reload();
+            console.log(res);
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
       },
       /* 打开修改社区通知窗口 */
       openModify() {
@@ -295,9 +307,38 @@
       closeDelete() {
         this.deleteWindows = false;
       },
+      //获取社区通知的接口
+      getNotice(c) {
+        this.$axios.get('/api/community/getCommunityNotice',{
+          params: {
+            current: c,
+            size: this.paging.pageSize
+          }
+        }).then((res) => {
+          console.log(res);
+          let data = res.data;
+          if(res.code === 200) {
+            this.paging.total = data.total;
+            this.noticeData = data.records;
+            for(let i = 0; i < this.noticeData.length; i++) {
+              this.noticeData[i].createTime = timeChange(this.noticeData[i].createTime);
+            }
+            if(data.records.length === 0) {
+              this.listNull = true;
+            }
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      }
     },
     beforeMount() {
       this.role = roleJudge();
+      //获取社区通知列表
+      this.getNotice(this.paging.currentPage);
     }
   }
 </script>
@@ -376,7 +417,7 @@
   border-width: 0px;
   border-radius: 15px;
   cursor: pointer;
-  margin-top: 30px;
+  margin-top: 25px;
   margin-left: -10px;
 }
 .notice_table {
@@ -451,7 +492,7 @@
 .addBox .back,
 .modifyBox .back {
   position: absolute;
-  left: 900px;
+  left: 930px;
   top: 24px;
   z-index: 99;
 }
