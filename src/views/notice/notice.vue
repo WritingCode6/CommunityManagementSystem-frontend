@@ -54,17 +54,16 @@
           </a>
         </div>
         <div class="addContentBox">
-          <el-form 
-                ref="form" 
-                :model="noticeContent" 
-                :rules="formRules"
-                :show-message="false">
+          <el-form
+                ref="form"
+                :model="noticeContent"
+                :rules="formRules">
             <el-form-item class="title" prop="title">
               <el-input
                   type="text" 
                   class="input" 
                   placeholder="请输入通知标题"
-                  style="font-size:20px"
+                  style="font-size:20px; text-align: center;"
                   v-model="noticeContent.title">
               </el-input>
             </el-form-item>
@@ -73,8 +72,8 @@
                   type="textarea" 
                   placeholder="请输入通知内容"
                   style="font-size:18px"
-                  resize="none" 
-                  :rows="16"
+                  resize="none"
+                  :rows="15"
                   v-model="noticeContent.content">
               </el-input>
             </el-form-item>
@@ -94,21 +93,20 @@
           </a>
         </div>
         <div class="modifyContentBox">
-          <el-form 
-                ref="form" 
-                :model="noticeMsg" 
-                :rules="formRules"
-                :show-message="false">
+          <el-form
+                ref="form"
+                :model="noticeMsg"
+                :rules="formRules">
             <el-form-item class="title" prop="title">
               <el-input
                   type="text" 
                   class="input" 
                   placeholder="请输入通知标题"
-                  style="font-size:20px"
+                  style="font-size:20px; text-align: center;"
                   v-model="noticeMsg.title">
               </el-input>
             </el-form-item>
-            <el-form-item class="addContent" prop="content">
+            <el-form-item class="modifyContent" prop="content">
               <el-input
                   type="textarea" 
                   placeholder="请输入通知内容"
@@ -226,10 +224,10 @@
 
         formRules:{
           title:[
-            { required: true, trigger: "blur" }
+            { required: true, message:"通知标题不能为空" }
           ],
           content:[
-            { required: true, trigger: "blur" }
+            { required: true, message:"通知内容不能为空" }
           ]
         },
 
@@ -458,7 +456,7 @@
 .modifyContentBox,
 .checkContentBox {
   width: 920px;
-  height: 75%;
+  height: 78%;
   margin: 20px auto;
   border: 1px solid #000;
   overflow: hidden;
@@ -477,7 +475,7 @@
   display: block;
   width: 300px;
   height: 25px;
-  margin: 30px auto;
+  margin: 30px auto 50px;
   font-size: 24px;
   text-align: center;
 }
@@ -496,7 +494,6 @@
 .modifyBox .modifyContent{
   width: 850px;
   margin: 10px 33px;
-  overflow-y: scroll;
   text-indent: 40px;
   font-size: 20px;
   letter-spacing: 2px;
@@ -509,7 +506,7 @@
 .addBox .button,
 .modifyBox .button,
 .checkBox .button {
-  margin-top: 30px;
+  margin-top: 20px;
   width: 100%;
   height: 15%;
   background: #bcbcbc;
@@ -561,5 +558,18 @@
   border-width: 0px;
   border-radius: 10px;
   cursor: pointer;
+}
+</style>
+<style>
+.el-form-item__error {
+  position: absolute;
+}
+.addContent .el-form-item__error,
+.modifyContent .el-form-item__error {
+  left: -40px;
+  letter-spacing:0;
+}
+.title .el-input__inner {
+  text-align: center;
 }
 </style>

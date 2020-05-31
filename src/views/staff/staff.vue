@@ -427,7 +427,10 @@
           ],
           phone:[
             { required: true, message: '手机号不能为空', trigger: 'blur'},
-            { len: 11, message: '手机号为 11 位', trigger: 'blur' }
+            {
+              pattern: /^1[3|4|5|7|8][0-9]\d{8}$/,
+              message: "请输入正确的11位手机号码"
+            }
           ],
           userType:[
             { required: true, message: '职位不能为空', trigger: 'change'}
@@ -997,11 +1000,34 @@ h5 {
   border-radius: 10px;
   cursor: pointer;
 }
-.el-form-item {
+.staff_form label {
+  width: 60px;
+  margin-left: 40px;
+}
+.phone label,
+.idNumber label,
+.userName label {
+  width: 90px;
+  margin-left: 10px;
+}
+.address label {
+  width: 110px;
+  margin-left: -10px;
+}
+.name,
+.service_id,
+.sex,
+.idNumber,
+.phone,
+.userType,
+.address,
+.userName,
+.password {
   position: absolute;
 }
 .name {
   left: 80px;
+  z-index: 9;
 }
 .service_id {
   left: 350px;
@@ -1009,6 +1035,7 @@ h5 {
 .sex {
   top: 40px;
   left: 80px;
+  z-index: 9;
 }
 .idNumber {
   top: 40px;
@@ -1020,7 +1047,8 @@ h5 {
 }
 .userType {
   top: 80px;
-  left: 350px;
+  left: 360px;
+  z-index: 99;
 }
 .address {
   top: 120px;
@@ -1033,6 +1061,7 @@ h5 {
 .userName {
   top: -10px;
   left: 80px;
+  z-index: 99999;
 }
 .password {
   top: -10px;
