@@ -1027,7 +1027,6 @@ h5 {
 }
 .name {
   left: 80px;
-  z-index: 9;
 }
 .service_id {
   left: 350px;
@@ -1035,7 +1034,6 @@ h5 {
 .sex {
   top: 40px;
   left: 80px;
-  z-index: 9;
 }
 .idNumber {
   top: 40px;
@@ -1048,7 +1046,6 @@ h5 {
 .userType {
   top: 80px;
   left: 360px;
-  z-index: 99;
 }
 .address {
   top: 120px;
@@ -1061,7 +1058,6 @@ h5 {
 .userName {
   top: -10px;
   left: 80px;
-  z-index: 99999;
 }
 .password {
   top: -10px;
