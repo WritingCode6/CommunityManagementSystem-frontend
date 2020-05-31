@@ -48,7 +48,7 @@
           </a>
         </div>
         <div class="addContentBox">
-          <el-form ref="form" :model="addActivity" :rules="formRules" :show-message="false">
+          <el-form ref="addActivity" :model="addActivity" :rules="formRules">
             <el-form-item class="activityName" prop="activityName">
               <label for="activityName">活动名称：</label>
               <el-input class="input" v-model="addActivity.activityName"></el-input>
@@ -101,7 +101,7 @@
           </a>
         </div>
         <div class="modifyContentBox">
-          <el-form ref="form" :model="modifyActivity" :rules="formRules" :show-message="false">
+          <el-form ref="modifyActivity" :model="modifyActivity" :rules="formRules">
             <el-form-item class="activityName" prop="activityName">
               <label for="activityName">活动名称：</label>
               <el-input class="input" v-model="modifyActivity.activityName"></el-input>
@@ -240,25 +240,30 @@ export default {
       },
       formRules: {
         activityName: [
-          { required: true, trigger: "blur" }
+          { required: true, message:"请输入活动名称", trigger: "blur" },
+          { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
         ],
         principal: [
-          { required: true, trigger: "blur" }
+          { required: true, message:"请输入负责人", trigger: "blur" }
         ],
         host: [
-          { required: true, trigger: "blur" }
+          { required: true, message:"请输入主办方", trigger: "blur" }
         ],
         telNumber: [
-          { required: true, trigger: "blur" }
+          { required: true, message:"请输入咨询电话", trigger: "blur" },
+          {
+            pattern: /^1[3|4|5|7|8][0-9]\d{8}$/,
+            message: "请输入正确的11位手机号码"
+          }
         ],
         startTime: [
-          { type: "date", required: true, trigger: "change" }
+          { type: "date", required: true, message:"请输入活动开始时间", trigger: "change" }
         ],
         endTime: [
-          { type: "date", required: true, trigger: "change" }
+          { type: "date", required: true, message:"请输入活动结束时间", trigger: "change" }
         ],
         content: [
-          { required: true, trigger: "blur" }
+          { required: true, message:"请输入活动内容", trigger: "blur" }
         ]
       },
 
@@ -608,5 +613,24 @@ export default {
   border-width: 0px;
   border-radius: 10px;
   cursor: pointer;
+}
+</style>
+<style>
+.el-form-item__error {
+  position: absolute;
+  top: 95%;
+  left: 100px;
+}
+.content .el-form-item__error {
+  top: 100%;
+  left: 0;
+}
+.activityName .el-form-item__error,
+.telNumber .el-form-item__error {
+  left: 100px;
+}
+.principal .el-form-item__error,
+.host .el-form-item__error {
+  left: 80px;
 }
 </style>

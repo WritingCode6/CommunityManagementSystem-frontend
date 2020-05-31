@@ -54,8 +54,7 @@
           <el-form
                 ref="form"
                 :model="addContent"
-                :rules="formRules"
-                :show-message="false">
+                :rules="formRules">
             <el-form-item class="type" prop="type">
               <label>反馈类型：</label>
               <el-select placeholder="请选择反馈类型" v-model="addContent.type">
@@ -95,8 +94,7 @@
           <el-form
                 ref="form"
                 :model="modifyContent"
-                :rules="formRules"
-                :show-message="false">
+                :rules="formRules">
             <el-form-item class="type" prop="type">
               <label>处理状态：</label>
               <el-select placeholder="请选择处理状态" v-model="modifyContent.isReceived">
@@ -301,7 +299,7 @@
             { required: true, trigger: "change" }
           ],
           details:[
-            { required: true, trigger: "blur" }
+            { required: true, message:"反馈内容不能为空" }
           ]
         },
         paging: {

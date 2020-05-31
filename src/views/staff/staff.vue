@@ -440,7 +440,10 @@
           ],
           phone:[
             { required: true, message: '手机号不能为空', trigger: 'blur'},
-            { len: 11, message: '手机号为 11 位', trigger: 'blur' }
+            {
+              pattern: /^1[3|4|5|7|8][0-9]\d{8}$/,
+              message: "请输入正确的11位手机号码"
+            }
           ],
           userType:[
             { required: true, message: '职位不能为空', trigger: 'change'}
@@ -1010,10 +1013,20 @@ h5 {
   border-radius: 10px;
   cursor: pointer;
 }
-/*绝对定位带来的点击bug，待修复*/
-/*.el-form-item {
-  position: absolute;
-}*/
+.staff_form label {
+  width: 60px;
+  margin-left: 40px;
+}
+.phone label,
+.idNumber label,
+.userName label {
+  width: 90px;
+  margin-left: 10px;
+}
+.address label {
+  width: 110px;
+  margin-left: -10px;
+}
 .name,
 .service_id,
 .sex,
