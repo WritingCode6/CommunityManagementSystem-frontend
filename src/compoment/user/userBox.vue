@@ -270,49 +270,6 @@
           roomNumber: '',
         },
         //住户的列表数据
-        /*userData: [
-  {
-    name: '黄一月',
-    buildingNumber: '1',
-    roomNumber: '101',
-    plateNumber: '粤A8888'
-  },{
-    name: '黄一月',
-    buildingNumber: '1',
-    roomNumber: '101',
-    plateNumber: '粤A8888'
-  },{
-    name: '黄一月',
-    buildingNumber: '1',
-    roomNumber: '101',
-    plateNumber: '粤A8888'
-  },{
-    name: '黄一月',
-    buildingNumber: '1',
-    roomNumber: '101',
-    plateNumber: '粤A8888'
-  },{
-    name: '黄一月',
-    buildingNumber: '1',
-    roomNumber: '101',
-    plateNumber: '粤A8888'
-  },{
-    name: '黄一月',
-    buildingNumber: '1',
-    roomNumber: '101',
-    plateNumber: '粤A8888'
-  },{
-    name: '黄一月',
-    buildingNumber: '1',
-    roomNumber: '101',
-    plateNumber: '粤A8888'
-  }/!*,{
-    name: '黄一月',
-    buildingNumber: '1',
-    roomNumber: '101',
-    plateNumber: '粤A8888'
-  }*!/
-],*/
         userData: [],
         //新增住户信息数据
         addUserData: {

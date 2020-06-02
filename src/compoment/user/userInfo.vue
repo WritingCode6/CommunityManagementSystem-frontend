@@ -174,7 +174,6 @@
           }
         }).then((res) => {
           if(res.code === 200) {
-            console.log(res.data);
             this.liverData.userInfo.name = res.data.userInfo.name;
             this.liverData.userInfo.userName = res.data.userInfo.userName;
             this.liverData.userInfo.sex = sexChange(res.data.userInfo.sex);

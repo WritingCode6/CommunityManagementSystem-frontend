@@ -246,9 +246,9 @@ export default {
           userId: localStorage.getItem("userId")
         }
       }).then((res) => {
-        /*let data = res.data;*/
+        let data = res.data;
         if(res.code === 200) {
-          /*this.userInfo = data;*/
+          this.userInfo = data;
         }
         else {
           this.$message.error(res.message);

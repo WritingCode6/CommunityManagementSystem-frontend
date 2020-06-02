@@ -26,6 +26,12 @@
     <div class="content">
       <div class="nav">
         <ul class="list">
+          <li>
+            <router-link to="/index/property" class="property">
+              <span class="property_word">物业信息</span>
+              <span class="arrows">></span>
+            </router-link>
+          </li>
           <li v-if="role">
             <router-link to="/index/personal" class="personal">
               <span class="personal_word">个人中心</span>
@@ -104,12 +110,12 @@
               <span class="arrows">></span>
             </router-link>
           </li>
-          <li>
+          <!--<li>
             <router-link to="/index/property" class="property">
               <span class="property_word">物业信息</span>
               <span class="arrows">></span>
             </router-link>
-          </li>
+          </li>-->
         </ul>
       </div>
       <div class="right_part">
@@ -169,10 +175,47 @@ export default {
       localStorage.removeItem("token");
       this.$router.push('/login');
       this.$message.success("退出成功！")
+    },
+    //获取管理员个人资料
+    getStaffInfo() {
+      this.$axios.get('/api/user/getStaffInfo',{
+        params: {
+          userId: localStorage.getItem("userId")
+        }
+      }).then((res) => {
+        let data = res.data;
+        if(res.code === 200) {
+          this.userName = data.name;
+        }
+        else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+    },
+    //获取住户详细信息
+    getUserInfo() {
+      this.$axios.get('/api/user/getUserInfo',{
+        params: {
+          userId: localStorage.getItem("userId")
+        }
+      }).then((res) => {
+        if(res.code === 200) {
+          this.userName = res.data.userInfo.name;
+        }
+        else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
     }
   },
   beforeMount() {
     this.role = roleJudge();
+    if(this.role === true) this.getStaffInfo();
+    else if(this.role === false) this.getUserInfo();
   }
 };
 </script>

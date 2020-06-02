@@ -477,10 +477,6 @@ export default {
     closeCheck() {
       this.checkWindows = false;
     },
-    //查询报修单列表
-    getRepairList() {
-      this.getRepair(this.paging.currentPage);
-    },
     //查询报修单的接口
     getRepair(current) {
       this.$axios.get('/api/repair/getRepair',{
@@ -490,6 +486,7 @@ export default {
           size: this.paging.pageSize
         }
       }).then((res) => {
+        console.log(res)
         let data = res.data;
         if(res.code === 200) {
           this.formData = data.records;
@@ -532,7 +529,7 @@ export default {
   },
   beforeMount() {
     //获取报修单列表
-    this.getRepairList();
+    this.getRepair(this.paging.currentPage);
   }
 }
 </script>

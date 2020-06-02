@@ -21,7 +21,7 @@
               <a href>
                 <span class="check" @click.prevent="openCheck(scope.row)">查看</span>
               </a>
-              <a href>
+              <a href v-if="role">
                 <span class="modify" @click.prevent="openModify(scope.row)">修改</span>
               </a>
              <!-- <a href>
@@ -213,78 +213,8 @@
     data() {
       return {
         //反馈列表数据
-        /*feedbackData:[
-          {
-            id:1,
-            type:'建议',
-            userId:1,
-            isReceived:'未处理',
-            createTime:'2020-05-08',
-          },
-          {
-            id:2,
-            type:'建议',
-            userId:1,
-            isReceived:'未处理',
-            createTime:'2020-05-08',
-          },
-          {
-            id:3,
-            type:'建议',
-            userId:1,
-            isReceived:'未处理',
-            createTime:'2020-05-08',
-          },
-          {
-            id:4,
-            type:'建议',
-            userId:1,
-            isReceived:'未处理',
-            createTime:'2020-05-08',
-          },
-          {
-            id:5,
-            type:'建议',
-            userId:1,
-            isReceived:'未处理',
-            createTime:'2020-05-08',
-          },
-          {
-            id:6,
-            type:'建议',
-            userId:1,
-            isReceived:'未处理',
-            createTime:'2020-05-08',
-          },
-          {
-            id:7,
-            type:'建议',
-            userId:1,
-            isReceived:'未处理',
-            createTime:'2020-05-08',
-          },
-          {
-            id:8,
-            type:'建议',
-            userId:1,
-            isReceived:'未处理',
-            createTime:'2020-05-08',
-          }
-        ],*/
         feedbackData: [],
         //反馈详情信息
-        /*feedbackMsg:{
-          id:1,
-          userId:1,
-          type:'投诉',
-          userName:'刘星',
-          isReceived:'未处理',
-          createTime:'2020-05-08',
-          details:'住户刘胡苏高空抛物',
-          employeeId:'123456',
-          employeeName:'夏东海',
-          result:'已联系相应住户进行沟通'
-        },*/
         feedbackMsg: {},
         addContent:{
           type: '',

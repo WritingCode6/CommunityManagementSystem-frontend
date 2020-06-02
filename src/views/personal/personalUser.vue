@@ -5,31 +5,31 @@
       <ul>
         <li class="name">
           姓名：
-          <span>{{ personalMsg.name }}</span>
+          <span>{{ personalMsg.userInfo.name }}</span>
         </li>
         <li class="userName">
           用户名：
-          <span>{{ personalMsg.userName }}</span>
+          <span>{{ personalMsg.userInfo.userName }}</span>
         </li>
         <li class="userId">
           用户ID：
-          <span>{{ personalMsg.userId }}</span>
+          <span>{{ personalMsg.userInfo.userId }}</span>
         </li>
         <li class="sex">
           性别：
-          <span>{{ personalMsg.sex }}</span>
+          <span>{{ personalMsg.userInfo.sex }}</span>
         </li>
         <li class="idNumber">
           身份证号：
-          <span>{{ personalMsg.idNumber }}</span>
+          <span>{{ personalMsg.userInfo.idNumber }}</span>
         </li>
         <li class="ancestralHome">
           籍贯：
-          <span>{{ personalMsg.ancestralHome }}</span>
+          <span>{{ personalMsg.userInfo.ancestralHome }}</span>
         </li>
         <li class="residenceAddress">
           户口住址：
-          <span>{{ personalMsg.residenceAddress }}</span>
+          <span>{{ personalMsg.userInfo.residenceAddress }}</span>
         </li>
       </ul>
     </div>
@@ -77,17 +77,17 @@
               <div class="form_left">
                 <el-form-item class="old" prop="oldPwd">
                   <label>旧密码：</label>
-                  <el-input v-model="passwordInfoWrite.oldPwd" class="input"></el-input>
+                  <el-input v-model="passwordInfoWrite.oldPwd" class="input" show-password></el-input>
                 </el-form-item>
               </div>
               <div class="form_right">
                 <el-form-item class="new" prop="newPwd">
                   <label>新密码：</label>
-                  <el-input v-model="passwordInfoWrite.newPwd" class="input"></el-input>
+                  <el-input v-model="passwordInfoWrite.newPwd" class="input" show-password></el-input>
                 </el-form-item>
                 <el-form-item class="again" prop="againPwd">
                   <label>确认密码：</label>
-                  <el-input v-model="passwordInfoWrite.againPwd" class="input"></el-input>
+                  <el-input v-model="passwordInfoWrite.againPwd" class="input" show-password></el-input>
                 </el-form-item>
               </div>
             </el-form>
@@ -124,11 +124,11 @@
           <ul>
             <li class="buildingNumber">
               栋数：
-              <span>{{ personalMsg.buildingNumber  }}</span>
+              <span>{{ personalMsg.houseInfo.buildingNumber  }}</span>
             </li>
             <li class="roomNumber">
               房间号：
-              <span>{{ personalMsg.roomNumber }}</span>
+              <span>{{ personalMsg.houseInfo.roomNumber }}</span>
             </li>
           </ul>
         </div>
@@ -149,19 +149,19 @@
           <ul>
             <li class="plateNumber">
               车牌号：
-              <span>{{ personalMsg.plateNumber }}</span>
+              <span>{{ personalMsg.carInfo.plateNumber }}</span>
             </li>
             <li class="brand">
               品牌：
-              <span>{{ personalMsg.brand }}</span>
+              <span>{{ personalMsg.carInfo.brand }}</span>
             </li>
             <li class="model">
               型号：
-              <span>{{ personalMsg.model }}</span>
+              <span>{{ personalMsg.carInfo.model }}</span>
             </li>
             <li class="color">
               颜色：
-              <span>{{ personalMsg.color }}</span>
+              <span>{{ personalMsg.carInfo.color }}</span>
             </li>
           </ul>
         </div>
@@ -171,6 +171,8 @@
 </template>
 
 <script>
+  import {sexChange} from "../../utils/sexUtil";
+
   export default {
     name: "personalUser",
     data() {
@@ -181,19 +183,25 @@
         onlyReadPwd:true,
         onlyWritePwd:false,
         personalMsg:{
-          name:'李华华',
-          userName:'破晓',
-          userId:123456,
-          sex:'女',
-          idNumber:'441588888888888888',
-          ancestralHome:'广东深圳',
-          residenceAddress:'广东省深圳市罗湖区XX村XX路XX号',
-          buildingNumber:'A栋',
-          roomNumber:123,
-          plateNumber:'粤A88888',
-          brand:'长安',
-          model:'SC7103',
-          color:'黑色'
+          userInfo: {
+            name:'李华华',
+            userName:'破晓',
+            userId:123456,
+            sex:'女',
+            idNumber:'441588888888888888',
+            ancestralHome:'广东深圳',
+            residenceAddress:'广东省深圳市罗湖区XX村XX路XX号'
+          },
+          houseInfo: {
+            buildingNumber:'A栋',
+            roomNumber:123
+          },
+          carInfo: {
+            plateNumber:'粤A88888',
+            brand:'长安',
+            model:'SC7103',
+            color:'黑色'
+          }
         },
         passwordInfoRead: {
           oldPwd: '******',
@@ -206,16 +214,16 @@
           againPwd: ''
         },
         passwordRules:{
-        oldPwd:[
-          { required: true, message: '旧密码不能为空', trigger: 'blur'}
-        ],
-        newPwd:[
-          { required: true, message: '新密码不能为空', trigger: 'blur'},
-        ],
-        againPwd:[
-          { required: true, message: '请再次输入新密码', trigger: 'blur'},
-        ]
-      },
+          oldPwd:[
+            { required: true, message: '旧密码不能为空', trigger: 'blur'}
+          ],
+          newPwd:[
+            { required: true, message: '新密码不能为空', trigger: 'blur'},
+          ],
+          againPwd:[
+            { required: true, message: '请再次输入新密码', trigger: 'blur'},
+          ]
+        },
       }
     },
     methods:{
@@ -247,6 +255,115 @@
         this.onlyReadPwd = true;
         this.onlyWritePwd = false;
       },
+      //获取住户详细信息
+      getUserInfo() {
+        this.$axios.get('/api/user/getUserInfo',{
+          params: {
+            userId: localStorage.getItem("userId")
+          }
+        }).then((res) => {
+          if(res.code === 200) {
+            this.personalMsg.userInfo.name = res.data.userInfo.name;
+            this.personalMsg.userInfo.userName = res.data.userInfo.userName;
+            this.personalMsg.userInfo.sex = sexChange(res.data.userInfo.sex);
+            this.personalMsg.userInfo.idNumber = res.data.userInfo.idNumber;
+            this.personalMsg.userInfo.ancestralHome = res.data.userInfo.ancestralHome;
+            this.personalMsg.userInfo.residenceAddress = res.data.userInfo.residenceAddress;
+            if(res.data.carInfo) {
+              this.personalMsg.carInfo.plateNumber = res.data.carInfo.plateNumber;
+              this.personalMsg.carInfo.brand = res.data.carInfo.brand;
+              this.personalMsg.carInfo.model = res.data.carInfo.model;
+              this.personalMsg.carInfo.color = res.data.carInfo.color;
+            }
+            else {
+              this.personalMsg.carInfo.plateNumber = '暂无信息';
+              this.personalMsg.carInfo.brand = '暂无信息';
+              this.personalMsg.carInfo.model = '暂无信息';
+              this.personalMsg.carInfo.color = '暂无信息';
+            }
+            if(res.data.houseInfo) {
+              this.personalMsg.houseInfo.buildingNumber = res.data.houseInfo.buildingNumber;
+              this.personalMsg.houseInfo.roomNumber = res.data.houseInfo.roomNumber;
+            }
+            else {
+              this.personalMsg.houseInfo.buildingNumber = '暂无信息';
+              this.personalMsg.houseInfo.roomNumber = '暂无信息';
+            }
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+      },
+      //字符串合理性判断
+      isValid(str) {
+        return /^[\u4e00-\u9fa5\w]{4,16}$/.test(str);
+      },
+      //新密码的合理性判断
+      pwdChange() {
+        let password = this.passwordInfoWrite.newPwd
+        if (password === '') {
+          this.$message.error('密码不得为空');
+        }
+        else if (password.length < 6 || password.length > 16) {
+          this.$message.warning('密码长度必须在6-16位');
+        }
+        else if (!this.isValid(password)) {
+          //排除特殊字符和空格
+          this.$message.warning('密码必须由中文字符、数字、字母和下划线组成');
+        }
+        else if (!isNaN(password)) {
+          //判断Pwd是不是一个值
+          this.$message.warning('密码不能为纯数字');
+        }
+      },
+      //更新账户密码
+      updatePwd(){
+        let pwd = localStorage.getItem("pwd");
+        //比较旧密码是否正确
+        if(pwd === this.passwordInfoWrite.oldPwd) {
+          //比较新密码的合理性
+          this.pwdChange();
+          //比较新密码和旧密码是否一致
+          if(this.passwordInfoWrite.oldPwd === this.passwordInfoWrite.newPwd) {
+            this.$message.warning("新旧密码一致，请更换！");
+          }
+          else {
+            //比较两次新密码是否一样
+            if(this.passwordInfoWrite.newPwd === this.passwordInfoWrite.againPwd) {
+              this.$axios.post('/api/user/updateAccount',{
+                id: localStorage.getItem("userId"),
+                password: this.passwordInfoWrite.newPwd
+              }).then((res) => {
+                console.log(res);
+                if(res.code === 200) {
+                  localStorage.setItem("pwd",this.passwordInfoWrite.newPwd)  //将password存入localStorage
+                  this.$message.success('修改密码成功！');
+                }
+                else {
+                  this.$message.error(res.message);
+                }
+              }).catch((err) => {
+                console.log(err);
+              })
+              //密码可修改变为只读
+              this.writeToReadPwd();
+            }
+            else {
+              this.$message.warning("两次输入的新密码不一致，请重试！");
+            }
+          }
+        }
+        else {
+          this.$message.warning("旧密码输入错误，请重试！");
+        }
+
+      }
+    },
+    beforeMount() {
+      this.getUserInfo();
     }
   }
 </script>

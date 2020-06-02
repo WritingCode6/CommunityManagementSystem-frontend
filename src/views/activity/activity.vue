@@ -145,7 +145,7 @@
                         value-format="yyyy-MM-dd"
                         v-model="modifyActivity.startTime"></el-date-picker>
                 <el-time-picker
-                        v-model="startTime1"
+                        v-model="startT"
                         value-format="HH:mm:ss"
                         placeholder="选择时间"></el-time-picker>
               </el-form-item>
@@ -157,7 +157,7 @@
                         value-format="yyyy-MM-dd"
                         v-model="modifyActivity.endTime"></el-date-picker>
                 <el-time-picker
-                        v-model="endTime1"
+                        v-model="endT"
                         value-format="HH:mm:ss"
                         placeholder="选择时间"></el-time-picker>
               </el-form-item>
@@ -190,7 +190,7 @@
         <div class="deleteContent">确定要删除吗？</div>
         <ul>
           <li class="yes">
-            <button type="button">是</button>
+            <button type="button" @click="saveDelete">是</button>
           </li>
           <li class="no">
             <button type="button" @click="closeDelete">否</button>
@@ -211,11 +211,15 @@ export default {
   inject: ['reload'],
   data() {
     return {
+      //搜索的标题
       title: "",
+      //存储活动开始日期和结束日期
       startTime: [],
       endTime: [],
-      startTime1: '',
-      endTime1: '',
+      //绑定修改框的时间
+      startT: '',
+      endT: '',
+      delId: [],
 
       activityData: [],
 
@@ -268,10 +272,10 @@ export default {
           }
         ],
         startTime: [
-          { type: "date", required: true, message:"请输入活动开始时间", trigger: "change" }
+          { type: "string", required: true, message:"请输入活动开始时间", trigger: "change" }
         ],
         endTime: [
-          { type: "date", required: true, message:"请输入活动结束时间", trigger: "change" }
+          { type: "string", required: true, message:"请输入活动结束时间", trigger: "change" }
         ],
         content: [
           { required: true, message:"请输入活动内容", trigger: "blur" }
@@ -302,13 +306,6 @@ export default {
     },
     /* 确定新增社区活动 */
     saveAdd() {
-       //可能会修改
-       /*if(this.addActivity.startTime) {
-        this.addActivity.startTime = timeChange2(this.addActivity.startTime);
-       }
-       if(this.addActivity.endTime) {
-         this.addActivity.endTime = timeChange2(this.addActivity.endTime);
-       }*/
       let s = this.addActivity.startTime + ' ' + this.addActivity.startTime1;
       let e = this.addActivity.endTime + ' ' + this.addActivity.endTime1;
       this.$axios.post('/api/community/addCommunityActivity',{
@@ -320,7 +317,6 @@ export default {
          endTime: e,
          content: this.addActivity.content
        }).then((res) => {
-         console.log(res);
          if(res.code === 200) {
            this.addWindows = false;
            this.$message.success('新增成功');
@@ -343,6 +339,14 @@ export default {
           this.modifyActivity.endTime = this.endTime[i];
         }
       }
+      let a1 = [];
+      let a2 = [];
+      a1 = this.modifyActivity.startTime.split(' ');
+      a2 = this.modifyActivity.endTime.split(' ');
+      this.modifyActivity.startTime = a1[0];
+      this.modifyActivity.endTime = a2[0];
+      this.startT = a1[1];
+      this.endT = a2[1];
     },
     /* 关闭修改社区活动窗口 */
     closeModify() {
@@ -351,13 +355,8 @@ export default {
     },
     /* 确定修改社区活动 */
     saveModify() {
-      /*if(this.modifyActivity.startTime) {
-        this.modifyActivity.startTime = timeChange2(this.modifyActivity.startTime);
-      }
-      if(this.modifyActivity.endTime) {
-        this.modifyActivity.endTime = timeChange2(this.modifyActivity.endTime);
-      }
-
+      this.modifyActivity.startTime = this.modifyActivity.startTime + ' ' + this.startT;
+      this.modifyActivity.endTime = this.modifyActivity.endTime + ' ' + this.endT;
       this.$axios.post('/api/community/updateCommunityActivity',{
         id: this.modifyActivity.id,
         activityName: this.modifyActivity.activityName,
@@ -379,16 +378,35 @@ export default {
         }
       }).catch((err) => {
         console.log(err);
-      })*/
+      })
     },
     /* 打开删除社区通知窗口 */
     openDelete(row) {
       this.deleteWindows = true;
       console.log(row);
+      this.delId.push(row.id);
     },
     /* 关闭删除社区通知窗口 */
     closeDelete() {
       this.deleteWindows = false;
+    },
+    //删除选中的活动
+    saveDelete() {
+      this.$axios.post('/api/community/deleteCommunityActivity',this.delId)
+        .then((res) => {
+        console.log(res);
+        if(res.code === 200) {
+          this.deleteWindows = false;
+          this.$message.success('删除成功');
+          this.reload();
+          this.delId = [];
+        }
+        else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
     },
     //获取活动的接口
     getActivity(c) {
@@ -464,8 +482,6 @@ export default {
           this.endTime[i] = this.activityData[i].endTime;
         }
       }
-      console.log(this.startTime)
-      console.log(this.endTime)
     }
   },
   beforeMount() {
