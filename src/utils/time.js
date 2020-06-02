@@ -5,6 +5,13 @@ export function timeChange(time) {
   return arr[0];
 }
 
+//处理时间，显示年月日，不显示具体时间
+export function timeChangeT(time) {
+  let arr = [];
+  arr = time.split('T');
+  return arr[0];
+}
+
 //处理时间，将标准时间转变为yyyy-mm-dd 00:00:00
 export function timeChange2(date) {
   var newDate = '';
@@ -25,8 +32,8 @@ export function timeChange2(date) {
   else {
     newDate = newDate + '-' + d;
   }
-  /*//拼接字符串
-  newDate = newDate + ' ' + '00:00:00';*/
+  //拼接字符串
+  newDate = newDate + ' ' + '00:00:00';
   return newDate;
 }
 

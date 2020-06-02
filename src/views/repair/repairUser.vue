@@ -88,18 +88,18 @@
               <el-table-column prop="isReceived" label="状态" min-width="12%" align="center"></el-table-column>
               <el-table-column prop="createTime" label="创建时间" min-width="18%" align="center"></el-table-column>
               <el-table-column label="操作" min-width="15%" align="center">
-                <a href>
-                  <span class="operation" @click.prevent="openCheck">查看</span>
-                </a>
+                <span slot-scope="scope">
+                  <a href>
+                    <span class="operation" @click.prevent="openCheck(scope.row)">查看</span>
+                  </a>
+                </span>
               </el-table-column>
             </el-table>
-            <div class="page_block">
+            <div class="page_block" v-if="listNull">
               <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="currentPage"
-                :page-size="pageSize"
-                :total="total"
+                :current-page="paging.currentPage"
+                :page-size="paging.pageSize"
+                :total="paging.total"
                 layout="prev, pager, next, total"
               ></el-pagination>
             </div>
@@ -193,8 +193,12 @@
 </template>
 
 <script>
+import {receiveJudge} from "../../utils/feedback";
+import {timeChange, timeChangeT} from "../../utils/time";
+
 export default {
   name: "repairUser",
+  inject: ['reload'],
   data() {
     return {
       processWindows: true,
@@ -202,10 +206,13 @@ export default {
       checkRepairWindows: false,
       addMsgWindows: false,
       checkWindows: false,
+      listNull: true,
 
-      pageSize: 10,
-      total: 100,
-      currentPage: 1,
+      paging: {
+        pageSize: 10,
+        total: 100,
+        currentPage: 1
+      },
 
       msg1:
         "为保证社区正常运营，提升后勤服务质量及管理水平，规范运作维修、报修流程，现将物业维修及报修相关流程通知如下：",
@@ -220,68 +227,11 @@ export default {
       msg7:
         "6、 报修单填写维修项目属人为故意损坏的，必须由损坏人员赔付后方可维修。",
       addContent: {
-        facility: "",
-        place: "",
-        reason: ""
+        facility: "厕所",
+        place: "未知",
+        reason: "就是要报修！"
       },
-      formData: [
-        {
-          id: 1,
-          facility: "水管",
-          place: "走廊",
-          isReceived: "已处理",
-          createTime: "2020-20-20"
-        },
-        {
-          id: 2,
-          facility: "水管",
-          place: "房屋",
-          isReceived: "未处理",
-          createTime: "2020-20-20"
-        },
-        {
-          id: 3,
-          facility: "水管",
-          place: "房屋",
-          isReceived: "未处理",
-          createTime: "2020-20-20"
-        },
-        {
-          id: 4,
-          facility: "水管",
-          place: "房屋",
-          isReceived: "未处理",
-          createTime: "2020-20-20"
-        },
-        {
-          id: 5,
-          facility: "水管",
-          place: "房屋",
-          isReceived: "未处理",
-          createTime: "2020-20-20"
-        },
-        {
-          id: 6,
-          facility: "水管",
-          place: "房屋",
-          isReceived: "未处理",
-          createTime: "2020-20-20"
-        },
-        {
-          id: 7,
-          facility: "水管",
-          place: "房屋",
-          isReceived: "未处理",
-          createTime: "2020-20-20"
-        },
-        {
-          id: 8,
-          facility: "水管",
-          place: "房屋",
-          isReceived: "未处理",
-          createTime: "2020-20-20"
-        }
-      ],
+      formData: [],
       repairMsg: {
         id: "1",
         userId: "123",
@@ -300,14 +250,6 @@ export default {
     };
   },
   methods: {
-    handleSizeChange(val) {
-      this.pageSize = val;
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      console.log(`当前页: ${val}`);
-    },
     /* 切换到报修流程板块 */
     toProcessWindows() {
       this.processWindows = true;
@@ -325,25 +267,87 @@ export default {
       this.processWindows = false;
       this.addRepairWindows = false;
       this.checkRepairWindows = true;
+      this.getRepairList(this.paging.currentPage)
     },
     /* 打开新增报修单确定窗口 */
     openAddMsgWindows() {
-      this.addMsgWindows = true;
+      this.$axios.post('/api/repair/addRepair',{
+        userId: localStorage.getItem('userId'),
+        facility: this.addContent.facility,
+        place: this.addContent.place,
+        reason: this.addContent.reason
+      }).then((res) => {
+        if(res.code === 200) {
+          this.addMsgWindows = true;
+        }else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
     },
     /* 关闭新增报修单确定窗口 */
     closeAddMsgWindows() {
       this.addMsgWindows = false;
     },
     /* 打开查看报修单窗口 */
-    openCheck() {
+    openCheck(row) {
+      let i = 0;
+      for(i; i<this.formData.length; i++) {
+        if(this.formData[i].id === row.id) {
+          this.repairMsg = this.formData[i];
+        }
+      }
       this.checkWindows = true;
     },
     /* 关闭查看报修单窗口 */
     closeCheck() {
       this.checkWindows = false;
+    },
+    //获取报修单列表
+    getRepairList(current) {
+      this.$axios.get('/api/repair/getRepair',{
+        params: {
+          userId: localStorage.getItem("userId"),
+          current: current,
+          size: this.paging.pageSize
+        }
+      }).then((res) => {
+        console.log(res);
+        let data = res.data;
+        if(res.code === 200) {
+          this.formData = data.records;
+          this.paging.total = data.total;
+          if(this.formData.length === 0) {
+            this.listNull = false;
+          }
+          for(let i = 0; i<this.formData.length; i++) {
+            this.formData[i].isReceived = receiveJudge(this.formData[i].isReceived);
+            this.formData[i].createTime = timeChange(this.formData[i].createTime);
+            if(this.formData[i].handleTime) {
+              this.formData[i].handleTime = timeChangeT(this.formData[i].handleTime);
+            }
+            if(!this.formData[i].employeeId) {
+              this.formData[i].employeeId = '暂无';
+              this.formData[i].employeePhone = '暂无';
+              this.formData[i].employeeName = '暂无';
+              this.formData[i].handleTime = '暂无';
+              this.formData[i].result = '暂无';
+            }
+          }
+        }
+        else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
     }
+  },
+  beforeMount() {
+    this.getRepairList(this.paging.currentPage)
   }
-};
+}
 </script>
 
 <style scoped>

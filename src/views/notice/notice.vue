@@ -19,15 +19,17 @@
                 style="width: 100%; margin-top: 45px;"
                 highlight-current-row>
           <!-- 设置min-width来自适应宽度 -->
-          <el-table-column prop="title" min-width="45%"></el-table-column>
-          <el-table-column prop="createTime" min-width="18%"></el-table-column>
-          <el-table-column min-width="20%">
-            <a href>
-              <span class="operation" @click.prevent="openCheck">查看</span>
-            </a>
-            <a href v-if="role">
-              <span class="operation" @click.prevent="openModify">修改</span>
-            </a>
+          <el-table-column prop="title" min-width="30%"></el-table-column>
+          <el-table-column prop="createTime" min-width="40%" align="center"></el-table-column>
+          <el-table-column min-width="30%" align="center">
+             <span slot-scope="scope">
+               <a href v-if="role">
+                <span class="operation" @click.prevent="openModify(scope.row)">修改</span>
+               </a>
+               <a href>
+                <span class="operation" @click.prevent="openCheck(scope.row)">查看</span>
+               </a>
+             </span>
            <!-- <a href v-if="role">
               <span class="operation" @click.prevent="openDelete">删除</span>
             </a>-->
@@ -127,14 +129,13 @@
         <div class="checkContentBox">
           <span>{{ noticeMsg.title }}</span>
           <div>{{ noticeMsg.content }}</div>
-          <div>大概是这样 我懒得分段写了T T</div>
         </div>
         <div class="button">
           <button type="button" value="返回" @click="closeCheck">返回</button>
         </div>
       </div>
     </div>
-    <div class="deleteWindows" v-show="deleteWindows">
+    <!--<div class="deleteWindows" v-show="deleteWindows">
       <div class="deleteBox">
         <h4>删除社区通知</h4>
         <div class="back">
@@ -152,7 +153,7 @@
           </li>
         </ul>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -168,62 +169,12 @@
         title:'',
 
         noticeData: [],
-        /*noticeData:[
-          {
-            title:"“喜迎羊年，共贺新春”通知",
-            date:"2020/05/08",
-          },
-          {
-            title:"“喜迎羊年，共贺新春”通知",
-            date:"2020/05/08",
-          },
-          {
-            title:"“喜迎羊年，共贺新春”通知",
-            date:"2020/05/08",
-          },
-          {
-            title:"“喜迎羊年，共贺新春”通知",
-            date:"2020/05/08",
-          },
-          {
-            title:"“喜迎羊年，共贺新春”通知",
-            date:"2020/05/08",
-          },
-          {
-            title:"“喜迎羊年，共贺新春”通知",
-            date:"2020/05/08",
-          },
-          {
-            title:"“喜迎羊年，共贺新春”通知",
-            date:"2020/05/08",
-          },
-          {
-            title:"“喜迎羊年，共贺新春”通知",
-            date:"2020/05/08",
-          }
-        ],*/
-
         noticeContent:{
           title:"",
           content:"",
         },
 
-        noticeMsg:{
-          title:"关于举报群租房的通知",
-          content:"各位居民：\n"+
-              "为进一步依法规范地区房屋租赁管理，加强对“群租房”的依法治理，"+
-              "保障出租房屋使用安全，消除各种安全隐患，落实人口调控措施，"+
-              "谐稳定，为居民创造良好的居住环境，大屯街道将开展"+
-              "房屋违法出租和“群租房”清理整治工作。为摸清底数和掌握房屋使用情况"+
-              "，欢迎广大居民朋友随时举报您所居住楼层的“群租房屋”。"+
-              "同时提醒已经将自己房屋出租并存在群租打隔断情况的业主尽快自行拆除"+
-              "，避免给您带来不必要的损失。\n"+
-              "符合群租房的条件：\n"+
-              "1、 出租房屋人均面积低于5平米，每个房间居住人数超过2人；\n"+
-              "2、 改变房屋内部结构分割出租，按床位等方式变相分割出租；\n"+
-              "3、 将厨房、卫生间、阳台等作为卧室出租供人居住。\n"+
-              "举报电话：欧陆经典社区流管站 84850529"
-        },
+        noticeMsg: {},
 
         formRules:{
           title:[
@@ -268,7 +219,6 @@
             this.addWindows = false;
             this.$message.success('新增成功');
             this.reload();
-            console.log(res);
           }
           else {
             this.$message.error(res.message);
@@ -278,8 +228,13 @@
         })
       },
       /* 打开修改社区通知窗口 */
-      openModify() {
+      openModify(row) {
         this.modifyWindows = true;
+        for(let i = 0; i<this.noticeData.length; i++) {
+          if(row.id === this.noticeData[i].id) {
+            this.noticeMsg = this.noticeData[i];
+          }
+        }
       },
       /* 关闭修改社区通知窗口 */
       closeModify() {
@@ -287,11 +242,33 @@
       },
       /* 保存修改社区通知 */
       saveModify() {
-        this.modifyWindows = false;
+        this.$axios.post('/api/community/updateCommunityNotice',{
+          id: this.noticeMsg.id,
+          title: this.noticeMsg.title,
+          content: this.noticeMsg.content
+        }).then((res) => {
+          console.log(res);
+          if(res.code === 200) {
+            this.modifyWindows = false;
+            this.$message.success('修改成功');
+          }
+          else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        })
+
       },
       /* 打开查看社区通知窗口 */
-      openCheck() {
+      openCheck(row) {
         this.checkWindows = true;
+        for(let i = 0; i<this.noticeData.length; i++) {
+          if(row.id === this.noticeData[i].id) {
+            this.noticeMsg = this.noticeData[i];
+          }
+        }
+
       },
       /* 关闭修改社区通知窗口 */
       closeCheck() {
@@ -313,7 +290,6 @@
             size: this.paging.pageSize
           }
         }).then((res) => {
-          console.log(res);
           let data = res.data;
           if(res.code === 200) {
             this.paging.total = data.total;

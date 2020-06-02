@@ -287,6 +287,9 @@
 <script>
 /*import {timeChange2} from "../../utils/time";*/
 
+import {receiveJudge} from "../../utils/feedback";
+import {timeChange, timeChangeT} from "../../utils/time";
+
 export default {
   name: "repair",
   inject: ['reload'],
@@ -319,64 +322,7 @@ export default {
         "5、 遇紧急情况涉及公共安全隐患的，可直接拨打紧急维修电话13222227356联系报修。",
       msg7:
         "6、 报修单填写维修项目属人为故意损坏的，必须由损坏人员赔付后方可维修。",
-      formData: [
-        {
-          id: 1,
-          facility: '水管',
-          place: '走廊',
-          isReceived: '已处理',
-          createTime: '2020-20-20'
-        },
-        {
-          id: 2,
-          facility: '水管',
-          place: '房屋',
-          isReceived: '未处理',
-          createTime: '2020-20-20'
-        },
-        {
-          id: 3,
-          facility: '水管',
-          place: '房屋',
-          isReceived: '未处理',
-          createTime: '2020-20-20'
-        },
-        {
-          id: 4,
-          facility: '水管',
-          place: '房屋',
-          isReceived: '未处理',
-          createTime: '2020-20-20'
-        },
-        {
-          id: 5,
-          facility: '水管',
-          place: '房屋',
-          isReceived: '未处理',
-          createTime: '2020-20-20'
-        },
-        {
-          id: 6,
-          facility: '水管',
-          place: '房屋',
-          isReceived: '未处理',
-          createTime: '2020-20-20'
-        },
-        {
-          id: 7,
-          facility: '水管',
-          place: '房屋',
-          isReceived: '未处理',
-          createTime: '2020-20-20'
-        },
-        {
-          id: 8,
-          facility: '水管',
-          place: '房屋',
-          isReceived: '未处理',
-          createTime: '2020-20-20'
-        }
-      ],
+      formData: [],
       repairMsg:{
         id:'1',
         userId:'123',
@@ -498,11 +444,11 @@ export default {
     },
     /* 保存修改报修单 */
     saveModify() {
-      /*this.$axios.post('/api/repair/updateRepair',{
+      this.$axios.post('/api/repair/updateRepair',{
         id: this.modifyId,
         isReceived: this.modifyCotent.isReceived,
         employeeId: localStorage.getItem('userId'),
-        handleTime: timeChange2(this.modifyCotent.handleTime),
+        handleTime: this.modifyCotent.handleTime,
         result: this.modifyCotent.result
       }).then((res) => {
         if(res.code === 200) {
@@ -515,7 +461,7 @@ export default {
         }
       }).catch((err) => {
         console.log(err);
-      })*/
+      })
     },
     /* 打开查看报修单窗口 */
     openCheck(row) {
@@ -539,23 +485,36 @@ export default {
     getRepair(current) {
       this.$axios.get('/api/repair/getRepair',{
         params: {
-          userId: localStorage.getItem("userId"),
+          userId: '',
           current: current,
           size: this.paging.pageSize
         }
       }).then((res) => {
-        console.log(res);
-        /*let data = res.data;
+        let data = res.data;
         if(res.code === 200) {
           this.formData = data.records;
           this.paging.total = data.total;
-          if(this.formData.length === 0 || this.paging.currentPage !== 1) {
+          if(this.formData.length === 0) {
             this.listNull = false;
+          }
+          for(let i = 0; i<this.formData.length; i++) {
+            this.formData[i].isReceived = receiveJudge(this.formData[i].isReceived);
+            this.formData[i].createTime = timeChange(this.formData[i].createTime);
+            if(this.formData[i].handleTime) {
+              this.formData[i].handleTime = timeChangeT(this.formData[i].handleTime);
+            }
+            if(!this.formData[i].employeeId) {
+              this.formData[i].employeeId = '暂无';
+              this.formData[i].employeePhone = '暂无';
+              this.formData[i].employeeName = '暂无';
+              this.formData[i].handleTime = '暂无';
+              this.formData[i].result = '暂无';
+            }
           }
         }
         else {
           this.$message.error(res.message);
-        }*/
+        }
       }).catch((err) => {
         console.log(err);
       })

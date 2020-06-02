@@ -2,39 +2,41 @@
   <div id="activity">
     <div class="activity_box">
       <h3>社区活动</h3>
-      <div class="search">
+      <!--<div class="search">
         <el-input v-model="title" class="search_input" placeholder="请输入活动名称"></el-input>
         <el-button type="primary">搜索</el-button>
-      </div>
+      </div>-->
       <div class="option" v-if="role">
         <h4>操作</h4>
         <button type="button" @click="openAdd">新增社区活动</button>
       </div>
       <div class="activity_table">
-        <el-table :data="noticeData" style="width: 100%" highlight-current-row>
+        <el-table :data="activityData" style="width: 100%" highlight-current-row>
           <!-- 设置min-width来自适应宽度 -->
-          <el-table-column prop="title" min-width="45%"></el-table-column>
-          <el-table-column prop="date" min-width="18%"></el-table-column>
-          <el-table-column min-width="20%">
-            <a href>
-              <span class="operation" @click.prevent>查看</span>
-            </a>
-            <a href v-if="role">
-              <span class="operation" @click.prevent="openModify">修改</span>
-            </a>
-            <a href v-if="role">
-              <span class="operation" @click.prevent="openDelete">删除</span>
-            </a>
+          <el-table-column prop="activityName" min-width="15%"></el-table-column>
+          <el-table-column prop="startTime" min-width="60%" align="center"></el-table-column>
+          <el-table-column min-width="30%" align="center">
+             <span slot-scope="scope">
+               <a href>
+                 <span class="operation" @click.prevent>查看</span>
+               </a>
+               <a href v-if="role">
+                 <span class="operation" @click.prevent="openModify(scope.row)">修改</span>
+               </a>
+               <a href v-if="role">
+                 <span class="operation" @click.prevent="openDelete(scope.row)">删除</span>
+               </a>
+             </span>
           </el-table-column>
         </el-table>
-        <div class="page_block">
+        <div class="page_block" v-if="listNull">
           <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-size="pageSize"
-            :total="pageCount"
-            layout="prev, pager, next, total"
+                  @prev-click = "prevChange"
+                  @next-click = "nextChange"
+                  :current-page="paging.currentPage"
+                  :page-size="paging.pageSize"
+                  :total="paging.total"
+                  layout="prev, pager, next, total"
           ></el-pagination>
         </div>
       </div>
@@ -68,11 +70,27 @@
             <el-form-item class="date" required>
               <label for="date">活动时间：</label>
               <el-form-item prop="startTime" class="startTimeSelect">
-                <el-date-picker type="date" placeholder="选择日期" v-model="addActivity.startTime"></el-date-picker>
+                <el-date-picker
+                        type="date"
+                        placeholder="选择日期"
+                        v-model="addActivity.startTime"
+                        value-format="yyyy-MM-dd"></el-date-picker>
+                <el-time-picker
+                        v-model="addActivity.startTime1"
+                        value-format="HH:mm:ss"
+                        placeholder="选择时间"></el-time-picker>
               </el-form-item>
               <p>至</p>
               <el-form-item prop="endTime" class="endTimeSelect">
-                <el-date-picker type="date" placeholder="选择日期" v-model="addActivity.endTime"></el-date-picker>
+                <el-date-picker
+                        type="date"
+                        placeholder="选择日期"
+                        value-format="yyyy-MM-dd"
+                        v-model="addActivity.endTime"></el-date-picker>
+                <el-time-picker
+                        v-model="addActivity.endTime1"
+                        value-format="HH:mm:ss"
+                        placeholder="选择时间"></el-time-picker>
               </el-form-item>
             </el-form-item>
             <el-form-item class="content" prop="content">
@@ -120,12 +138,28 @@
             </el-form-item>
             <el-form-item class="date" required>
               <label for="date">活动时间：</label>
-              <el-form-item prop="startTime" class="startTimeSelect">
-                <el-date-picker type="date" placeholder="选择日期" v-model="modifyActivity.startTime"></el-date-picker>
+              <el-form-item prop="startTime" class="startTimeSelect" value-format="yyyy-MM-dd">
+                <el-date-picker
+                        type="date"
+                        placeholder="选择日期"
+                        value-format="yyyy-MM-dd"
+                        v-model="modifyActivity.startTime"></el-date-picker>
+                <el-time-picker
+                        v-model="startTime1"
+                        value-format="HH:mm:ss"
+                        placeholder="选择时间"></el-time-picker>
               </el-form-item>
               <p>至</p>
-              <el-form-item prop="endTime" class="endTimeSelect">
-                <el-date-picker type="date" placeholder="选择日期" v-model="modifyActivity.endTime"></el-date-picker>
+              <el-form-item prop="endTime" class="endTimeSelect" value-format="yyyy-MM-dd">
+                <el-date-picker
+                        type="date"
+                        placeholder="选择日期"
+                        value-format="yyyy-MM-dd"
+                        v-model="modifyActivity.endTime"></el-date-picker>
+                <el-time-picker
+                        v-model="endTime1"
+                        value-format="HH:mm:ss"
+                        placeholder="选择时间"></el-time-picker>
               </el-form-item>
             </el-form-item>
             <el-form-item class="content" prop="content">
@@ -169,58 +203,35 @@
 
 <script>
 import {roleJudge} from "../../utils/roleUtil";
+import {timeChange} from "../../utils/time";
+/*import {timeChange2} from "../../utils/time";*/
 
 export default {
   name: "activity",
+  inject: ['reload'],
   data() {
     return {
       title: "",
+      startTime: [],
+      endTime: [],
+      startTime1: '',
+      endTime1: '',
 
-      noticeData: [
-        {
-          title: "社区“争做环保小卫士”卫生环境大扫除活动",
-          date: "2020/05/07至2020/05/08"
-        },
-        {
-          title: "社区“争做环保小卫士”卫生环境大扫除活动",
-          date: "2020/05/07至2020/05/08"
-        },
-        {
-          title: "社区“争做环保小卫士”卫生环境大扫除活动",
-          date: "2020/05/07至2020/05/08"
-        },
-        {
-          title: "社区“争做环保小卫士”卫生环境大扫除活动",
-          date: "2020/05/07至2020/05/08"
-        },
-        {
-          title: "社区“争做环保小卫士”卫生环境大扫除活动",
-          date: "2020/05/07至2020/05/08"
-        },
-        {
-          title: "社区“争做环保小卫士”卫生环境大扫除活动",
-          date: "2020/05/07至2020/05/08"
-        },
-        {
-          title: "社区“争做环保小卫士”卫生环境大扫除活动",
-          date: "2020/05/07至2020/05/08"
-        },
-        {
-          title: "社区“争做环保小卫士”卫生环境大扫除活动",
-          date: "2020/05/07至2020/05/08"
-        }
-      ],
+      activityData: [],
 
       addActivity: {
-        activityName: "",
-        principal: "",
-        host: "",
-        telNumber: "",
+        activityName: "测试",
+        principal: "测试",
+        host: "测试",
+        telNumber: "19909090909",
         startTime: "",
         endTime: "",
-        content: ""
+        content: "测试",
+        startTime1: '',
+        endTime1: ''
       },
-      modifyActivity:{
+      modifyActivity: {},
+      /*modifyActivity:{
         activityName:"社区乒乓球交流活动",
         principal:"刘阳十",
         host:"社区乒乓球协会",
@@ -237,7 +248,7 @@ export default {
                 "这种乒乓球活动，让我们大家有机会一起交流，一起学习，一起切磋，大家"+
                 "相互帮助，真好！感谢居委会给我们老百姓提供了这么好的交流平台，让咱"+
                 "们老年人真正实现老有所学，老有所用！"
-      },
+      },*/
       formRules: {
         activityName: [
           { required: true, message:"请输入活动名称", trigger: "blur" },
@@ -267,25 +278,20 @@ export default {
         ]
       },
 
-      pageSize: 4,
-      pageCount: 400,
-      currentPage: 1,
+      paging: {
+        pageSize: 10,
+        total: 400,
+        currentPage: 1,
+      },
 
       addWindows: false,
       modifyWindows:false,
       deleteWindows:false,
-      role: false
+      role: false,
+      listNull: true
     };
   },
   methods: {
-    handleSizeChange(val) {
-      this.pageSize = val;
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      console.log(`当前页: ${val}`);
-    },
     /* 打开新增社区活动窗口 */
     openAdd() {
       this.addWindows = true;
@@ -296,31 +302,175 @@ export default {
     },
     /* 确定新增社区活动 */
     saveAdd() {
-      this.addWindows = false;
+       //可能会修改
+       /*if(this.addActivity.startTime) {
+        this.addActivity.startTime = timeChange2(this.addActivity.startTime);
+       }
+       if(this.addActivity.endTime) {
+         this.addActivity.endTime = timeChange2(this.addActivity.endTime);
+       }*/
+      let s = this.addActivity.startTime + ' ' + this.addActivity.startTime1;
+      let e = this.addActivity.endTime + ' ' + this.addActivity.endTime1;
+      this.$axios.post('/api/community/addCommunityActivity',{
+         activityName: this.addActivity.activityName,
+         principal: this.addActivity.principal,
+         host: this.addActivity.host,
+         telNumber: this.addActivity.telNumber,
+         startTime: s,
+         endTime: e,
+         content: this.addActivity.content
+       }).then((res) => {
+         console.log(res);
+         if(res.code === 200) {
+           this.addWindows = false;
+           this.$message.success('新增成功');
+           this.reload();
+         }
+         else {
+           this.$message.error(res.message);
+         }
+       }).catch((err) => {
+         console.log(err);
+       })
     },
     /* 打开修改社区活动窗口 */
-    openModify() {
+    openModify(row) {
       this.modifyWindows = true;
+      for(let i = 0; i<this.activityData.length; i++) {
+        if(row.id === this.activityData[i].id) {
+          this.modifyActivity = this.activityData[i];
+          this.modifyActivity.startTime = this.startTime[i];
+          this.modifyActivity.endTime = this.endTime[i];
+        }
+      }
     },
     /* 关闭修改社区活动窗口 */
     closeModify() {
       this.modifyWindows = false;
+      this.activityTime();
     },
     /* 确定修改社区活动 */
     saveModify() {
-      this.modifyWindows = false;
+      /*if(this.modifyActivity.startTime) {
+        this.modifyActivity.startTime = timeChange2(this.modifyActivity.startTime);
+      }
+      if(this.modifyActivity.endTime) {
+        this.modifyActivity.endTime = timeChange2(this.modifyActivity.endTime);
+      }
+
+      this.$axios.post('/api/community/updateCommunityActivity',{
+        id: this.modifyActivity.id,
+        activityName: this.modifyActivity.activityName,
+        host: this.modifyActivity.host,
+        principal: this.modifyActivity.principal,
+        telNumber: this.modifyActivity.telNumber,
+        content: this.modifyActivity.content,
+        startTime: this.modifyActivity.startTime,
+        endTime: this.modifyActivity.endTime
+      }).then((res) => {
+        console.log(res);
+        if(res.code === 200) {
+          this.modifyWindows = false;
+          this.$message.success('修改成功');
+          this.reload();
+        }
+        else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })*/
     },
     /* 打开删除社区通知窗口 */
-    openDelete() {
+    openDelete(row) {
       this.deleteWindows = true;
+      console.log(row);
     },
     /* 关闭删除社区通知窗口 */
     closeDelete() {
       this.deleteWindows = false;
     },
+    //获取活动的接口
+    getActivity(c) {
+      this.$axios.get('/api/community/getCommunityActivity',{
+        params: {
+          current: c
+        }
+      }).then((res) => {
+          let data = res.data;
+          if(res.code === 200) {
+            this.activityData = data.records;
+            this.paging.total = data.total;
+            if(this.activityData.length === 0) {
+              this.listNull = false;
+            }else {
+              this.listNull = true;
+            }
+            this.saveTime();
+            this.activityTime();
+          }
+        else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+
+    },
+    //前一页
+    prevChange(val) {
+      //val是当前页
+      this.getActivity(val);
+    },
+    //后一页
+    nextChange(val) {
+      //val是当前页
+      this.getActivity(val);
+    },
+    //活动时间的显示情况
+    activityTime() {
+      for(let i = 0; i<this.activityData.length; i++) {
+        if(this.activityData[i].startTime && this.activityData[i].endTime) {
+          this.activityData[i].startTime = timeChange(this.activityData[i].startTime)
+          this.activityData[i].endTime = timeChange(this.activityData[i].endTime)
+          this.activityData[i].startTime = this.activityData[i].startTime + ' - ' + this.activityData[i].endTime;
+        }
+        else if(this.activityData[i].startTime) {
+          this.activityData[i].startTime = timeChange(this.activityData[i].startTime)
+          this.activityData[i].startTime = this.activityData[i].startTime + ' - ' + '暂无';
+        }
+        else if(this.activityData[i].endTime) {
+          this.activityData[i].endTime = timeChange(this.activityData[i].endTime)
+          this.activityData[i].startTime = '暂无' + ' - ' + this.activityData[i].endTime;
+        }
+        else {
+          this.activityData[i].startTime = '暂无';
+          this.activityData[i].endTime = '暂无';
+          this.activityData[i].startTime = this.activityData[i].startTime + ' - ' + this.activityData[i].endTime;
+        }
+      }
+    },
+    //存储开始时间和结束时间
+    saveTime() {
+      for(let i = 0; i<this.activityData.length; i++) {
+        if(this.activityData[i].startTime === undefined) {
+          this.startTime[i] = ''
+        }else {
+          this.startTime[i] = this.activityData[i].startTime;
+        }
+        if(this.activityData[i].endTime === undefined) {
+          this.endTime[i] = ''
+        }else {
+          this.endTime[i] = this.activityData[i].endTime;
+        }
+      }
+      console.log(this.startTime)
+      console.log(this.endTime)
+    }
   },
   beforeMount() {
     this.role = roleJudge();
+    this.getActivity(this.paging.currentPage);
   }
 };
 </script>
@@ -403,7 +553,7 @@ export default {
   margin-left: -10px;
 }
 .activity_table {
-  margin-top: 10px;
+  margin-top: 50px;
 }
 .activity_table a {
   display: block;
