@@ -73,27 +73,37 @@
             </div>
           </div>
           <div v-show="onlyWritePwd">
-            <el-form class="passwordForm">
+            <el-form :model="passwordInfoWrite" ref="passwordInfoWrite" class="passwordForm" :rules="passwordRules">
               <div class="form_left">
-                <el-form-item class="old">
+                <el-form-item class="old" prop="oldPwd">
                   <label>旧密码：</label>
-                  <el-input class="input"></el-input>
+                  <el-input v-model="passwordInfoWrite.oldPwd" class="input"></el-input>
                 </el-form-item>
               </div>
               <div class="form_right">
-                <el-form-item class="new">
+                <el-form-item class="new" prop="newPwd">
                   <label>新密码：</label>
-                  <el-input class="input"></el-input>
+                  <el-input v-model="passwordInfoWrite.newPwd" class="input"></el-input>
                 </el-form-item>
-                <el-form-item class="again">
+                <el-form-item class="again" prop="againPwd">
                   <label>确认密码：</label>
-                  <el-input class="input"></el-input>
+                  <el-input v-model="passwordInfoWrite.againPwd" class="input"></el-input>
                 </el-form-item>
               </div>
             </el-form>
             <div class="form_button">
               <el-button type="primary" @click="writeToReadPwd">取消</el-button>
               <el-button type="primary" @click="updatePwd">保存</el-button>
+            </div>
+            <div class="form_right">
+              <el-form-item class="new">
+                <label>新密码：</label>
+                <el-input class="input" readonly></el-input>
+              </el-form-item>
+              <el-form-item class="again">
+                <label>确认密码：</label>
+                <el-input class="input" readonly></el-input>
+              </el-form-item>
             </div>
           </div>
         </div>
@@ -195,6 +205,17 @@
           newPwd: '',
           againPwd: ''
         },
+        passwordRules:{
+        oldPwd:[
+          { required: true, message: '旧密码不能为空', trigger: 'blur'}
+        ],
+        newPwd:[
+          { required: true, message: '新密码不能为空', trigger: 'blur'},
+        ],
+        againPwd:[
+          { required: true, message: '请再次输入新密码', trigger: 'blur'},
+        ]
+      },
       }
     },
     methods:{
@@ -413,5 +434,14 @@ h3::before {
   background: #8a79af;
   border-color: #8a79af;
   margin-left: 30px;
+}
+</style>
+<style>
+.el-form-item__error {
+  position: absolute;
+  left: 80px;
+}
+.again .el-form-item__error {
+  left: 100px;
 }
 </style>

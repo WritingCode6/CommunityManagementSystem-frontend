@@ -107,19 +107,19 @@
         </div>
         <div v-show="onlyWritePwd">
           <h3>修改密码</h3>
-          <el-form class="passwordForm">
+          <el-form :model="passwordInfoWrite" ref="passwordInfoWrite" class="passwordForm" :rules="passwordRules">
             <div class="form_left">
-              <el-form-item class="old">
+              <el-form-item class="old" prop="oldPwd">
                 <label>旧密码：</label>
                 <el-input v-model="passwordInfoWrite.oldPwd" class="input" show-password></el-input>
               </el-form-item>
             </div>
             <div class="form_right">
-              <el-form-item class="new">
+              <el-form-item class="new" prop="newPwd">
                 <label>新密码：</label>
                 <el-input v-model="passwordInfoWrite.newPwd" class="input" show-password></el-input>
               </el-form-item>
-              <el-form-item class="again">
+              <el-form-item class="again" prop="againPwd">
                 <label>确认密码：</label>
                 <el-input v-model="passwordInfoWrite.againPwd" class="input" show-password></el-input>
               </el-form-item>
@@ -173,6 +173,17 @@ export default {
         ],
         address:[
           { required: true, message: '地址不能为空', trigger: 'blur'},
+        ]
+      },
+      passwordRules:{
+        oldPwd:[
+          { required: true, message: '旧密码不能为空', trigger: 'blur'}
+        ],
+        newPwd:[
+          { required: true, message: '新密码不能为空', trigger: 'blur'},
+        ],
+        againPwd:[
+          { required: true, message: '请再次输入新密码', trigger: 'blur'},
         ]
       },
       onlyReadInfo: true,

@@ -26,7 +26,14 @@
       <div class="repairPicture">
         <h4>报修申请新增情况</h4>
         <div class="picture">
-          <!-- 曲线画在这里 -->
+          <el-progress
+                type="circle"
+                :percentage="25"
+                :width="210"
+                :height="210"
+                :stroke-width="15"
+                color="#fdc38a">
+          </el-progress>
         </div>
       </div>
     </div>
@@ -116,7 +123,7 @@
           <el-form
                 ref="form"
                 :v-model="addContent"
-                :rules="repairWordRules"
+                :rules="addRules"
                 :show-message="false">
             <el-form-item class="facility" prop="facility">
               <label>设施：</label>
@@ -162,9 +169,10 @@
         <div class="modifyContentBox">
           <h5>处理信息</h5>
           <el-form
-                ref="form"
-                :v-model="modifyCotent">
-            <el-form-item class="isReceived">
+                ref="modifyCotent"
+                :v-model="modifyCotent"
+                :rules="modifyRules">
+            <el-form-item class="isReceived" prop="isReceived">
               <label>处理状态：</label>
               <el-select
                       placeholder="请选择处理状态"
@@ -175,7 +183,7 @@
                 <el-option label="已处理" value="1"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item class="handleTime">
+            <el-form-item class="handleTime" prop="handleTime">
               <label>处理时间：</label>
               <el-date-picker
                       type="date"
@@ -183,7 +191,7 @@
                       v-model="modifyCotent.handleTime"
                       class="time_input"></el-date-picker>
             </el-form-item>
-            <el-form-item class="result">
+            <el-form-item class="result" prop="result">
               <label>处理结果：</label>
               <el-input
                   type="textarea"
@@ -394,7 +402,7 @@ export default {
         handleTime:'',
         result:''
       },
-      repairWordRules:{
+      addRules:{
         facility:[
           { required: true, trigger: "blur" }
         ],
@@ -403,6 +411,17 @@ export default {
         ],
         reason:[
           { required: true, trigger: "blur" }
+        ]
+      },
+      modifyRules:{
+        isReceived:[
+          { required: true, message:"请选择处理状态", trigger: "change" }
+        ],
+        handleTime:[
+          { required: true, message:"请选择处理日期", trigger: "change" }
+        ],
+        result:[
+          { required: true, message:"请输入处理结果", trigger: "blur" }
         ]
       },
       paging: {
@@ -653,7 +672,10 @@ h4::before {
   z-index: 1;
 }
 .option h4::before {
-  background-color: #d38cad;
+  background: #d38cad;
+}
+.repairPicture h4::before {
+  background: #fdc38a;
 }
 .repairProcessRead button {
   width: 300px;
@@ -677,6 +699,12 @@ h4::before {
   border: 1px solid rgb(161, 158, 158);
   margin-top: 20px;
   border-radius: 5px;
+  position: relative;
+}
+.picture .el-progress {
+  position: absolute;
+  top: 50px;
+  left: 45px;
 }
 .modifyProcessWindows,
 .addWindows,
