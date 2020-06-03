@@ -120,12 +120,31 @@
             </el-form-item>
             <el-form-item class="date" required>
               <label for="date">活动时间：</label>
-              <el-form-item prop="startTime" class="startTimeSelect">
-                <el-date-picker type="date" placeholder="选择日期" v-model="modifyActivity.startTime"></el-date-picker>
+              <el-form-item prop="startTime" class="startTimeSelect" value-format="yyyy-MM-dd">
+                <el-date-picker
+                        type="date"
+                        placeholder="选择日期"
+                        value-format="yyyy-MM-dd"
+                        v-model="modifyActivity.startTime"></el-date-picker>
+                <el-time-picker
+                        v-model="startTime1"
+                        value-format="HH:mm:ss"
+                        placeholder="选择时间"
+                        class="timeSelect"></el-time-picker>
               </el-form-item>
               <p>至</p>
-              <el-form-item prop="endTime" class="endTimeSelect">
-                <el-date-picker type="date" placeholder="选择日期" v-model="modifyActivity.endTime"></el-date-picker>
+              <el-form-item prop="endTime" class="endTimeSelect" value-format="yyyy-MM-dd">
+                <el-date-picker
+                        type="date"
+                        placeholder="选择日期"
+                        value-format="yyyy-MM-dd"
+                        class="timeSelect"
+                        v-model="modifyActivity.endTime"></el-date-picker>
+                <el-time-picker
+                        v-model="endTime1"
+                        value-format="HH:mm:ss"
+                        class="timeSelect"
+                        placeholder="选择时间"></el-time-picker>
               </el-form-item>
             </el-form-item>
             <el-form-item class="content" prop="content">
@@ -504,6 +523,9 @@ export default {
   width: 250px;
   height: 50px;
 }
+.startTimeSelect {
+  display: block;
+}
 .activityName {
   margin-left: 20px;
 }
@@ -522,13 +544,8 @@ export default {
   margin-left: 20px;
 }
 .date p {
-  margin-top: -50px;
-  margin-left: 330px;
-}
-.startTimeSelect,
-.endTimeSelect {
-  width: 200px;
-  height: 50px;
+  margin-top: -55px;
+  margin-left: 425px;
 }
 .startTimeSelect {
   margin-top: -40px;
@@ -536,7 +553,7 @@ export default {
 }
 .endTimeSelect {
   margin-top: -40px;
-  margin-left: 360px;
+  margin-left: 460px;
 }
 .content {
   margin-top: -10px;
@@ -551,6 +568,7 @@ export default {
   letter-spacing: 2px;
   line-height: 30px;
 }
+
 .addBox .buttonBox,
 .modifyBox .buttonBox {
   margin-top: -30px;
@@ -621,10 +639,25 @@ export default {
 }
 .activityName .el-form-item__error,
 .telNumber .el-form-item__error {
+  top: 40px;
   left: 100px;
 }
 .principal .el-form-item__error,
 .host .el-form-item__error {
+  top: 40px;
   left: 80px;
+}
+.startTimeSelect .el-form-item__error,
+.endTimeSelect .el-form-item__error {
+  top: 40px;
+}
+.startTimeSelect .el-input__inner,
+.endTimeSelect .el-input__inner {
+  width: 150px;
+  display: block;
+  float: left;
+}
+.el-date-editor.el-input {
+  width: 160px;
 }
 </style>
