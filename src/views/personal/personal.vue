@@ -1,156 +1,148 @@
 <template>
   <div id="personal">
-      <div class="info">
-        <div v-show="onlyReadInfo">
-          <h3>个人资料</h3>
-          <el-form class="infoFrom">
-            <div class="form_left">
-              <el-form-item prop="name" class="name">
-                <label>姓名：</label>
-                <el-input v-model="userInfo[0].name" class="input" readonly></el-input>
-              </el-form-item>
-              <el-form-item prop="phone" class="phone">
-                <label>手机号：</label>
-                <el-input v-model="userInfo[0].phone" class="input" readonly></el-input>
-              </el-form-item>
-              <el-form-item prop="sex" class="sex">
-                <label>性别：</label>
-                <el-input v-model="userInfo[0].sex" class="select" readonly></el-input>
-              </el-form-item>
-            </div>
-            <div class="form_right">
-              <el-form-item prop="idNumber" class="idNumber">
-                <label>身份证号：</label>
-                <el-input v-model="userInfo[0].idNumber" class="longInput input" readonly></el-input>
-              </el-form-item>
-              <el-form-item prop="serviceId" class="serviceId">
-                <label>工作ID：</label>
-                <el-input v-model="userInfo[0].serviceId" class="input" readonly></el-input>
-              </el-form-item>
-              <el-form-item prop="address" class="address">
-                <label>地址：</label>
-                <el-input v-model="userInfo[0].address" class="longInput input" readonly></el-input>
-              </el-form-item>
-            </div>
-          </el-form>
-          <div class="form_button">
-            <el-button type="primary" @click="readToWriteInfo">修改</el-button>
-            <el-button type="primary" @click="refresh">刷新</el-button>
+    <div class="info">
+      <div v-show="onlyReadInfo">
+        <h3>个人资料</h3>
+        <el-form class="infoFrom">
+          <div class="form_left">
+            <el-form-item prop="name" class="name">
+              <label>姓名：</label>
+              <el-input v-model="userInfo.name" class="input" readonly></el-input>
+            </el-form-item>
+            <el-form-item prop="phone" class="phone">
+              <label>手机号：</label>
+              <el-input v-model="userInfo.phone" class="input" readonly></el-input>
+            </el-form-item>
+            <el-form-item prop="sex" class="sex">
+              <label>性别：</label>
+              <el-input v-model="userInfo.sex" class="select" readonly></el-input>
+            </el-form-item>
           </div>
-        </div>
-        <div v-show="onlyWriteInfo">
-          <h3>个人资料</h3>
-          <el-form :model="userInfo[0]" ref="userInfo[0]" class="infoFrom" :rules="infoRules">
-            <div class="form_left">
-              <el-form-item class="name">
-                <label>姓名：</label>
-                <el-input v-model="userInfo[0].name" class="input" readonly></el-input>
-              </el-form-item>
-              <el-form-item prop="phone" class="phone">
-                <label>手机号：</label>
-                <el-input v-model="userInfo[0].phone" class="input" clearable></el-input>
-              </el-form-item>
-              <el-form-item class="sex">
-                <label>性别：</label>
-                <el-select v-model="userInfo[0].sex" class="select">
-                  <el-option label="男" value="0"></el-option>
-                  <el-option label="女" value="1"></el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-            <div class="form_right">
-              <el-form-item class="idNumber">
-                <label>身份证号：</label>
-                <el-input v-model="userInfo[0].idNumber" class="longInput input" readonly></el-input>
-              </el-form-item>
-              <el-form-item class="serviceId">
-                <label>工作ID：</label>
-                <el-input v-model="userInfo[0].serviceId" class="input" readonly></el-input>
-              </el-form-item>
-              <el-form-item prop="address" class="address">
-                <label>地址：</label>
-                <el-input v-model="userInfo[0].address" class="longInput input" clearable></el-input>
-              </el-form-item>
-            </div>
-          </el-form>
-          <div class="form_button">
-            <el-button type="primary" @click="writeToReadInfo">取消</el-button>
-            <el-button type="primary" @click="updateStaffInfo">保存</el-button>
+          <div class="form_right">
+            <el-form-item prop="idNumber" class="idNumber">
+              <label>身份证号：</label>
+              <el-input v-model="userInfo.idNumber" class="longInput input" readonly></el-input>
+            </el-form-item>
+            <el-form-item prop="serviceId" class="serviceId">
+              <label>工作ID：</label>
+              <el-input v-model="userInfo.serviceId" class="input" readonly></el-input>
+            </el-form-item>
+            <el-form-item prop="address" class="address">
+              <label>地址：</label>
+              <el-input v-model="userInfo.address" class="longInput input" readonly></el-input>
+            </el-form-item>
           </div>
+        </el-form>
+        <div class="form_button">
+          <el-button type="primary" @click="readToWriteInfo">修改</el-button>
+          <el-button type="primary" @click="refresh">刷新</el-button>
         </div>
       </div>
-      <div class="password">
-        <div v-show="onlyReadPwd">
-          <h3>修改密码</h3>
-          <el-form class="passwordForm">
-            <div class="form_left">
-              <el-form-item class="old">
-                <label>旧密码：</label>
-                <el-input v-model="passwordInfoRead.oldPwd" class="input" readonly></el-input>
-              </el-form-item>
-            </div>
-            <div class="form_right">
-              <el-form-item class="new">
-                <label>新密码：</label>
-                <el-input v-model="passwordInfoRead.newPwd" class="input" readonly></el-input>
-              </el-form-item>
-              <el-form-item class="again">
-                <label>确认密码：</label>
-                <el-input v-model="passwordInfoRead.againPwd" class="input" readonly></el-input>
-              </el-form-item>
-            </div>
-          </el-form>
-          <div class="form_button">
-            <el-button type="primary" @click="readToWritePwd">修改</el-button>
-            <el-button type="primary" @click="refresh">刷新</el-button>
+      <div v-show="onlyWriteInfo">
+        <h3>个人资料</h3>
+        <el-form :model="userInfo" ref="userInfo[0]" class="infoFrom" :rules="infoRules">
+          <div class="form_left">
+            <el-form-item class="name">
+              <label>姓名：</label>
+              <el-input v-model="userInfo.name" class="input" readonly></el-input>
+            </el-form-item>
+            <el-form-item prop="phone" class="phone">
+              <label>手机号：</label>
+              <el-input v-model="userInfo.phone" class="input" clearable></el-input>
+            </el-form-item>
+            <el-form-item class="sex">
+              <label>性别：</label>
+              <el-select v-model="userInfo.sex" class="select">
+                <el-option label="男" value="0"></el-option>
+                <el-option label="女" value="1"></el-option>
+              </el-select>
+            </el-form-item>
           </div>
-        </div>
-        <div v-show="onlyWritePwd">
-          <h3>修改密码</h3>
-          <el-form :model="passwordInfoWrite" ref="passwordInfoWrite" class="passwordForm" :rules="passwordRules">
-            <div class="form_left">
-              <el-form-item class="old" prop="oldPwd">
-                <label>旧密码：</label>
-                <el-input v-model="passwordInfoWrite.oldPwd" class="input" show-password></el-input>
-              </el-form-item>
-            </div>
-            <div class="form_right">
-              <el-form-item class="new" prop="newPwd">
-                <label>新密码：</label>
-                <el-input v-model="passwordInfoWrite.newPwd" class="input" show-password></el-input>
-              </el-form-item>
-              <el-form-item class="again" prop="againPwd">
-                <label>确认密码：</label>
-                <el-input v-model="passwordInfoWrite.againPwd" class="input" show-password></el-input>
-              </el-form-item>
-            </div>
-          </el-form>
-          <div class="form_button">
-            <el-button type="primary" @click="writeToReadPwd">取消</el-button>
-            <el-button type="primary" @click="updatePwd">保存</el-button>
+          <div class="form_right">
+            <el-form-item class="idNumber">
+              <label>身份证号：</label>
+              <el-input v-model="userInfo.idNumber" class="longInput input" readonly></el-input>
+            </el-form-item>
+            <el-form-item class="serviceId">
+              <label>工作ID：</label>
+              <el-input v-model="userInfo.serviceId" class="input" readonly></el-input>
+            </el-form-item>
+            <el-form-item prop="address" class="address">
+              <label>地址：</label>
+              <el-input v-model="userInfo.address" class="longInput input" clearable></el-input>
+            </el-form-item>
           </div>
+        </el-form>
+        <div class="form_button">
+          <el-button type="primary" @click="writeToReadInfo">取消</el-button>
+          <el-button type="primary" @click="updateStaffInfo">保存</el-button>
         </div>
       </div>
+    </div>
+    <div class="password">
+      <div v-show="onlyReadPwd">
+        <h3>修改密码</h3>
+        <el-form class="passwordForm">
+          <div class="form_left">
+            <el-form-item class="old">
+              <label>旧密码：</label>
+              <el-input v-model="passwordInfoRead.oldPwd" class="input" readonly></el-input>
+            </el-form-item>
+          </div>
+          <div class="form_right">
+            <el-form-item class="new">
+              <label>新密码：</label>
+              <el-input v-model="passwordInfoRead.newPwd" class="input" readonly></el-input>
+            </el-form-item>
+            <el-form-item class="again">
+              <label>确认密码：</label>
+              <el-input v-model="passwordInfoRead.againPwd" class="input" readonly></el-input>
+            </el-form-item>
+          </div>
+        </el-form>
+        <div class="form_button">
+          <el-button type="primary" @click="readToWritePwd">修改</el-button>
+          <el-button type="primary" @click="refresh">刷新</el-button>
+        </div>
+      </div>
+      <div v-show="onlyWritePwd">
+        <h3>修改密码</h3>
+        <el-form :model="passwordInfoWrite" ref="passwordInfoWrite" class="passwordForm" :rules="passwordRules">
+          <div class="form_left">
+            <el-form-item class="old" prop="oldPwd">
+              <label>旧密码：</label>
+              <el-input v-model="passwordInfoWrite.oldPwd" class="input" show-password></el-input>
+            </el-form-item>
+          </div>
+          <div class="form_right">
+            <el-form-item class="new" prop="newPwd">
+              <label>新密码：</label>
+              <el-input v-model="passwordInfoWrite.newPwd" class="input" show-password></el-input>
+            </el-form-item>
+            <el-form-item class="again" prop="againPwd">
+              <label>确认密码：</label>
+              <el-input v-model="passwordInfoWrite.againPwd" class="input" show-password></el-input>
+            </el-form-item>
+          </div>
+        </el-form>
+        <div class="form_button">
+          <el-button type="primary" @click="writeToReadPwd">取消</el-button>
+          <el-button type="primary" @click="updatePwd">保存</el-button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-  import {sexChange} from "../../utils/sexUtil";
+  import {sexChange, sexChangeNum} from "../../utils/sexUtil";
 
 export default {
   name:"personal",
   inject: ['reload'],
   data() {
     return {
-      userInfo: [{
-        name: "李华华",
-        phone: '12345678910',
-        sex: 0,
-        idNumber: "441900197609239999",
-        serviceId: "123443",
-        address: "广东省东莞市大岭山镇教育西路"
-      }],
-      /*userInfo: [],*/
+      userInfo: {},
       passwordInfoRead: {
         oldPwd: '******',
         newPwd: '******',
@@ -208,14 +200,15 @@ export default {
     writeToReadInfo() {
       this.onlyReadInfo = true;
       this.onlyWriteInfo = false;
-      if(this.userInfo[0].sex === '0' || this.userInfo[0].sex === 0 || this.userInfo[0].sex === '1' || this.userInfo[0].sex === 1) {
-        this.userInfo[0].sex = sexChange(this.userInfo[0].sex);
-      }
+      this.getStaffInfo();
     },
     //密码可修改变为只读
     writeToReadPwd() {
       this.onlyReadPwd = true;
       this.onlyWritePwd = false;
+      this.passwordInfoWrite.oldPwd = '';
+      this.passwordInfoWrite.newPwd = '';
+      this.passwordInfoWrite.againPwd = '';
     },
     //字符串合理性判断
     isValid(str) {
@@ -248,7 +241,9 @@ export default {
       }).then((res) => {
         let data = res.data;
         if(res.code === 200) {
-          this.userInfo = data;
+          this.userInfo = data[0];
+          //性别展示
+          this.userInfo.sex = sexChange(this.userInfo.sex);
         }
         else {
           this.$message.error(res.message);
@@ -260,13 +255,14 @@ export default {
     //更新管理员个人资料
     updateStaffInfo() {
       this.$axios.post('/api/user/updateStaffInfo', {
-        id: localStorage.getItem("userId"),
-        phone: this.userInfo[0].phone,
-        sex: this.userInfo[0].sex,
-        address: this.userInfo[0].address
+        id: this.userInfo.id,
+        phone: this.userInfo.phone,
+        sex: sexChangeNum(this.userInfo.sex),
+        address: this.userInfo.address
       }).then((res) => {
         if(res.code === 200) {
-          this.$message.success("修改成功！");
+          this.writeToReadInfo();
+          this.$message.success("修改成功");
         }
         else {
           this.$message.error(res.message);
@@ -274,8 +270,6 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
-      //信息可修改变为只读
-      this.writeToReadInfo();
     },
     //更新账户密码
     updatePwd(){
@@ -295,10 +289,10 @@ export default {
               id: localStorage.getItem("userId"),
               password: this.passwordInfoWrite.newPwd
             }).then((res) => {
-              console.log(res);
               if(res.code === 200) {
+                this.writeToReadPwd();
                 localStorage.setItem("pwd",this.passwordInfoWrite.newPwd)  //将password存入localStorage
-                this.$message.success('修改密码成功！');
+                this.$message.success('修改密码成功');
               }
               else {
                 this.$message.error(res.message);
@@ -306,8 +300,6 @@ export default {
             }).catch((err) => {
               console.log(err);
             })
-            //密码可修改变为只读
-            this.writeToReadPwd();
           }
           else {
             this.$message.warning("两次输入的新密码不一致，请重试！");
@@ -317,7 +309,6 @@ export default {
       else {
         this.$message.warning("旧密码输入错误，请重试！");
       }
-
     },
     //刷新函数
     refresh() {
@@ -326,8 +317,6 @@ export default {
   },
   beforeMount() {
     this.getStaffInfo();
-    //性别展示（数字变为文字）
-    this.userInfo[0].sex = sexChange(this.userInfo[0].sex);
   }
 };
 </script>

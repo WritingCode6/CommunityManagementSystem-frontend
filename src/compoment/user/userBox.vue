@@ -75,6 +75,8 @@
         </el-table>
         <div class="page_block" v-show="listNull">
           <el-pagination
+                  @prev-click = "prevChange"
+                  @next-click = "nextChange"
                   :current-page="pageBlock.currentPage"
                   :page-size="pageBlock.pageSize"
                   :total="pageBlock.total"
@@ -132,7 +134,7 @@
               </el-form-item>
               <el-form-item class="sex" prop="sex">
                 <label>性别：</label>
-                <el-select v-model="addUserData.sex" class="select">
+                <el-select v-model="addUserData.sex" class="select" placeholder="">
                   <el-option value="0" label="男"></el-option>
                   <el-option value="1" label="女"></el-option>
                 </el-select>
@@ -273,15 +275,15 @@
         userData: [],
         //新增住户信息数据
         addUserData: {
-          userName: 'ycfszd',
-          password: '123456a',
-          name: '郑云龙',
-          personalID: '330234566669809765',
-          sex: '0',
-          ancestralHome: '山东青岛',
-          residenceAddress: '广东省东莞市大岭山镇教育西路',
-          buildingNumber: 2,
-          roomNumber: 101
+          userName: '',
+          password: '',
+          name: '',
+          personalID: '',
+          sex: '',
+          ancestralHome: '',
+          residenceAddress: '',
+          buildingNumber: '',
+          roomNumber: ''
         },
         /*addUserData: {
           userName: '',
@@ -296,7 +298,7 @@
         },*/
         //分页器
         pageBlock: {
-          pageSize: 6,
+          pageSize: 7,
           total: 100,
           currentPage: 1,
         },
@@ -362,6 +364,7 @@
           }
         }).then((res) => {
           if(res.code === 200) {
+            this.closeDelete();
             this.$message.success("删除成功");
             this.reload();
           }
@@ -372,14 +375,18 @@
           console.log(err);
         })
       },
-      /* //打开修改用户窗口
+     /* //打开修改用户窗口
       openModify(){
         this.modifyWindows = true;
       },
       //关闭修改用户窗口
       closeModify(){
         this.modifyWindows = false;
-      }, */
+      },
+      //修改用户窗口保存修改按钮
+      saveModify(){
+        this.modifyWindows = false;
+      },*/
       //打开新增用户窗口
       openAdd(){
         this.addWindows = true;
@@ -387,10 +394,15 @@
       //关闭新增用户窗口
       closeAdd(){
         this.addWindows = false;
-      },
-      //修改用户窗口保存修改按钮
-      saveModify(){
-        this.modifyWindows = false;
+        this.addUserData.userName = ''
+        this.addUserData.password = ''
+        this.addUserData.name = ''
+        this.addUserData.personalID = ''
+        this.addUserData.sex = ''
+        this.addUserData.ancestralHome = ''
+        this.addUserData.residenceAddress = ''
+        this.addUserData.buildingNumber = ''
+        this.addUserData.roomNumber = ''
       },
       //获取住户相关的列表
       getList() {
@@ -404,15 +416,17 @@
         let name = this.userSearch.name;
         let buildingNumber = this.userSearch.buildingNumber;
         let roomNumber = this.userSearch.roomNumber;
-        this.searchUser(name, buildingNumber, roomNumber);
+        this.searchUser(name, buildingNumber, roomNumber, this.pageBlock.currentPage);
       },
       //查询住户接口
-      searchUser(n, b, r) {
+      searchUser(n, b, r, c) {
         this.$axios.get('/api/user/searchUser',{
           params: {
             name: n,
             buildingNumber: b,
-            roomNumber: r
+            roomNumber: r,
+            current: c,
+            size: this.pageBlock.pageSize
           }
         }).then((res) => {
           let data = res.data;
@@ -422,7 +436,7 @@
           else {
             this.listNull = true;
             this.userData = data.records;
-            this.pageBlock.pageSize = data.pageSize;
+            /*this.pageBlock.pageSize = data.pageSize;*/
             this.pageBlock.total = data.total;
             this.pageBlock.currentPage = data.currentPage;
           }
@@ -457,11 +471,27 @@
       },
       //获取住户的详细信息，获取UserID
       getDetail(row) {
-        console.log(row);
         bus.$emit('userId', row.userId);
         this.$router.push('/index/user/userInfo');
         this.userList = false;
         this.$emit('userBoxData', this.userList);
+      },
+      //前一页
+      prevChange(val) {
+        //val是当前页
+        let name = this.userSearch.name;
+        let buildingNumber = this.userSearch.buildingNumber;
+        let roomNumber = this.userSearch.roomNumber;
+        this.searchUser(name, buildingNumber, roomNumber, val);
+      },
+      //后一页
+      nextChange(val) {
+        console.log(val);
+        //val是当前页
+        let name = this.userSearch.name;
+        let buildingNumber = this.userSearch.buildingNumber;
+        let roomNumber = this.userSearch.roomNumber;
+        this.searchUser(name, buildingNumber, roomNumber, val);
       }
     },
     beforeMount() {
@@ -692,12 +722,12 @@ h5 {
 }
 .form_table .input {
   margin-top: 10px;
-  width: 137px;
+  width: 150px;
   height: 20px;
 }
 .form_table .select {
   margin-top: 10px;
-  width: 70px;
+  width: 80px;
   height: 30px;
 }
 .line1,

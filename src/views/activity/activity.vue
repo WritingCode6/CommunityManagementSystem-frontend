@@ -7,7 +7,7 @@
         <el-button type="primary">搜索</el-button>
       </div>-->
       <div class="option" v-if="role">
-        <h4>操作</h4>
+        <!--<h4>操作</h4>-->
         <button type="button" @click="openAdd">新增社区活动</button>
       </div>
       <div class="activity_table">
@@ -16,17 +16,17 @@
           <el-table-column prop="activityName" min-width="15%"></el-table-column>
           <el-table-column prop="startTime" min-width="60%" align="center"></el-table-column>
           <el-table-column min-width="30%" align="center">
-             <span slot-scope="scope">
-               <a href>
-                 <span class="operation" @click.prevent>查看</span>
-               </a>
-               <a href v-if="role">
-                 <span class="operation" @click.prevent="openModify(scope.row)">修改</span>
-               </a>
-               <a href v-if="role">
-                 <span class="operation" @click.prevent="openDelete(scope.row)">删除</span>
-               </a>
-             </span>
+           <span slot-scope="scope">
+             <a href>
+               <span class="operation" @click.prevent="openCheck(scope.row)">查看</span>
+             </a>
+             <a href v-if="role">
+               <span class="operation" @click.prevent="openModify(scope.row)">修改</span>
+             </a>
+             <a href v-if="role">
+               <span class="operation" @click.prevent="openDelete(scope.row)">删除</span>
+             </a>
+           </span>
           </el-table-column>
         </el-table>
         <div class="page_block" v-if="listNull">
@@ -198,12 +198,47 @@
         </ul>
       </div>
     </div>
+    <div class="checkWindows" v-show="checkWindows">
+      <h3>查看社区活动</h3>
+      <img src="../../../src/assets/image/icon/icon_back.png" class="back" @click="checkWindows=false">
+      <div class="check_box">
+        <div class="check_detail">
+          活动详情
+        </div>
+        <div class="check_box1">
+          <div class="check_form">
+            <span class="check_title">活动名称：</span>
+            {{checkActivity.activityName}}
+          </div>
+          <div class="check_form">
+            <span class="check_title">负责人：</span>
+            {{checkActivity.principal}}
+          </div>
+          <div class="check_form">
+            <span class="check_title">主办方：</span>
+            {{checkActivity.host}}
+          </div>
+          <div class="check_form">
+            <span class="check_title">咨询电话：</span>
+            {{checkActivity.telNumber}}
+          </div>
+          <div class="check_form check_time">
+            <span class="check_title">活动时间：</span>
+            {{activityAllTime}}
+          </div>
+          <div class="check_form check_content">
+            <span class="check_title">活动内容：</span>
+            {{checkActivity.content}}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import {roleJudge} from "../../utils/roleUtil";
-import {timeChange} from "../../utils/time";
+import {timeChange, timeChangeC} from "../../utils/time";
 /*import {timeChange2} from "../../utils/time";*/
 
 export default {
@@ -219,40 +254,24 @@ export default {
       //绑定修改框的时间
       startT: '',
       endT: '',
+      //要删除的活动ID
       delId: [],
-
+      //活动详情中的时间渲染结果
+      activityAllTime: '',
       activityData: [],
-
       addActivity: {
-        activityName: "测试",
-        principal: "测试",
-        host: "测试",
-        telNumber: "19909090909",
+        activityName: "",
+        principal: "",
+        host: "",
+        telNumber: "",
         startTime: "",
         endTime: "",
-        content: "测试",
+        content: "",
         startTime1: '',
         endTime1: ''
       },
+      checkActivity: {},
       modifyActivity: {},
-      /*modifyActivity:{
-        activityName:"社区乒乓球交流活动",
-        principal:"刘阳十",
-        host:"社区乒乓球协会",
-        telNumber:"13888888888",
-        startTime:"",
-        endTime:"",
-        content:"为了提倡全民健身活动，促进社区文化体育事业的发展，社区在社区乒乓球活"+
-                "动室举办乒乓球交流活动，共29名乒乓球爱好者参加了此次活动。"+
-                "社区乒乓球协会在蔡学忠队长的带领下，作了很多的准备工作，他们提前一天在"+
-                "社区以循环赛的形式作了选拔赛。\n"+
-                "比赛分为男子单打，女子单打二种形式。大家以学习交流为目的，利用此次活"+
-                "动机会，不断提升自己的球技水平和实战技巧，受益良多。活动中，大家相互"+
-                "学习、相互鼓励，在友谊赛中增加了彼此之间的感情，技术水平也不断提升。"+
-                "这种乒乓球活动，让我们大家有机会一起交流，一起学习，一起切磋，大家"+
-                "相互帮助，真好！感谢居委会给我们老百姓提供了这么好的交流平台，让咱"+
-                "们老年人真正实现老有所学，老有所用！"
-      },*/
       formRules: {
         activityName: [
           { required: true, message:"请输入活动名称", trigger: "blur" },
@@ -281,16 +300,15 @@ export default {
           { required: true, message:"请输入活动内容", trigger: "blur" }
         ]
       },
-
       paging: {
         pageSize: 10,
-        total: 400,
+        total: 100,
         currentPage: 1,
       },
-
       addWindows: false,
       modifyWindows:false,
       deleteWindows:false,
+      checkWindows: false,
       role: false,
       listNull: true
     };
@@ -303,6 +321,15 @@ export default {
     /* 关闭新增社区活动窗口 */
     closeAdd() {
       this.addWindows = false;
+      this.addActivity.activityName = '';
+      this.addActivity.principal = '';
+      this.addActivity.host = '';
+      this.addActivity.telNumber = '';
+      this.addActivity.startTime = '';
+      this.addActivity.endTime = '';
+      this.addActivity.content = '';
+      this.addActivity.startTime1 = '';
+      this.addActivity.endTime1 = '';
     },
     /* 确定新增社区活动 */
     saveAdd() {
@@ -329,9 +356,35 @@ export default {
          console.log(err);
        })
     },
+    //打开查看社区活动窗口
+    openCheck(row) {
+      this.checkWindows = true;
+      for(let i = 0; i<this.activityData.length; i++) {
+        if(row.id === this.activityData[i].id) {
+          this.checkActivity = this.activityData[i];
+          if(this.startTime[i] && this.endTime[i]) {
+            this.activityAllTime = timeChangeC(this.startTime[i]) + '  至  ' + timeChangeC(this.endTime[i]);
+          }
+          else if(!this.startTime[i] && this.endTime[i]) {
+            this.activityAllTime = '未知' + '  至  ' + timeChangeC(this.endTime[i]);
+          }
+          else if(!this.endTime[i] && this.startTime[i]) {
+            this.activityAllTime = timeChangeC(this.startTime[i]) + '  至  ' + '未知';
+          }
+          else {
+            this.activityAllTime = '未知';
+          }
+          break;
+        }
+      }
+    },
+    //关闭查看社区活动窗口
+    clockCheck() {
+      this.checkWindows = false;
+      this.checkActivity = '';
+    },
     /* 打开修改社区活动窗口 */
     openModify(row) {
-      this.modifyWindows = true;
       for(let i = 0; i<this.activityData.length; i++) {
         if(row.id === this.activityData[i].id) {
           this.modifyActivity = this.activityData[i];
@@ -347,10 +400,12 @@ export default {
       this.modifyActivity.endTime = a2[0];
       this.startT = a1[1];
       this.endT = a2[1];
+      this.modifyWindows = true;
     },
     /* 关闭修改社区活动窗口 */
     closeModify() {
       this.modifyWindows = false;
+      this.modifyActivity = '';
       this.activityTime();
     },
     /* 确定修改社区活动 */
@@ -367,7 +422,6 @@ export default {
         startTime: this.modifyActivity.startTime,
         endTime: this.modifyActivity.endTime
       }).then((res) => {
-        console.log(res);
         if(res.code === 200) {
           this.modifyWindows = false;
           this.$message.success('修改成功');
@@ -383,23 +437,22 @@ export default {
     /* 打开删除社区通知窗口 */
     openDelete(row) {
       this.deleteWindows = true;
-      console.log(row);
       this.delId.push(row.id);
     },
     /* 关闭删除社区通知窗口 */
     closeDelete() {
       this.deleteWindows = false;
+      this.delId = [];
     },
     //删除选中的活动
     saveDelete() {
       this.$axios.post('/api/community/deleteCommunityActivity',this.delId)
         .then((res) => {
-        console.log(res);
         if(res.code === 200) {
+          this.delId = [];
           this.deleteWindows = false;
           this.$message.success('删除成功');
           this.reload();
-          this.delId = [];
         }
         else {
           this.$message.error(res.message);
@@ -433,7 +486,6 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
-
     },
     //前一页
     prevChange(val) {
@@ -495,26 +547,37 @@ export default {
 .activity_box {
   margin-top: 20px;
   width: 100%;
-  height: 650px;
+  height: 655px;
   border-radius: 10px;
+  border: 1px solid #dcdcdc;
   position: relative;
   left: 55px;
   font-size: 16px;
 }
-.activity_box h3 {
+.activity_box h3,
+.checkWindows h3{
   font-size: 24px;
   color: #666;
-  margin-left: 28px;
+  margin-left: 88px;
+  margin-top: 30px;
+}
+.checkWindows h3 {
+  margin-left: 105px;
   margin-top: 20px;
 }
-.activity_box h3::before {
+.activity_box h3::before,
+.checkWindows h3::before {
   content: "";
   width: 7px;
   height: 26px;
   background: #8a79af;
   position: absolute;
-  left: 0;
+  left: 60px;
   z-index: 1;
+}
+.checkWindows h3::before {
+  left: 75px;
+  top: 20px;
 }
 .search {
   margin-top: 30px;
@@ -555,8 +618,8 @@ export default {
   z-index: 1;
 }
 .option button {
-  width: 300px;
-  height: 40px;
+  width: 260px;
+  height: 55px;
   background: #d38cad;
   font-size: 20px;
   font-weight: bold;
@@ -565,11 +628,13 @@ export default {
   border-width: 0px;
   border-radius: 15px;
   cursor: pointer;
-  margin-top: 30px;
-  margin-left: -10px;
+  margin-top: 20px;
+  margin-left: 150px;
 }
 .activity_table {
-  margin-top: 50px;
+  /*margin-top: 50px;*/
+  width: 90%;
+  margin: 0 auto;
 }
 .activity_table a {
   display: block;
@@ -780,7 +845,57 @@ export default {
   border-radius: 10px;
   cursor: pointer;
 }
+/*查看活动*/
+.back {
+  float: right;
+  margin-right: 7%;
+  position: relative;
+  bottom: 20px;
+  cursor: pointer;
+}
+.checkWindows {
+  width: 83%;
+  height: 650px;
+  background-color: white;
+  position: absolute;
+  top: 11%;
+  margin-left: 1%;
+  z-index: 999;
+}
+.check_box {
+  width: 90%;
+  height: 550px;
+  margin: 35px 0 0 70px;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  font-size: 20px;
+}
+.check_box1 {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.check_form {
+  width: 40%;
+  margin: 15px;
+}
+.check_time,
+.check_content {
+  width: 90%;
+}
+.check_detail {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 30px 0 30px 50px;
+}
+.check_title {
+  color: rgba(0,0,0,0.5);
+  display: inline-block;
+  width: 100px;
+  text-align: right;
+}
 </style>
+<!--tips样式-->
 <style>
 .el-form-item__error {
   position: absolute;

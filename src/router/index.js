@@ -22,7 +22,7 @@ Vue.use(VueRouter)
     {
       path: '/index',
       name: 'index',
-      redirect: '/index/personal',
+      redirect: '/index/property',
       meta: {
         needLogin: true
       },
@@ -143,7 +143,7 @@ Vue.use(VueRouter)
     },
     {
       path : '*',
-      redirect: '/index',
+      redirect: '/index/property',
       meta: {
         needLogin: true
       }

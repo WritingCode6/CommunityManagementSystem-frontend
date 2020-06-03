@@ -3,24 +3,46 @@
     <div class="pakingUserBox">
       <div class="paking">
         <h3>车位资料</h3>
-        <el-table :data="msg" class="table" style="width: 95%;font-size:20px" highlight-current-row>
+        <el-table
+                :data="parkingData"
+                class="table"
+                height="480"
+                style="width: 95%;font-size:20px"
+                highlight-current-row>
           <el-table-column prop="spaceNumber" label="车位号" min-width="50%" align="center"></el-table-column>
-          <el-table-column prop="pakingId" label="车位ID" min-width="50%" align="center"></el-table-column>
+          <el-table-column prop="id" label="车位ID" min-width="50%" align="center"></el-table-column>
         </el-table>
-        <div class="paking_pageblock">
+        <!--<div class="paking_pageblock">
           <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
             :current-page="paking_currentPage"
             :page-size="paking_pageSize"
             :total="paking_total"
             layout="prev, pager, next, total"
           ></el-pagination>
+        </div>-->
+      </div>
+      <div class="parking_img">
+        <div class="picture">
+          <h4>可用车位情况</h4>
+          <el-progress
+                  type="circle"
+                  :percentage="parkingNum"
+                  class="pakingProgress"
+                  :width="210"
+                  :height="210"
+                  :stroke-width="15"
+                  color="#D7676E">
+          </el-progress>
         </div>
       </div>
-      <div class="car">
+      <!--<div class="car">
         <h3>车辆资料</h3>
-        <el-table :data="msg" class="table" style="width: 95%;font-size:20px" highlight-current-row>
+        <el-table
+                :data="carData"
+                class="table"
+                height="500"
+                style="width: 95%;font-size:20px"
+                highlight-current-row>
           <el-table-column prop="plateNumber" label="车牌号" min-width="33%" align="center"></el-table-column>
           <el-table-column prop="userId" label="车主ID" min-width="33%" align="center"></el-table-column>
           <el-table-column label="操作" min-width="33%" align="center">
@@ -29,16 +51,14 @@
             </a>
           </el-table-column>
         </el-table>
-        <div class="car_pageblock">
+        &lt;!&ndash;<div class="car_pageblock">
           <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
             :current-page="car_currentPage"
             :page-size="car_pageSize"
             :total="car_total"
             layout="prev, pager, next, total"
           ></el-pagination>
-        </div>
+        </div>&ndash;&gt;
       </div>
       <div class="checkWindows" v-show="checkWindows">
         <div class="checkBox">
@@ -69,73 +89,25 @@
             <button type="button" @click="closeCheck">返回</button>
           </div>
         </div>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
 
 <script>
+import {parkingProgress} from "../../utils/parking";
+
 export default {
   name: "parkingUser",
   data() {
     return {
-      paking_pageSize: 8,
+      /*paking_pageSize: 8,
       paking_total: 100,
-      paking_currentPage: 1,
-      car_pageSize: 8,
+      paking_currentPage: 1,*/
+     /* car_pageSize: 8,
       car_total: 100,
-      car_currentPage: 1,
-
-      msg: [
-        {
-          spaceNumber: "A1",
-          pakingId: 1,
-          plateNumber: "粤A88888",
-          userId: 123456
-        },
-        {
-          spaceNumber: "A1",
-          pakingId: 1,
-          plateNumber: "粤A88888",
-          userId: 123456
-        },
-        {
-          spaceNumber: "A1",
-          pakingId: 1,
-          plateNumber: "粤A88888",
-          userId: 123456
-        },
-        {
-          spaceNumber: "A1",
-          pakingId: 1,
-          plateNumber: "粤A88888",
-          userId: 123456
-        },
-        {
-          spaceNumber: "A1",
-          pakingId: 1,
-          plateNumber: "粤A88888",
-          userId: 123456
-        },
-        {
-          spaceNumber: "A1",
-          pakingId: 1,
-          plateNumber: "粤A88888",
-          userId: 123456
-        },
-        {
-          spaceNumber: "A1",
-          pakingId: 1,
-          plateNumber: "粤A88888",
-          userId: 123456
-        },
-        {
-          spaceNumber: "A1",
-          pakingId: 1,
-          plateNumber: "粤A88888",
-          userId: 123456
-        }
-      ],
+      car_currentPage: 1,*/
+      parkingData: [],
       carMsg:{
         userId:1,
         carNumber:'粤A8888',
@@ -143,17 +115,25 @@ export default {
         type:'SC7103',
         color:'黑色'
       },
-      checkWindows: false
+      checkWindows: false,
+      parkingNum: 0,
+      parkingTotal: 200
     };
   },
   methods: {
-    handleSizeChange(val) {
-      this.pageSize = val;
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      console.log(`当前页: ${val}`);
+    //获取车位信息列表
+    getParkingList() {
+      this.$axios.get('/api/car/getParkingInfo')
+        .then((res) => {
+          if(res.code === 200) {
+            this.parkingData = res.data;
+            this.parkingNum = Number(parkingProgress(this.parkingData.length, this.parkingTotal));
+          }else {
+            this.$message.error(res.message);
+          }
+        }).catch((err) => {
+        console.log(err);
+      })
     },
     /* 打开查看车辆信息窗口 */
     openCheck() {
@@ -163,15 +143,22 @@ export default {
     closeCheck() {
       this.checkWindows = false;
     }
+  },
+  beforeMount() {
+    this.getParkingList();
   }
 };
 </script>
 
 <style scoped>
+.pakingUserBox {
+  display: flex;
+  justify-content: space-around;
+}
 .paking,
 .car {
   margin-top: 30px;
-  width: 47.5%;
+  width: 70%;
   height: 600px;
   float: left;
   position: relative;
@@ -184,7 +171,7 @@ export default {
 }
 h3 {
   margin-top: 30px;
-  margin-left: 50px;
+  margin-left: 65px;
   font-size: 24px;
 }
 h3::before {
@@ -193,7 +180,7 @@ h3::before {
   height: 26px;
   background: #8a79af;
   position: absolute;
-  left: 15px;
+  left: 30px;
   z-index: 1;
 }
 .table {
@@ -294,5 +281,32 @@ h3::before {
   border-width: 0;
   border-radius: 10px;
   cursor: pointer;
+}
+/* fxy */
+.parking_img {
+  position: relative;
+  left: 10px;
+  top: 60px;
+}
+.parking_img h4 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #666;
+  position: relative;
+  left: 32px;
+}
+.parking_img h4::before {
+  content: "";
+  width: 8px;
+  height: 28px;
+  background: #fdc38a;
+  position: absolute;
+  right: 230px;
+  z-index: 1;
+}
+.pakingProgress {
+  position: relative;
+  top: 40px;
+  left: 10px;
 }
 </style>

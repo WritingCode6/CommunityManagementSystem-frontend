@@ -125,26 +125,6 @@
             roomNumber: ''
           }
         },
-        /*liverData: {
-          userInfo: {
-            name: '黄一月',
-            userName: '黄一月',
-            sex: 0,
-            idNumber: '1111112222222222222',
-            ancestralHome: '广东广州',
-            residenceAddress: '广州市体育西路'
-          },
-          carInfo: {
-            plateNumber: '粤A88888',
-            brand: '长安',
-            model: '？',
-            color: '红色'
-          },
-          houseInfo: {
-            buildingNumber: '1',
-            roomNumber: '101'
-          }
-        },*/
         houseRead: true,
         carRead: false,
         userInfo: true
@@ -208,9 +188,6 @@
           console.log(err);
         })
       }
-    },
-    beforeMount() {
-      this.liverData.userInfo.sex = sexChange(this.liverData.userInfo.sex);
     },
     mounted() {
       bus.$on('userId', (res) => {

@@ -13,7 +13,7 @@
         </li>
         <li class="userId">
           用户ID：
-          <span>{{ personalMsg.userInfo.userId }}</span>
+          <span>{{ personalMsg.userInfo.id }}</span>
         </li>
         <li class="sex">
           性别：
@@ -69,7 +69,7 @@
             </el-form>
             <div class="form_button">
               <el-button type="primary" @click="readToWritePwd">修改</el-button>
-              <el-button type="primary">刷新</el-button>
+              <el-button type="primary" @click="refresh">刷新</el-button>
             </div>
           </div>
           <div v-show="onlyWritePwd">
@@ -94,16 +94,6 @@
             <div class="form_button">
               <el-button type="primary" @click="writeToReadPwd">取消</el-button>
               <el-button type="primary" @click="updatePwd">保存</el-button>
-            </div>
-            <div class="form_right">
-              <el-form-item class="new">
-                <label>新密码：</label>
-                <el-input class="input" readonly></el-input>
-              </el-form-item>
-              <el-form-item class="again">
-                <label>确认密码：</label>
-                <el-input class="input" readonly></el-input>
-              </el-form-item>
             </div>
           </div>
         </div>
@@ -175,6 +165,7 @@
 
   export default {
     name: "personalUser",
+    inject: ['reload'],
     data() {
       return {
         accountRead:true,
@@ -184,23 +175,23 @@
         onlyWritePwd:false,
         personalMsg:{
           userInfo: {
-            name:'李华华',
-            userName:'破晓',
-            userId:123456,
-            sex:'女',
-            idNumber:'441588888888888888',
-            ancestralHome:'广东深圳',
-            residenceAddress:'广东省深圳市罗湖区XX村XX路XX号'
+            name:'',
+            userName:'',
+            id: '',
+            sex: '',
+            idNumber:'',
+            ancestralHome:'',
+            residenceAddress:''
           },
           houseInfo: {
-            buildingNumber:'A栋',
-            roomNumber:123
+            buildingNumber: '',
+            roomNumber: ''
           },
           carInfo: {
-            plateNumber:'粤A88888',
-            brand:'长安',
-            model:'SC7103',
-            color:'黑色'
+            plateNumber:'',
+            brand:'',
+            model:'',
+            color:''
           }
         },
         passwordInfoRead: {
@@ -232,18 +223,21 @@
         this.accountRead = true;
         this.houseRead = false;
         this.carRead = false;
+        this.writeToReadPwd();
       },
       /* 切换到房屋信息板块 */
       toHouseRead(){
         this.accountRead = false;
         this.houseRead = true;
         this.carRead = false;
+        this.writeToReadPwd();
       },
       /* 切换到车辆信息板块 */
       toCarRead(){
         this.accountRead = false;
         this.houseRead = false;
         this.carRead = true;
+        this.writeToReadPwd();
       },
       //密码只读变为可修改
       readToWritePwd() {
@@ -254,6 +248,9 @@
       writeToReadPwd() {
         this.onlyReadPwd = true;
         this.onlyWritePwd = false;
+        this.passwordInfoWrite.oldPwd = '';
+        this.passwordInfoWrite.newPwd = '';
+        this.passwordInfoWrite.againPwd = '';
       },
       //获取住户详细信息
       getUserInfo() {
@@ -265,6 +262,7 @@
           if(res.code === 200) {
             this.personalMsg.userInfo.name = res.data.userInfo.name;
             this.personalMsg.userInfo.userName = res.data.userInfo.userName;
+            this.personalMsg.userInfo.id = res.data.userInfo.id;
             this.personalMsg.userInfo.sex = sexChange(res.data.userInfo.sex);
             this.personalMsg.userInfo.idNumber = res.data.userInfo.idNumber;
             this.personalMsg.userInfo.ancestralHome = res.data.userInfo.ancestralHome;
@@ -312,7 +310,7 @@
         }
         else if (!this.isValid(password)) {
           //排除特殊字符和空格
-          this.$message.warning('密码必须由中文字符、数字、字母和下划线组成');
+          this.$message.warning('密码必须由数字、字母和下划线组成');
         }
         else if (!isNaN(password)) {
           //判断Pwd是不是一个值
@@ -337,10 +335,10 @@
                 id: localStorage.getItem("userId"),
                 password: this.passwordInfoWrite.newPwd
               }).then((res) => {
-                console.log(res);
                 if(res.code === 200) {
+                  this.writeToReadPwd();
                   localStorage.setItem("pwd",this.passwordInfoWrite.newPwd)  //将password存入localStorage
-                  this.$message.success('修改密码成功！');
+                  this.$message.success('修改密码成功');
                 }
                 else {
                   this.$message.error(res.message);
@@ -360,6 +358,10 @@
           this.$message.warning("旧密码输入错误，请重试！");
         }
 
+      },
+      //刷新
+      refresh() {
+        this.reload();
       }
     },
     beforeMount() {
@@ -378,7 +380,7 @@
 h3 {
   font-size: 24px;
   color: #666;
-  margin-left: 68px;
+  margin-left: 50px;
   margin-top: 10px;
 }
 h3::before {
@@ -387,7 +389,7 @@ h3::before {
   height: 26px;
   background: #8a79af;
   position: absolute;
-  left: 30px;
+  left: 20px;
   z-index: 1;
 }
 .info ul,
@@ -403,7 +405,8 @@ h3::before {
   position: relative;
 }
 .content {
-  height: 205px;
+  height: 210px;
+  width: 105%;
 }
 .info li {
   position: absolute;

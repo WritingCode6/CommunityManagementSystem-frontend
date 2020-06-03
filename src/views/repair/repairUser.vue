@@ -81,12 +81,16 @@
         </div>
         <div class="content">
           <div class="form_table">
-            <el-table :data="formData" style="width: 100%;font-size:16px" highlight-current-row>
+            <el-table
+                    :data="formData"
+                    style="width: 100%;font-size:16px"
+                    :default-sort = "{prop: 'createTime', order: 'ascending'}"
+                    highlight-current-row>
               <el-table-column prop="id" label="单号" min-width="10%" align="center"></el-table-column>
               <el-table-column prop="facility" label="设施" min-width="15%" align="center"></el-table-column>
               <el-table-column prop="place" label="所在地" min-width="15%" align="center"></el-table-column>
               <el-table-column prop="isReceived" label="状态" min-width="12%" align="center"></el-table-column>
-              <el-table-column prop="createTime" label="创建时间" min-width="18%" align="center"></el-table-column>
+              <el-table-column prop="createTime" label="创建时间" min-width="18%" align="center" sortable></el-table-column>
               <el-table-column label="操作" min-width="15%" align="center">
                 <span slot-scope="scope">
                   <a href>
@@ -97,10 +101,12 @@
             </el-table>
             <div class="page_block" v-if="listNull">
               <el-pagination
-                :current-page="paging.currentPage"
-                :page-size="paging.pageSize"
-                :total="paging.total"
-                layout="prev, pager, next, total"
+                      @prev-click = "prevChange"
+                      @next-click = "nextChange"
+                      :current-page="paging.currentPage"
+                      :page-size="paging.pageSize"
+                      :total="paging.total"
+                      layout="prev, pager, next, total"
               ></el-pagination>
             </div>
           </div>
@@ -209,7 +215,7 @@ export default {
       listNull: true,
 
       paging: {
-        pageSize: 10,
+        pageSize: 8,
         total: 100,
         currentPage: 1
       },
@@ -227,9 +233,9 @@ export default {
       msg7:
         "6、 报修单填写维修项目属人为故意损坏的，必须由损坏人员赔付后方可维修。",
       addContent: {
-        facility: "厕所",
-        place: "未知",
-        reason: "就是要报修！"
+        facility: "",
+        place: "",
+        reason: ""
       },
       formData: [],
       repairMsg: {
@@ -264,10 +270,11 @@ export default {
     },
     /* 切换到查看报修单板块 */
     toCheckRepairWindows() {
+      this.getRepairList(1)
+      this.paging.currentPage = 1;
       this.processWindows = false;
       this.addRepairWindows = false;
       this.checkRepairWindows = true;
-      this.getRepairList(this.paging.currentPage)
     },
     /* 打开新增报修单确定窗口 */
     openAddMsgWindows() {
@@ -289,6 +296,9 @@ export default {
     /* 关闭新增报修单确定窗口 */
     closeAddMsgWindows() {
       this.addMsgWindows = false;
+      this.addContent.facility = '';
+      this.addContent.place = '';
+      this.addContent.reason = '';
     },
     /* 打开查看报修单窗口 */
     openCheck(row) {
@@ -313,11 +323,11 @@ export default {
           size: this.paging.pageSize
         }
       }).then((res) => {
-        console.log(res);
         let data = res.data;
         if(res.code === 200) {
           this.formData = data.records;
           this.paging.total = data.total;
+          this.paging.currentPage = data.currentPage;
           if(this.formData.length === 0) {
             this.listNull = false;
           }
@@ -342,6 +352,16 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
+    },
+    //前一页
+    prevChange(val) {
+      //val是当前页
+      this.getRepairList(val);
+    },
+    //后一页
+    nextChange(val) {
+      //val是当前页
+      this.getRepairList(val);
     }
   },
   beforeMount() {
@@ -647,6 +667,7 @@ export default {
 }
 .page_block {
   margin-top: 25px;
-  text-align: center;
+  /*text-align: center;*/
+  float: right;
 }
 </style>

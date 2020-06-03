@@ -93,8 +93,8 @@
         <div class="modifyContentBox">
           <el-form
                 ref="form"
-                :model="modifyContent"
-                :rules="formRules">
+                :model="modifyContent">
+            <!--                :rules="formRules"-->
             <el-form-item class="type" prop="type">
               <label>处理状态：</label>
               <el-select placeholder="请选择处理状态" v-model="modifyContent.isReceived">
@@ -224,16 +224,16 @@
           isReceived: '',
           result: ''
         },
-        formRules:{
+        /*formRules:{
           type:[
             { required: true, trigger: "change" }
           ],
           details:[
             { required: true, message:"反馈内容不能为空" }
           ]
-        },
+        },*/
         paging: {
-          pageSize: 10,
+          pageSize: 8,
           total: 100,
           currentPage: 1,
         },
@@ -254,6 +254,8 @@
       /* 关闭新增投诉反馈窗口 */
       closeAdd() {
         this.addWindows = false;
+        this.addContent.type = '';
+        this.addContent.details = '';
       },
       /* 确认新增投诉反馈 */
       saveAdd() {
@@ -282,6 +284,8 @@
       /* 关闭修改社区通知窗口 */
       closeModify() {
         this.modifyWindows = false;
+        this.modifyContent.isReceived = '';
+        this.modifyContent.result = '';
       },
       /* 保存修改社区通知 */
       saveModify() {
@@ -305,14 +309,13 @@
       },
       /* 打开查看社区通知窗口 */
       openCheck(row) {
-        this.checkWindows = true;
         let i = 0;
         for(i; i < this.feedbackData.length; i++) {
           if(row.id === this.feedbackData[i].id) {
             this.feedbackMsg = this.feedbackData[i];
-            console.log(this.feedbackMsg.isReceived);
           }
         }
+        this.checkWindows = true;
       },
       /* 关闭查看社区通知窗口 */
       closeCheck() {
@@ -328,6 +331,11 @@
       },*/
       //获取反馈列表
       getFeedback(c) {
+        if(this.role === true) {
+          this.paging.pageSize = 9;
+        }else {
+          this.paging.pageSize = 8;
+        }
         this.$axios.get('/api/feedback/getFeedback',{
           params: {
             current: c,
@@ -371,7 +379,8 @@
     },
     beforeMount() {
       this.role = roleJudge();
-      this.getFeedback(this.paging.currentPage);
+      this.getFeedback(1);
+      this.paging.currentPage = 1;
     }
   }
 </script>
@@ -393,7 +402,7 @@
 .feedbackBox h3 {
   font-size: 24px;
   color: #666;
-  margin-left: 68px;
+  margin-left: 80px;
   margin-top: 20px;
 }
 .feedbackBox h3::before {
@@ -402,7 +411,7 @@
   height: 26px;
   background: #8a79af;
   position: absolute;
-  left: 40px;
+  left: 52px;
   z-index: 1;
 }
 .addOptionBox button{

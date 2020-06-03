@@ -20,7 +20,8 @@
         <div class="parking_table">
           <el-table
                   :data="parkingData"
-                  style="width: 100%"
+                  height="550"
+                  style="width: 100%;"
                   :default-sort = "{prop: 'id', order: 'ascending'}"
                   highlight-current-row>
             <!-- 设置min-width来自适应宽度 -->
@@ -32,17 +33,16 @@
                 <span class="operation" @click.prevent="openDeletePark(scope.row)">删除</span>
               </a>
             </span>
-
             </el-table-column>
           </el-table>
-          <div class="page_block" v-if="listNullParking">
+          <!--<div class="page_block" v-if="listNullParking">
             <el-pagination
                     :current-page="currentPage1"
                     :page-size="pageSize1"
                     :total="total1"
                     layout="prev, pager, next, total"
             ></el-pagination>
-          </div>
+          </div>-->
         </div>
       </div>
       <ul class="parkingButton">
@@ -58,7 +58,7 @@
         <div class="picture">
           <el-progress
                 type="circle"
-                :percentage="25"
+                :percentage="parkingNum"
                 class="pakingProgress"
                 :width="210"
                 :height="210"
@@ -88,34 +88,34 @@
         <div class="car_table">
           <el-table
                   :data="carData"
+                  height="550"
                   style="width: 100%"
-                  :default-sort = "{prop: 'buildingNumber', order: 'ascending'}"
                   highlight-current-row>
             <!-- 设置min-width来自适应宽度 -->
-            <el-table-column prop="userId" label="车主ID" min-width="25%" align="center" sortable></el-table-column>
+            <el-table-column prop="name" label="车主姓名" min-width="25%" align="center"></el-table-column>
             <el-table-column prop="plateNumber" label="车牌号" min-width="25%" align="center"></el-table-column>
             <el-table-column label="操作" min-width="40%" align="center">
               <span slot-scope="scope">
                <a href>
                 <span class="operation" @click.prevent="openCheckCar(scope.row)">查看</span>
                </a>
-              <a href>
+              <!--<a href>
                 <span class="operation" @click.prevent="openModifyModify(scope.row)">修改</span>
-              </a>
-              <a href>
+              </a>-->
+              <!--<a href>
                 <span class="operation" @click.prevent="openDeleteCar(scope.row)">删除</span>
-              </a>
+              </a>-->
             </span>
            </el-table-column>
           </el-table>
-          <div class="page_block" v-if="listNullCar">
+          <!--<div class="page_block" v-if="listNullCar">
             <el-pagination
                     :current-page="currentPage2"
                     :page-size="pageSize2"
                     :total="total2"
                     layout="prev, pager, next, total"
             ></el-pagination>
-          </div>
+          </div>-->
         </div>
       </div>
       <div class="addCarButton">
@@ -126,7 +126,7 @@
         <div class="picture">
           <el-progress
                 type="circle"
-                :percentage="25"
+                :percentage="carNum"
                 class="pakingProgress"
                 :width="210"
                 :height="210"
@@ -177,7 +177,7 @@
         <div class="deleteContent">确定要删除吗？</div>
         <ul>
           <li class="yes">
-            <button type="button">是</button>
+            <button type="button" @click="saveCarDelete">是</button>
           </li>
           <li class="no">
             <button type="button" @click="closeDeletePark">否</button>
@@ -308,6 +308,8 @@
 </template>
 
 <script>
+import {parkingProgress} from "../../utils/parking";
+
 export default {
   name: "parking",
   inject: ['reload'],  //注入App里的reload方法，刷新
@@ -326,97 +328,22 @@ export default {
       listNullCar: false,
       //车位信息
       parkingData: [],
-      /*parkingData: [
-        {
-          id: 1,
-          spaceNumber: 11
-        },
-        {
-          id: 2,
-          spaceNumber: 22
-        },
-        {
-          id: 3,
-          spaceNumber: 3
-        },
-        {
-          id: 4,
-          spaceNumber: 4
-        },
-        {
-          id: 5,
-          spaceNumber: 5
-        },
-        {
-          id: 6,
-          spaceNumber: 11
-        },
-        {
-          id: 7,
-          spaceNumber: 11
-        },
-        {
-          id: 8,
-          spaceNumber: 11
-        },
-        {
-          id: 9,
-          spaceNumber: 11
-        }
-      ],*/
       //车辆信息
-      /*carData: [],*/
-      carData: [
-        {
-          userId: 1,
-          plateNumber: "粤A99999"
-        },
-        {
-          userId: 2,
-          plateNumber: "粤A99999"
-        },
-        {
-          userId: 3,
-          plateNumber: "粤A99999"
-        },
-        {
-          userId: 4,
-          plateNumber: "粤A99999"
-        },
-        {
-          userId: 5,
-          plateNumber: "粤A99999"
-        },
-        {
-          userId: 6,
-          plateNumber: "粤A99999"
-        },
-        {
-          userId: 7,
-          plateNumber: "粤A99999"
-        },
-        {
-          userId: 8,
-          plateNumber: "粤A99999"
-        },
-        {
-          userId: 9,
-          plateNumber: "粤A99999"
-        }
-      ],
+      carData: [],
+      //新增车辆信息
       carNewMsg:{
-        userId:'',
-        plateNumber:'',
-        brand:'',
-        model:'',
-        color:''
+        userId:'13',
+        plateNumber:'粤A9999',
+        brand:'未知',
+        model:'未知',
+        color:'未知'
       },
       carMsg:{
-        userId:1,
-        plateNumber:'粤A8888',
-        brand:'长安',
-        model:'SC7103',
-        color:'黑色'
+        userId: '',
+        plateNumber:'',
+        brand: '',
+        model: '',
+        color: ''
       },
       formRules:{
         userId:[
@@ -435,26 +362,40 @@ export default {
           { required: true, message: '颜色不得为空'}
         ]
       },
-      currentPage1: 1,
+      /*currentPage1: 1,
       pageSize1: 9,
-      total1: 100,
-      currentPage2: 1,
+      total1: 100,*/
+      /*currentPage2: 1,
       pageSize2: 9,
-      total2: 100,
+      total2: 100,*/
+      //批量增加车位
       inputAddBatch: "",
       inputAddBatchArr: [],
+      //批量删除车位
       inputDelBatch: "",
-      inputDelBatchArr: []
+      inputDelBatchArr: [],
+      //修改车辆的userId
+      modifyId: '',
+      //删除车辆的id数组
+      delId: [],
+      //图的数据
+      parkingNum: 100,
+      carNum: 100,
+      parkingTotal: 200,
+      carPaiTotal: 0,
+      carTotal: 200
     };
   },
   methods: {
     //切换到车辆资料板块
     toCarMsg() {
+      this.searchUser();
       this.parkingMsgRead = false;
       this.carMsgRead = true;
     },
     //切换到车位信息板块
     toParkingMsg() {
+      this.getParkingList();
       this.parkingMsgRead = true;
       this.carMsgRead = false;
     },
@@ -462,17 +403,51 @@ export default {
     getParkingList() {
       this.$axios.get('/api/car/getParkingInfo')
       .then((res) => {
-        console.log(res);
-        let data = res.data;
-        if(data.length === 0) {
-          this.listNullParking = false;
+        if(res.code === 200) {
+          this.parkingData = res.data;
+          this.parkingNum = Number(parkingProgress(this.parkingData.length, this.parkingTotal));
+        }else {
+          this.$message.error(res.message);
         }
-        else {
-          this.listNullParking = true;
-          this.parkingData = data;
-          /*this.pageBlock.pageSize = data.pageSize;
-          this.pageBlock.total = data.total;
-          this.pageBlock.currentPage = data.currentPage;*/
+      }).catch((err) => {
+        console.log(err);
+      })
+    },
+    //查询住户接口,获取住户信息（姓名+车牌号）列表
+    searchUser() {
+      this.carPaiTotal = 0;
+      this.$axios.get('/api/user/searchUser',{
+        params: {
+          name: '',
+          buildingNumber: '',
+          roomNumber: ''
+        }
+      }).then((res) => {
+        if(res.code === 200) {
+          this.carData = res.data.records;
+          for(let i = 0; i<this.carData.length; i++) {
+            this.$axios.get('/api/user/getUserInfo',{
+              params: {
+                userId: this.carData[i].userId
+              }
+            }).then((res) => {
+              if(res.code === 200) {
+                if (res.data.carInfo) {
+                  this.carPaiTotal += 1;
+                }
+                this.carNum = Number(parkingProgress(this.carPaiTotal, this.carTotal));
+              }
+              else {
+                this.$message.error(res.message);
+              }
+            }).catch((err) => {
+              console.log(err);
+            })
+          }
+          /*console.log(this.carPaiTotal)*/
+          /*this.carNum = Number(parkingProgress(this.carPaiTotal, this.carTotal));*/
+        }else {
+          this.$message.error(res.message);
         }
       }).catch((err) => {
         console.log(err);
@@ -481,21 +456,21 @@ export default {
     //打开批量增加车位窗口
     openBatchAdd() {
       this.batchAddWindows = true;
-      this.inputAddBatch = '';
     },
     //关闭批量增加车位窗口
     closeBatchAdd() {
       this.batchAddWindows = false;
+      this.inputAddBatch = '';
     },
     //确定批量增加车位
     saveBatchAdd() {
       this.inputAddBatchArr = this.inputAddBatch.split(' ');
-      //传json数据，花括号都不用套= =
+      //传json数据，花括号都不用套
        this.$axios.post('/api/parking/addParking',this.inputAddBatchArr)
          .then((res) => {
          if(res.code === 200) {
-           this.$message.success('批量新增成功');
            this.batchAddWindows = false;
+           this.$message.success('批量新增成功');
            this.reload();
          }
          else {
@@ -508,21 +483,21 @@ export default {
     //打开批量删除车位窗口
     openBatchDelete() {
       this.batchDeleteWindows = true;
-      this.inputDelBatch = '';
     },
     //关闭批量删除车位窗口
     closeBatchDelete() {
       this.batchDeleteWindows = false;
+      this.inputDelBatch = '';
     },
     //确定批量删除车位
     saveBatchDelete() {
       this.inputDelBatchArr = this.inputDelBatch.split(' ');
-      //传json数据，花括号都不用套= =
+      //传json数据，花括号都不用套
       this.$axios.post('/api/parking/deleteParking',this.inputDelBatchArr)
         .then((res) => {
           if(res.code === 200) {
-            this.$message.success('批量删除成功');
             this.batchDeleteWindows = false;
+            this.$message.success('批量删除成功');
             this.reload();
           }
           else {
@@ -535,15 +510,22 @@ export default {
     /* 打开删除车辆信息窗口 */
     openDeletePark(row) {
       this.parkDeleteWindows = true;
-      let arr = [];
-      arr.push(row.id);
+      console.log(row);
+      /*this.delId.push(row.id);*/
+    },
+    /* 关闭删除车辆信息窗口 */
+    closeDeletePark() {
+      this.parkDeleteWindows = false;
+    },
+    //删除车辆信息
+    saveCarDelete() {
       //传json数据，花括号都不用套= =
-      this.$axios.post('/api/parking/deleteParking',arr)
+      this.$axios.post('/api/parking/deleteParking',this.delId)
         .then((res) => {
           if(res.code === 200) {
-            this.$message.success('删除成功');
             this.parkDeleteWindows = false;
-            this.reload();
+            this.$message.success('删除成功');
+            this.toCarMsg();
           }
           else {
             this.$message.error(res.message);
@@ -552,10 +534,6 @@ export default {
         console.log(err);
       })
     },
-    /* 关闭删除车辆信息窗口 */
-    closeDeletePark() {
-      this.parkDeleteWindows = false;
-    },
     //打开新增车辆信息窗口
     openCarAdd() {
       this.carAddWindows = true;
@@ -563,6 +541,11 @@ export default {
     //关闭新增车辆信息窗口
     closeCarAdd() {
       this.carAddWindows = false;
+      this.carNewMsg.userId = '';
+      this.carNewMsg.plateNumber = '';
+      this.carNewMsg.brand = '';
+      this.carNewMsg.model = '';
+      this.carNewMsg.color = '';
     },
     //确定新增车辆信息
     saveCarAdd() {
@@ -573,10 +556,10 @@ export default {
         model: this.carNewMsg.model,
         color: this.carNewMsg.color
       }).then((res) => {
-        console.log(res);
         if(res.code === 200) {
-          this.$message.success('新增成功');
           this.carAddWindows = false;
+          this.$message.success('新增成功');
+          this.toCarMsg();
         }
         else {
           this.$message.error(res.message);
@@ -588,7 +571,8 @@ export default {
     //打开修改车辆信息窗口
     openModifyModify(row) {
       this.carModifyWindows = true;
-      console.log(row.id);
+      console.log(row);
+      /*this.modifyId = row.userId;*/
     },
     //关闭修改车辆信息窗口
     closeModifyModify() {
@@ -596,32 +580,75 @@ export default {
     },
     //确定修改车辆信息
     saveCarModify() {
-      this.carModifyWindows = false;
+      this.$axios.post('/api/car/updateCarInfo',{
+        /*id: this.carMsg.userId,*/
+        id: this.carMsg.id,
+        plateNumber: this.carMsg.plateNumber,
+        brand: this.carMsg.brand,
+        model: this.carMsg.model,
+        color: this.carMsg.color
+      }).then((res) => {
+        if(res.code === 200) {
+          this.carModifyWindows = false;
+          this.$message.success('修改成功');
+          this.toCarMsg();
+        }
+        else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+
     },
     /* 打开查看车辆信息窗口 */
     openCheckCar(row) {
-      this.carCheckWindows = true;
-      console.log(row.id);
+      this.$axios.get('/api/user/getUserInfo',{
+        params: {
+          userId: row.userId
+        }
+      }).then((res) => {
+        if(res.code === 200) {
+          this.carMsg.userId = row.userId;
+          if(res.data.carInfo) {
+            this.carMsg.plateNumber = res.data.carInfo.plateNumber;
+            this.carMsg.brand = res.data.carInfo.brand;
+            this.carMsg.model = res.data.carInfo.model;
+            this.carMsg.color = res.data.carInfo.color;
+          }
+          else {
+            this.carMsg.plateNumber = '暂无信息';
+            this.carMsg.brand = '暂无信息';
+            this.carMsg.model = '暂无信息';
+            this.carMsg.color = '暂无信息';
+          }
+          this.carCheckWindows = true;
+        }
+        else {
+          this.$message.error(res.message);
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
     },
     /* 关闭查看车辆信息窗口 */
     closeCheckCar() {
       this.carCheckWindows = false;
+      this.carMsg.userId = '';
+      this.carMsg.plateNumber = '';
+      this.carMsg.brand = '';
+      this.carMsg.model = '';
+      this.carMsg.color = '';
     },
     /* 打开删除车辆信息窗口 */
     openDeleteCar(row) {
       this.carDeleteWindows = true;
-      console.log(row.id);
+      console.log(row.userId);
     },
     /* 关闭删除车辆信息窗口 */
     closeDeleteCar() {
       this.carDeleteWindows = false;
-    },
-    /* //批量输入信息提醒
-    inputMsg() {
-      if (this.inputAddBatch === "" || this.inputDelBatch === "") {
-        this.$message("车位号请以空格隔开");
-      }
-    } */
+    }
   },
   beforeMount() {
     //获取车位列表
@@ -1041,10 +1068,12 @@ h4 {
   position: relative;
   z-index: 1;
 }*/
+
 .parking_table,
 .car_table {
-  margin: 50px 0 0 40px;
+  margin: 10px 0 0 20px;
   width: 93%;
+  height: 500px;
 }
 .parking_table a {
   display: block;

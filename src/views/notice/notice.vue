@@ -10,7 +10,7 @@
           <el-button type="primary">搜索</el-button>
       </div>-->
       <div class="option" v-if="role">
-        <h4>操作</h4>
+        <!--<h4>操作</h4>-->
         <button type="button" @click="openAdd">新增社区通知</button>
       </div>
       <div class="notice_table">
@@ -37,6 +37,8 @@
         </el-table>
         <div class="page_block" v-if="!listNull">
           <el-pagination
+                  @prev-click = "prevChange"
+                  @next-click = "nextChange"
                   :current-page="paging.currentPage"
                   :page-size="paging.pageSize"
                   :total="paging.total"
@@ -167,15 +169,12 @@
     data() {
       return {
         title:'',
-
         noticeData: [],
         noticeContent:{
           title:"",
           content:"",
         },
-
         noticeMsg: {},
-
         formRules:{
           title:[
             { required: true, message:"通知标题不能为空" }
@@ -184,13 +183,11 @@
             { required: true, message:"通知内容不能为空" }
           ]
         },
-
         paging: {
-          pageSize: 10,
+          pageSize: 9,
           total: 100,
           currentPage: 1
         },
-
         addWindows:false,
         modifyWindows:false,
         checkWindows:false,
@@ -207,6 +204,8 @@
       /* 关闭新增社区通知窗口 */
       closeAdd() {
         this.addWindows = false;
+        this.noticeContent.title = '';
+        this.noticeContent.content = '';
       },
       /* 确认新增社区通知 */
       saveAdd() {
@@ -229,16 +228,17 @@
       },
       /* 打开修改社区通知窗口 */
       openModify(row) {
-        this.modifyWindows = true;
         for(let i = 0; i<this.noticeData.length; i++) {
           if(row.id === this.noticeData[i].id) {
             this.noticeMsg = this.noticeData[i];
           }
         }
+        this.modifyWindows = true;
       },
       /* 关闭修改社区通知窗口 */
       closeModify() {
         this.modifyWindows = false;
+        this.noticeMsg = '';
       },
       /* 保存修改社区通知 */
       saveModify() {
@@ -247,10 +247,10 @@
           title: this.noticeMsg.title,
           content: this.noticeMsg.content
         }).then((res) => {
-          console.log(res);
           if(res.code === 200) {
             this.modifyWindows = false;
             this.$message.success('修改成功');
+            this.reload();
           }
           else {
             this.$message.error(res.message);
@@ -258,17 +258,15 @@
         }).catch((err) => {
           console.log(err);
         })
-
       },
       /* 打开查看社区通知窗口 */
       openCheck(row) {
-        this.checkWindows = true;
         for(let i = 0; i<this.noticeData.length; i++) {
           if(row.id === this.noticeData[i].id) {
             this.noticeMsg = this.noticeData[i];
           }
         }
-
+        this.checkWindows = true;
       },
       /* 关闭修改社区通知窗口 */
       closeCheck() {
@@ -299,6 +297,8 @@
             }
             if(data.records.length === 0) {
               this.listNull = true;
+            }else {
+              this.listNull = false;
             }
           }
           else {
@@ -307,12 +307,23 @@
         }).catch((err) => {
           console.log(err);
         })
+      },
+      //前一页
+      prevChange(val) {
+        //val是当前页
+        this.getNotice(val);
+      },
+      //后一页
+      nextChange(val) {
+        //val是当前页
+        this.getNotice(val);
       }
     },
     beforeMount() {
       this.role = roleJudge();
       //获取社区通知列表
-      this.getNotice(this.paging.currentPage);
+      this.getNotice(1);
+      this.paging.currentPage = 1;
     }
   }
 </script>
@@ -323,6 +334,7 @@
   width: 100%;
   height: 650px;
   border-radius: 10px;
+  border: 1px solid #dcdcdc;
   position: relative;
   left: 55px;
   font-size: 16px;
@@ -330,8 +342,8 @@
 .notice_box h3 {
   font-size: 24px;
   color: #666;
-  margin-left: 28px;
-  margin-top: 20px;
+  margin-left: 88px;
+  margin-top: 30px;
 }
 .notice_box h3::before {
   content: "";
@@ -339,7 +351,7 @@
   height: 26px;
   background: #8a79af;
   position: absolute;
-  left: 0;
+  left: 60px;
   z-index: 1;
 }
 .search {
@@ -381,8 +393,8 @@
   z-index: 1;
 }
 .option button {
-  width: 300px;
-  height: 40px;
+  width: 260px;
+  height: 60px;
   background: #d38cad;
   font-size: 20px;
   font-weight: bold;
@@ -391,11 +403,13 @@
   border-width: 0px;
   border-radius: 15px;
   cursor: pointer;
-  margin-top: 25px;
-  margin-left: -10px;
+  margin-top: 30px;
+  margin-left: 150px;
 }
 .notice_table {
-  margin-top: 10px;
+  /*margin-top: 10px;*/
+  width: 90%;
+  margin: -25px auto;
 }
 .notice_table a {
   display: block;

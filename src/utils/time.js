@@ -37,3 +37,11 @@ export function timeChange2(date) {
   return newDate;
 }
 
+//处理时间，显示yyyy年mm月dd日，中文格式
+export function timeChangeC(str) {
+  let t1 = '';
+  t1 = str.replace("-","年");
+  t1 = t1.replace("-","月");
+  t1 = t1.replace(" ","日");
+  return t1;
+}

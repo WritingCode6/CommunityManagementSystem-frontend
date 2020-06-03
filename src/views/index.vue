@@ -14,9 +14,9 @@
             <img src="../assets/image/icon/icon_exit.png" alt />
           </a>
         </li>
-        <li class="unread_message">
-          <a href="#">
-            <img src="../assets/image/icon/icon_unread_message.png" alt />
+        <li class="refresh">
+          <a href @click.prevent="refresh">
+            <img src="../assets/image/icon/icon_refresh.png" alt />
           </a>
         </li>
         <li class="line">|</li>
@@ -151,13 +151,13 @@ import {roleJudge} from "../utils/roleUtil";
 
 export default {
   name: "index",
+  inject: ['reload'],
   data() {
     return {
       communityLocation: '东莞 · 碧桂园',
-      //渲染用户名，待做
-      userName: '李华华',
+      userName: '',
       exitWindows: false,
-      //true是管理员，false是住户
+      //true是管理员或工作人员，false是住户
       role: true
     };
   },
@@ -174,7 +174,7 @@ export default {
     exit() {
       localStorage.removeItem("token");
       this.$router.push('/login');
-      this.$message.success("退出成功！")
+      this.$message.success("退出成功")
     },
     //获取管理员个人资料
     getStaffInfo() {
@@ -185,7 +185,7 @@ export default {
       }).then((res) => {
         let data = res.data;
         if(res.code === 200) {
-          this.userName = data.name;
+          this.userName = data[0].name;
         }
         else {
           this.$message.error(res.message);
@@ -210,6 +210,10 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
+    },
+    //刷新函数
+    refresh() {
+      this.reload();
     }
   },
   beforeMount() {
@@ -259,10 +263,10 @@ export default {
   width: 18px;
   height: 18px;
 }
-.unread_message img {
-  margin-top: 16px;
-  width: 27px;
-  height: 27px;
+.refresh img {
+  margin-top: 18px;
+  width: 23px;
+  height: 23px;
 }
 .line {
   margin: 0 20px 0 20px;
@@ -434,6 +438,7 @@ export default {
 }
 /* 更换布局后的子组件展示样式 */
 .right_part {
+  /* 计算子组件宽度 */
   width: calc(99% - 190px);
   /*width: 100%;*/
   height: 100%;

@@ -20,16 +20,6 @@
                   show-password
                   @change="pwdChange"></el-input>
         </el-form-item>
-        <!--<ul>
-          <li class="forget">
-            &lt;!&ndash;看情况修为router-link&ndash;&gt;
-            <a href>忘记密码</a>
-          </li>
-          <li class="enroll">
-            &lt;!&ndash;看情况修为router-link&ndash;&gt;
-            <a href>新住户注册</a>
-          </li>
-        </ul>-->
         <el-form-item class="button">
           <el-button type="primary" @click="toLogin">登录</el-button>
         </el-form-item>
@@ -38,7 +28,7 @@
     <div class="passwordWrong" v-show="passwordWrong">
       <div class="wrongBox">
         <h4>提示</h4>
-        <div class="wrongContent">账号或密码不正确</div>
+        <div class="wrongContent">{{ errorMsg }}</div>
         <div class="wrongButton">
           <button type="button" @click="closePasswordWrong">确定</button>
         </div>
@@ -53,9 +43,10 @@ export default {
   data() {
     return {
       userInfo: {
-        userName: "root",
-        password: "123456",
+        userName: "test2",
+        password: "test2",
       },
+      errorMsg: '',
       passwordWrong:false
     };
   },
@@ -105,18 +96,17 @@ export default {
         userName: userName,
         password: password
       }).then((res) => {
-        console.log(res);
         let data = res.data;
         if(res.code === 200) {
           localStorage.setItem("token",data.token)   //将token存到localStorage里
           localStorage.setItem("userId",data.userId)  //将username存入localStorage
           localStorage.setItem("roleId",data.roleId)  //将roleId存入localStorage
           localStorage.setItem("pwd",password)  //将password存入localStorage
-          this.$message.success('登录成功！');
+          this.$message.success('登录成功');
           this.$router.push('/index')
         }
         else {
-          /*this.$message.error(res.message);*/
+          this.errorMsg = res.message;
           this.passwordWrong = true;
         }
       }).catch((err) => {
@@ -168,21 +158,6 @@ export default {
 .loginForm {
   width: 350px;
   margin: 15px auto 0 auto;
-}
-/* 待修改 */
-a {
-  color: #fff;
-  display: block;
-  width: 70px;
-  height: 100%;
-  position: relative;
-  z-index: 1;
-}
-.forget {
-  float:left;
-}
-.enroll {
-  float:right;
 }
 .el-button--primary {
   width: 350px;

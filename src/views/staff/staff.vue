@@ -19,7 +19,7 @@
                       placeholder="选择值班日期">
               </el-date-picker>
               <button class="search_btn" @click="searchDuty">搜索</button>
-              <div class="add_staff">
+              <div class="add_staff" v-if="role">
                 <el-button type="primary" class="add_button1" @click="addDutyInfo">新增值班信息</el-button>
                 <el-button type="primary" class="add_button2" @click="addStaffInfo">新增工作人员用户</el-button>
               </div>
@@ -29,6 +29,7 @@
         <el-table
                 :data="staffData"
                 style="width: 100%"
+                height="380"
                 :default-sort = "{prop: 'employeeId', order: 'ascending'}"
                 highlight-current-row>
           <!-- 设置min-width来自适应宽度 -->
@@ -39,10 +40,10 @@
           <el-table-column prop="date" label="值班时间" min-width="20%" align="center"></el-table-column>
           <el-table-column label="操作" min-width="25%" align="center">
             <span slot-scope="scope">
-              <a href>
+              <a href v-if="role">
                 <span class="operation" @click.prevent="delDutyInfo(scope.row)">删除值班</span>
               </a>
-              <a href>
+              <a href v-if="role">
                 <span class="operation" @click.prevent="delStaffInfo(scope.row)">删除用户</span>
               </a>
               <a href>
@@ -53,6 +54,8 @@
         </el-table>
         <div class="page_block" v-if="listNull">
           <el-pagination
+                  @prev-click = "prevChange"
+                  @next-click = "nextChange"
                   :current-page="pagingData.currentPage"
                   :page-size="pagingData.pageSize"
                   :total="pagingData.total"
@@ -293,6 +296,7 @@
 <script>
   import {sexChange} from "../../utils/sexUtil";
   import {typeJudge, typeJudgeNum} from "../../utils/duty";
+  import {roleJudge} from "../../utils/roleUtil";
 
   export default {
     name: "staff",
@@ -301,7 +305,7 @@
       return {
         //分页器数据
         pagingData: {
-          pageSize: 6,
+          pageSize: 10,
           total: 100,
           currentPage: 1,
         },
@@ -311,57 +315,6 @@
           type: '',
         },
         //表格数据
-        /*staffData: [
-          {
-            employee_id: 1,
-            name: '梨花',
-            type: '安保',
-            place: '走廊',
-            date: '2020-20-20'
-          },
-          {
-            employee_id: 2,
-            name: '梨花',
-            type: '安保',
-            place: '走廊',
-            date: '2020-20-20'
-          },
-          {
-            employee_id: 3,
-            name: '梨花',
-            type: '安保',
-            place: '走廊',
-            date: '2020-20-20'
-          },
-          {
-            employee_id: 4,
-            name: '梨花',
-            type: '安保',
-            place: '走廊',
-            date: '2020-20-20'
-          },
-          {
-            employee_id: 5,
-            name: '梨花',
-            type: '安保',
-            place: '走廊',
-            date: '2020-20-20'
-          },
-          {
-            employee_id: 6,
-            name: '梨花',
-            type: '安保',
-            place: '走廊',
-            date: '2020-20-20'
-          },
-          {
-            employee_id: 7,
-            name: '梨花',
-            type: '安保',
-            place: '走廊',
-            date: '2020-20-20'
-          }
-        ],*/
         staffData: [],
         //新增值班框数据
         addDutyData: {
@@ -380,29 +333,23 @@
             }
           ],
           type: '',
-          date: '2020-05-06',
-          employeeId: '1',
-          place: '未知'
+          date: '',
+          employeeId: '',
+          place: ''
         },
         //新增工作人员数据
         addStaffData: {
-          name: '11',
-          service_id: '123456',
+          name: '',
+          service_id: '',
           sex: '',
-          idNumber: '123456789012345678',
-          address: '未知',
-          phone: '12345678901',
+          idNumber: '',
+          address: '',
+          phone: '',
           userType: '',
-          userName: '1111',
-          password: '123456a'
+          userName: '',
+          password: ''
         },
         //工作人员详细信息
-        /*staffDetail: {
-          name: '菊花',
-          serviceId: '001',
-          sex: 1,
-          phone: '19909090909'
-        },*/
         staffDetail: {
           name: '',
           serviceId: '',
@@ -467,43 +414,43 @@
         delWindows2: false,
         checkWindows: false,
         listNull: false,
+        role: false,
         delDutyId: '',
         delStaffId: '',
         getStaffId: ''
       }
     },
     methods: {
-      //查看值班信息
-      getDutyList() {
-        this.getList(this.searchData.date, this.searchData.type, this.pagingData.currentPage, this.pagingData.pageSize);
-      },
       //搜索值班信息
       searchDuty() {
         this.getList(this.searchData.date, typeJudgeNum(this.searchData.type), this.pagingData.currentPage, this.pagingData.pageSize);
       },
       //值班信息接口
-      getList(d, t, c, p) {
+      getList(d, t, c) {
         this.$axios.get('/api/property/getDutyInfo',{
           params: {
             date: d,
             type: t,
             current: c,
-            pageSize: p
+            pageSize: this.pagingData.pageSize
           }
         }).then((res) => {
-          console.log(res)
           let data = res.data;
-          if(data.records.length === 0) {
-            this.staffData = data.records;
-            this.listNull = false;
-          }
-          else {
-            this.listNull = true;
-            this.staffData = data.records;
-            this.change(this.staffData);
-            this.pagingData.pageSize = data.pageSize;
-            this.pagingData.total = data.total;
-            this.pagingData.currentPage = data.currentPage;
+          if(res.code === 200) {
+            if(data.records.length === 0) {
+              this.staffData = data.records;
+              this.listNull = false;
+            }
+            else {
+              this.listNull = true;
+              this.staffData = data.records;
+              this.change(this.staffData);
+              this.pagingData.pageSize = data.pageSize;
+              this.pagingData.total = data.total;
+              this.pagingData.currentPage = data.currentPage;
+            }
+          }else {
+            this.$message.error(res.message);
           }
         }).catch((err) => {
           console.log(err);
@@ -523,7 +470,11 @@
       },
       //关闭新增值班信息窗口
       closeAddDuty() {
-        this.addWindows1 = false
+        this.addWindows1 = false;
+        this.addDutyData.type = '';
+        this.addDutyData.date = '';
+        this.addDutyData.employeeId = '';
+        this.addDutyData.place = '';
       },
       //新增值班信息
       addDutyPost() {
@@ -554,6 +505,15 @@
       //关闭新增工作人员信息窗口
       closeAddStaff() {
         this.addWindows2 = false
+        this.addStaffData.name = '';
+        this.addStaffData.service_id = '';
+        this.addStaffData.sex = '';
+        this.addStaffData.idNumber = '';
+        this.addStaffData.address = '';
+        this.addStaffData.phone = '';
+        this.addStaffData.userType = '';
+        this.addStaffData.userName = '';
+        this.addStaffData.password = '';
       },
       //新增工作人员信息
       addStaffPost() {
@@ -569,8 +529,8 @@
           phone: this.addStaffData.phone
         }).then((res) => {
           if(res.code === 200) {
-            this.$message.success('新增成功');
             this.addWindows2 = false;
+            this.$message.success('新增成功');
             this.reload();
           }
           else {
@@ -660,11 +620,22 @@
       //关闭查看工作人员详情信息窗口
       closeStaffInfo() {
         this.checkWindows = false;
+      },
+      //前一页
+      prevChange(val) {
+        //val是当前页
+        this.getList(this.searchData.date, this.searchData.type, val);
+      },
+      //后一页
+      nextChange(val) {
+        //val是当前页
+        this.getList(this.searchData.date, this.searchData.type, val);
       }
     },
     beforeMount() {
+      this.role = roleJudge();
       //获取值班列表
-      this.getDutyList();
+      this.getList(this.searchData.date, this.searchData.type, this.pagingData.currentPage);
     }
   }
 </script>
@@ -704,8 +675,8 @@ h3::before {
   margin: 15px 0;
 }
 .search_box2 {
-  display: flex;
-  justify-content: space-between;
+  /*display: flex;
+  justify-content: space-between;*/
   margin-bottom: 30px;
 }
 .search_input {
@@ -720,10 +691,12 @@ h3::before {
   color: white;
   border: none;
   border-radius: 8px;
-  margin-right: 10px;
+  position: relative;
+  left: 161px;
 }
 .add_staff {
   display: flex;
+  float: right;
 }
 .add_button1,
 .add_button2 {

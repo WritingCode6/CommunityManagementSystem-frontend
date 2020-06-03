@@ -28,11 +28,11 @@
         <div class="picture">
           <el-progress
                 type="circle"
-                :percentage="25"
+                :percentage="repairNum"
                 :width="210"
                 :height="210"
                 :stroke-width="15"
-                color="#fdc38a">
+                color="#67C23A">
           </el-progress>
         </div>
       </div>
@@ -64,12 +64,13 @@
           <el-table
                   :data="formData"
                   style="width: 100%"
+                  :default-sort = "{prop: 'createTime', order: 'ascending'}"
                   highlight-current-row>
             <el-table-column prop="id" label="单号" min-width="7%" align="center"></el-table-column>
             <el-table-column prop="facility" label="设施" min-width="15%" align="center"></el-table-column>
             <el-table-column prop="place" label="所在地" min-width="15%" align="center"></el-table-column>
             <el-table-column prop="isReceived" label="状态" min-width="12%" align="center"></el-table-column>
-            <el-table-column prop="createTime" label="创建时间" min-width="18%" align="center"></el-table-column>
+            <el-table-column prop="createTime" label="创建时间" min-width="18%" align="center" sortable></el-table-column>
             <el-table-column label="操作" min-width="20%" align="center">
               <span slot-scope="scope">
                 <a href>
@@ -170,8 +171,8 @@
           <h5>处理信息</h5>
           <el-form
                 ref="modifyCotent"
-                :v-model="modifyCotent"
-                :rules="modifyRules">
+                :v-model="modifyCotent">
+            <!-- :rules="modifyRules" -->
             <el-form-item class="isReceived" prop="isReceived">
               <label>处理状态：</label>
               <el-select
@@ -289,6 +290,7 @@
 
 import {receiveJudge} from "../../utils/feedback";
 import {timeChange, timeChangeT} from "../../utils/time";
+import {parkingProgress} from "../../utils/parking";
 
 export default {
   name: "repair",
@@ -323,7 +325,8 @@ export default {
       msg7:
         "6、 报修单填写维修项目属人为故意损坏的，必须由损坏人员赔付后方可维修。",
       formData: [],
-      repairMsg:{
+      repairMsg: {},
+      /*repairMsg:{
         id:'1',
         userId:'123',
         facility:'水管',
@@ -337,7 +340,7 @@ export default {
         handleTime:'2020-05-09',
         employeePhone:'13888888888',
         result:'完成维修'
-      },
+      },*/
       addContent:{
         facility:'',
         place:'',
@@ -359,29 +362,33 @@ export default {
           { required: true, trigger: "blur" }
         ]
       },
-      modifyRules:{
+      /*modifyRules:{
         isReceived:[
-          { required: true, message:"请选择处理状态", trigger: "change" }
+          { required: true, message:"请选择处理状态", trigger: "blur" }
         ],
         handleTime:[
-          { required: true, message:"请选择处理日期", trigger: "change" }
+          { required: true, message:"请选择处理日期", trigger: "blur" }
         ],
         result:[
           { required: true, message:"请输入处理结果", trigger: "blur" }
         ]
-      },
+      },*/
       paging: {
         pageSize: 9,
         total: 100,
         currentPage: 1,
       },
       /*searchName: '',*/
-      modifyId: ''
+      modifyId: '',
+      repairNum: 100,
+      repairTotal: 200
     };
   },
   methods: {
     //切换到报修单板块
     toRepairFormRead() {
+      this.getRepair(1);
+      this.paging.currentPage = 1;
       this.repairFormRead = true;
       this.repairProcessRead = false;
     },
@@ -441,6 +448,9 @@ export default {
     /* 关闭修改报修单窗口 */
     closeModify() {
       this.modifyWindows = false;
+      this.modifyCotent.isReceived = '';
+      this.modifyCotent.handleTime = '';
+      this.modifyCotent.result = '';
     },
     /* 保存修改报修单 */
     saveModify() {
@@ -453,8 +463,8 @@ export default {
       }).then((res) => {
         if(res.code === 200) {
           this.modifyWindows = false;
-          this.$message.success('修改成功！');
-          this.reload();
+          this.$message.success('修改成功');
+          this.toRepairFormRead();
         }
         else {
           this.$message.error(res.message);
@@ -476,6 +486,7 @@ export default {
     /* 关闭查看报修单窗口 */
     closeCheck() {
       this.checkWindows = false;
+      this.repairMsg = '';
     },
     //查询报修单的接口
     getRepair(current) {
@@ -486,14 +497,15 @@ export default {
           size: this.paging.pageSize
         }
       }).then((res) => {
-        console.log(res)
         let data = res.data;
         if(res.code === 200) {
           this.formData = data.records;
           this.paging.total = data.total;
+          this.repairNum = Number(parkingProgress(this.paging.total, this.repairTotal));
           if(this.formData.length === 0) {
             this.listNull = false;
           }
+          this.listNull = true;
           for(let i = 0; i<this.formData.length; i++) {
             this.formData[i].isReceived = receiveJudge(this.formData[i].isReceived);
             this.formData[i].createTime = timeChange(this.formData[i].createTime);
@@ -733,6 +745,9 @@ h4::before {
   left: 580px;
   top: 20px;
 }
+.modifyProcessBox .back {
+  left: 550px;
+}
 .modifycontent {
   height: 80%;
 }
@@ -964,3 +979,9 @@ h4::before {
   margin-top: 20px;
 }
 </style>
+<!--<style>
+.el-form-item__error {
+  position: absolute;
+  left: 105px;
+ }
+</style>-->
