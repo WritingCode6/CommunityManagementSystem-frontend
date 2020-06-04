@@ -16,7 +16,7 @@
         </li>
         <li class="refresh">
           <a href @click.prevent="refresh">
-            <img src="../assets/image/icon/icon_refresh.png" alt />
+            <img src="../assets/image/tab/icon_refresh.png" alt />
           </a>
         </li>
         <li class="line">|</li>

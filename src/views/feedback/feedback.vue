@@ -53,8 +53,8 @@
         <div class="addContentBox">
           <el-form
                 ref="form"
-                :model="addContent"
-                :rules="formRules">
+                :model="addContent">
+            <!--                :rules="formRules"-->
             <el-form-item class="type" prop="type">
               <label>反馈类型：</label>
               <el-select placeholder="请选择反馈类型" v-model="addContent.type">

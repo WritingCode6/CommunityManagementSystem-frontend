@@ -6,9 +6,9 @@ Vue.use(VueRouter)
   const routes = [
     {
       path: "/",
-      redirect: '/index/property',
+      redirect: '/login',
       meta: {
-        needLogin: true
+        needLogin: false
       }
     },
     {
@@ -151,7 +151,7 @@ Vue.use(VueRouter)
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes
 })
@@ -175,5 +175,14 @@ router.beforeEach(function(to, from, next) {
     next(); //继续往后走
   }
 });
+
+/*router.onError((error) => {
+  const pattern = /Loading chunk (\d)+ failed/g;
+  const isChunkLoadFailed = error.message.match(pattern);
+  const targetPath = router.history.pending.fullPath;
+  if (isChunkLoadFailed) {
+    router.replace(targetPath);
+  }
+});*/
 
 export default router

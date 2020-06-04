@@ -43,8 +43,8 @@ export default {
   data() {
     return {
       userInfo: {
-        userName: "test2",
-        password: "test2",
+        userName: "test3",
+        password: "test3",
       },
       errorMsg: '',
       passwordWrong:false

@@ -12,7 +12,7 @@ Vue.config.productionTip = false;
 
 Vue.prototype.$axios = axios;  //全局配置axios
 /*axios.defaults.headers.post['Content-Type'] = 'application/json';*/
-/*axios.defaults.baseURL = 'http://community.chavy.top';*/
+axios.defaults.baseURL = 'https://community.chavy.top';
 
 new Vue({
   router,
@@ -22,7 +22,6 @@ new Vue({
 
 //请求拦截器
 axios.interceptors.request.use((config) => {
-  /*config.headers.Authorization = localStorage.getItem("token");*/
   if (localStorage.token) { //判断token是否存在
     config.headers.Authorization = localStorage.token;  //将token设置成请求头
   }
