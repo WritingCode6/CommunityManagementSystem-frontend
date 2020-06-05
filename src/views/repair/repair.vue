@@ -63,6 +63,7 @@
         <div class="form_table">
           <el-table
                   :data="formData"
+                  height="480"
                   style="width: 100%"
                   :default-sort = "{prop: 'createTime', order: 'ascending'}"
                   highlight-current-row>
@@ -326,21 +327,6 @@ export default {
         "6、 报修单填写维修项目属人为故意损坏的，必须由损坏人员赔付后方可维修。",
       formData: [],
       repairMsg: {},
-      /*repairMsg:{
-        id:'1',
-        userId:'123',
-        facility:'水管',
-        userName:'邹雅岚',
-        isReceived:'已处理',
-        createTime:'2020-05-08',
-        place:'住户房屋',
-        reason:'水管老化',
-        employeeId:'123456',
-        employeeName:'刘杨十',
-        handleTime:'2020-05-09',
-        employeePhone:'13888888888',
-        result:'完成维修'
-      },*/
       addContent:{
         facility:'',
         place:'',
@@ -387,8 +373,8 @@ export default {
   methods: {
     //切换到报修单板块
     toRepairFormRead() {
-      this.getRepair(1);
       this.paging.currentPage = 1;
+      this.getRepair(this.paging.currentPage);
       this.repairFormRead = true;
       this.repairProcessRead = false;
     },

@@ -20,7 +20,7 @@
         <div class="parking_table">
           <el-table
                   :data="parkingData"
-                  height="550"
+                  height="570"
                   style="width: 100%;"
                   :default-sort = "{prop: 'id', order: 'ascending'}"
                   highlight-current-row>
@@ -332,11 +332,11 @@ export default {
       carData: [],
       //新增车辆信息
       carNewMsg:{
-        userId:'13',
-        plateNumber:'粤A9999',
-        brand:'未知',
-        model:'未知',
-        color:'未知'
+        userId:'',
+        plateNumber:'',
+        brand:'',
+        model:'',
+        color:''
       },
       carMsg:{
         userId: '',
@@ -507,25 +507,25 @@ export default {
         console.log(err);
       })
     },
-    /* 打开删除车辆信息窗口 */
+    /* 打开删除车位信息窗口 */
     openDeletePark(row) {
       this.parkDeleteWindows = true;
-      console.log(row);
-      /*this.delId.push(row.id);*/
+      this.delId.push(row.id);
     },
-    /* 关闭删除车辆信息窗口 */
+    /* 关闭删除车位信息窗口 */
     closeDeletePark() {
       this.parkDeleteWindows = false;
     },
-    //删除车辆信息
+    //删除车位信息
     saveCarDelete() {
       //传json数据，花括号都不用套= =
       this.$axios.post('/api/parking/deleteParking',this.delId)
         .then((res) => {
           if(res.code === 200) {
             this.parkDeleteWindows = false;
+            this.delId = [];
             this.$message.success('删除成功');
-            this.toCarMsg();
+            this.toParkingMsg();
           }
           else {
             this.$message.error(res.message);
@@ -643,7 +643,7 @@ export default {
     /* 打开删除车辆信息窗口 */
     openDeleteCar(row) {
       this.carDeleteWindows = true;
-      console.log(row.userId);
+      console.log(row);
     },
     /* 关闭删除车辆信息窗口 */
     closeDeleteCar() {
@@ -999,6 +999,7 @@ h4 {
 .carInfo span {
   display: flex;
   float: right;
+  color: #000;
 }
 .carInfo .input,
 .carInfo span {

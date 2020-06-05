@@ -32,12 +32,18 @@
       </ul>
       <div class="content honor_content">
         <!-- 可改为v-for -->
+        <img src="../../assets/image/property/honor1.jpg" class="honor_photo" alt />
+        <img src="../../assets/image/property/honor1.jpg" class="honor_photo" alt />
+        <img src="../../assets/image/property/honor1.jpg" class="honor_photo" alt />
+        <img src="../../assets/image/property/honor1.jpg" class="honor_photo" alt />
+        <img src="../../assets/image/property/honor1.jpg" class="honor_photo" alt />
+        <img src="../../assets/image/property/honor1.jpg" class="honor_photo" alt />
+        <!--<div class="honor_photo">正在开发！</div>
         <div class="honor_photo">正在开发！</div>
         <div class="honor_photo">正在开发！</div>
         <div class="honor_photo">正在开发！</div>
         <div class="honor_photo">正在开发！</div>
-        <div class="honor_photo">正在开发！</div>
-        <div class="honor_photo">正在开发！</div>
+        <div class="honor_photo">正在开发！</div>-->
       </div>
     </div>
     <div class="modifyIntroCover" v-show="modifyIntro">
@@ -186,13 +192,13 @@ a:hover {
   justify-content: space-around;
 }
 .honor_photo {
-  width: 300px;
-  height: 150px;
+  width: 350px;
+  height: 200px;
   font-size: 24px;
   border: 1px black solid;
   text-align: center;
   /* 文字上下居中：line-height = height */
-  line-height: 150px;
+  line-height: 200px;
   margin: auto 0;
 }
 h3 {

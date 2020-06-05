@@ -80,7 +80,7 @@
                         value-format="HH:mm:ss"
                         placeholder="选择时间"></el-time-picker>
               </el-form-item>
-              <p>至</p>
+              <p class="time_liner">至</p>
               <el-form-item prop="endTime" class="endTimeSelect">
                 <el-date-picker
                         type="date"
@@ -138,7 +138,7 @@
             </el-form-item>
             <el-form-item class="date" required>
               <label for="date">活动时间：</label>
-              <el-form-item prop="startTime" class="startTimeSelect" value-format="yyyy-MM-dd">
+              <el-form-item prop="startTime" class="startTimeSelect">
                 <el-date-picker
                         type="date"
                         placeholder="选择日期"
@@ -149,8 +149,8 @@
                         value-format="HH:mm:ss"
                         placeholder="选择时间"></el-time-picker>
               </el-form-item>
-              <p>至</p>
-              <el-form-item prop="endTime" class="endTimeSelect" value-format="yyyy-MM-dd">
+              <p class="time_liner">至</p>
+              <el-form-item prop="endTime" class="endTimeSelect">
                 <el-date-picker
                         type="date"
                         placeholder="选择日期"
@@ -301,7 +301,7 @@ export default {
         ]
       },
       paging: {
-        pageSize: 10,
+        pageSize: 9,
         total: 100,
         currentPage: 1,
       },
@@ -634,7 +634,7 @@ export default {
 .activity_table {
   /*margin-top: 50px;*/
   width: 90%;
-  margin: 0 auto;
+  margin: 12px auto;
 }
 .activity_table a {
   display: block;
@@ -770,8 +770,11 @@ export default {
   margin-left: 100px;
 }
 .endTimeSelect {
-  margin-top: -40px;
+  margin-top: -50px;
   margin-left: 460px;
+}
+.time_liner {
+  line-height: 65px;
 }
 .content {
   margin-top: -10px;

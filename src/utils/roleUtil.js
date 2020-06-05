@@ -9,3 +9,10 @@ export function roleJudge() {
   else role = true;
   return role;
 }
+
+//判断用户角色
+export function tranUserType() {
+  let roleId = localStorage.getItem("roleId")
+  let userType = ["超级管理员","住户","清洁人员","物业管理员","巡查人员","安保人员"];
+  return userType[roleId-1];
+}

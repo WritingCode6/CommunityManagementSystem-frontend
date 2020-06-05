@@ -42,16 +42,16 @@
         </div>
         <div class="content">
           <h4>填写报修单</h4>
-          <el-form ref="form" class="addTable" :v-model="addContent">
-            <el-form-item class="facility" prop>
+          <el-form ref="form" class="addTable" v-model="addContent" :rules="addRules">
+            <el-form-item class="facility" prop="facility">
               <label>设施：</label>
               <el-input class="input" style="font-size:20px" v-model="addContent.facility"></el-input>
             </el-form-item>
-            <el-form-item class="place" prop>
+            <el-form-item class="place" prop="place">
               <label>所在地：</label>
               <el-input class="input" style="font-size:20px" v-model="addContent.place"></el-input>
             </el-form-item>
-            <el-form-item prop>
+            <el-form-item prop="reason">
               <label>原因：</label>
               <el-input
                 type="textarea"
@@ -83,6 +83,7 @@
           <div class="form_table">
             <el-table
                     :data="formData"
+                    height="440"
                     style="width: 100%;font-size:16px"
                     :default-sort = "{prop: 'createTime', order: 'ascending'}"
                     highlight-current-row>
@@ -238,7 +239,8 @@ export default {
         reason: ""
       },
       formData: [],
-      repairMsg: {
+      repairMsg: {},
+      /*repairMsg: {
         id: "1",
         userId: "123",
         facility: "水管",
@@ -252,6 +254,17 @@ export default {
         handleTime: "2020-05-09",
         employeePhone: "13888888888",
         result: "完成维修"
+      },*/
+      addRules: {
+        facility: [
+          {required: true, message: '请输入报修设施', trigger: "blur"}
+        ],
+        place: [
+          {required: true, message: '请输入报修地点', trigger: "blur"}
+        ],
+        reason: [
+          {required: true, message: '请输入报修原因', trigger: "blur"}
+        ]
       }
     };
   },
@@ -347,6 +360,7 @@ export default {
           }
         }
         else {
+          this.listNull = false;
           this.$message.error(res.message);
         }
       }).catch((err) => {
@@ -669,5 +683,19 @@ export default {
   margin-top: 25px;
   /*text-align: center;*/
   float: right;
+}
+</style>
+<style>
+.facility .el-form-item__error {
+  position: absolute;
+  left: 60px;
+}
+.place .el-form-item__error {
+  position: absolute;
+  left: 80px;
+}
+.reason .el-form-item__error {
+  position: absolute;
+  left: 105px;
 }
 </style>

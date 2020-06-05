@@ -43,8 +43,8 @@ export default {
   data() {
     return {
       userInfo: {
-        userName: "test3",
-        password: "test3",
+        userName: "",
+        password: "",
       },
       errorMsg: '',
       passwordWrong:false
@@ -60,7 +60,7 @@ export default {
       let userName = this.userInfo.userName
       if (userName === '')
         this.$message.error('用户名不得为空');
-      else if (userName.length < 4 || userName.length > 16) {
+      /*else if (userName.length < 4 || userName.length > 16) {
         this.$message.warning('用户名长度必须在4-16位');
       } else if (!this.isValid(userName)) {
         //排除特殊字符和空格
@@ -68,7 +68,7 @@ export default {
       } else if (!isNaN(userName)) {
         //判断username是不是一个值
         this.$message.warning('用户名不能为纯数字');
-      }
+      }*/
     },
     //密码的合理性判断
     pwdChange() {
@@ -76,7 +76,7 @@ export default {
       if (password === '') {
         this.$message.error('密码不得为空');
       }
-      else if (password.length < 6 || password.length > 16) {
+      /*else if (password.length < 6 || password.length > 16) {
         this.$message.warning('密码长度必须在6-16位');
       }
       else if (!this.isValid(password)) {
@@ -86,7 +86,7 @@ export default {
       else if (!isNaN(password)) {
         //判断Pwd是不是一个值
         this.$message.warning('密码不能为纯数字');
-      }
+      }*/
     },
     //登录接口
     toLogin() {

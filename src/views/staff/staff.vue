@@ -15,6 +15,7 @@
             <div class="search_box2">
               <el-date-picker
                       v-model="searchData.date"
+                      value-format="yyyy-MM-dd"
                       type="date"
                       placeholder="选择值班日期">
               </el-date-picker>
@@ -423,6 +424,7 @@
     methods: {
       //搜索值班信息
       searchDuty() {
+        console.log(this.searchData.date)
         this.getList(this.searchData.date, typeJudgeNum(this.searchData.type), this.pagingData.currentPage, this.pagingData.pageSize);
       },
       //值班信息接口
@@ -893,7 +895,6 @@ h5 {
 .staff_word {
   position: relative;
   margin-left: -50px;
-  margin-top: -50px;
   left: -40px;
   width: 150px;
   line-height: 35px;

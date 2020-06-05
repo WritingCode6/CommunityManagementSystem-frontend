@@ -18,28 +18,26 @@
               <el-option value="1"></el-option>
               <el-option value="2"></el-option>
               <el-option value="3"></el-option>
-              <el-option value="4"></el-option>
-              <el-option value="5"></el-option>
-              <el-option value="6"></el-option>
-              <el-option value="7"></el-option>
-              <el-option value="8"></el-option>
-              <el-option value="9"></el-option>
-              <el-option value="10"></el-option>
             </el-select>
           </div>
           <div class="select_box2">
             <label>房间号：</label>
             <el-select v-model="userSearch.roomNumber" class="select">
-              <el-option value="100"></el-option>
               <el-option value="101"></el-option>
               <el-option value="102"></el-option>
               <el-option value="103"></el-option>
               <el-option value="104"></el-option>
               <el-option value="105"></el-option>
-              <el-option value="106"></el-option>
-              <el-option value="107"></el-option>
-              <el-option value="108"></el-option>
-              <el-option value="109"></el-option>
+              <el-option value="201"></el-option>
+              <el-option value="202"></el-option>
+              <el-option value="203"></el-option>
+              <el-option value="204"></el-option>
+              <el-option value="205"></el-option>
+              <el-option value="301"></el-option>
+              <el-option value="302"></el-option>
+              <el-option value="303"></el-option>
+              <el-option value="304"></el-option>
+              <el-option value="305"></el-option>
             </el-select>
           </div>
         </div>
@@ -50,6 +48,7 @@
         </div>
         <el-table
                 :data="userData"
+                height="400"
                 style="width: 100%"
                 :default-sort = "{prop: 'buildingNumber', order: 'ascending'}"
                 highlight-current-row>
@@ -157,11 +156,31 @@
               <h5>房屋信息</h5>
               <el-form-item class="buildingNumber" prop="buildingNumber">
                 <label>栋数：</label>
-                <el-input type="text" class="input" v-model="addUserData.buildingNumber"></el-input>
+                <el-select v-model="addUserData.buildingNumber" class="select">
+                  <el-option value="1"></el-option>
+                  <el-option value="2"></el-option>
+                  <el-option value="3"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item class="roomNumber" prop="roomNumber">
-                <label>房号：</label>
-                <el-input type="text" class="input" v-model="addUserData.roomNumber"></el-input>
+                <label>房间号：</label>
+                <el-select v-model="addUserData.roomNumber" class="select">
+                  <el-option value="101"></el-option>
+                  <el-option value="102"></el-option>
+                  <el-option value="103"></el-option>
+                  <el-option value="104"></el-option>
+                  <el-option value="105"></el-option>
+                  <el-option value="201"></el-option>
+                  <el-option value="202"></el-option>
+                  <el-option value="203"></el-option>
+                  <el-option value="204"></el-option>
+                  <el-option value="205"></el-option>
+                  <el-option value="301"></el-option>
+                  <el-option value="302"></el-option>
+                  <el-option value="303"></el-option>
+                  <el-option value="304"></el-option>
+                  <el-option value="305"></el-option>
+                </el-select>
               </el-form-item>
             </div>
           </el-form>
@@ -285,17 +304,6 @@
           buildingNumber: '',
           roomNumber: ''
         },
-        /*addUserData: {
-          userName: '',
-          password: '',
-          name: '',
-          personalID: '',
-          sex: '',
-          ancestralHome: '',
-          residenceAddress: '',
-          buildingNumber: '',
-          roomNumber: ''
-        },*/
         //分页器
         pageBlock: {
           pageSize: 7,
@@ -328,7 +336,7 @@
             { required: true, message: '身份证号不得为空', trigger: 'blur'},
             { len: 18, message: '身份证号为 18 位', trigger: 'blur' }
           ],
-          nativenPlace:[
+          ancestralHome:[
             { required: true, message: '籍贯不得为空', trigger: 'blur'},
           ],
           residenceAddress:[
@@ -430,12 +438,12 @@
           }
         }).then((res) => {
           let data = res.data;
+          this.userData = data.records;
           if(data.records.length === 0) {
             this.listNull = false;
           }
           else {
             this.listNull = true;
-            this.userData = data.records;
             /*this.pageBlock.pageSize = data.pageSize;*/
             this.pageBlock.total = data.total;
             this.pageBlock.currentPage = data.currentPage;
@@ -765,11 +773,11 @@ label {
   margin-right: 130px;
 }
 .liver .personalID .input {
-  margin-top: -30px;
+  margin-top: -2px;
   width: 190px;
 }
 .liver .residenceAddress .input {
-  margin-top: -30px;
+  margin-top: -2px;
   width: 425px;
 }
 .liver .personalID label {
@@ -792,6 +800,10 @@ label {
   float: right;
   margin-top: -72px;
   margin-right: 65px;
+}
+.house .buildingNumber .select,
+.house .roomNumber .select {
+  width: 140px;
 }
 .saveButton {
   margin-top: 30px;

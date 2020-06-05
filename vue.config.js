@@ -1,10 +1,9 @@
-/*
 module.exports = {
   publicPath: '',
   outputDir: 'dist',
   assetsDir: 'static',
   productionSourceMap: false
-/!*  devServer: {
+  /*devServer: {
    proxy : {
     "/api" : {
       target : "https://community.chavy.top", //服务器地址
@@ -15,6 +14,5 @@ module.exports = {
       }
     }
    }
-  }*!/
+  }*/
 }
-*/

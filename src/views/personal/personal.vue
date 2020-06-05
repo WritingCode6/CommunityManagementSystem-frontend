@@ -52,10 +52,11 @@
             </el-form-item>
             <el-form-item class="sex">
               <label>性别：</label>
-              <el-select v-model="userInfo.sex" class="select">
+              <el-input v-model="userInfo.sex" class="select" readonly></el-input>
+              <!--<el-select v-model="userInfo.sex" class="select" readonly>
                 <el-option label="男" value="0"></el-option>
                 <el-option label="女" value="1"></el-option>
-              </el-select>
+              </el-select>-->
             </el-form-item>
           </div>
           <div class="form_right">
@@ -135,7 +136,7 @@
 </template>
 
 <script>
-  import {sexChange, sexChangeNum} from "../../utils/sexUtil";
+  import {sexChange} from "../../utils/sexUtil";
 
 export default {
   name:"personal",
@@ -257,7 +258,6 @@ export default {
       this.$axios.post('/api/user/updateStaffInfo', {
         id: this.userInfo.id,
         phone: this.userInfo.phone,
-        sex: sexChangeNum(this.userInfo.sex),
         address: this.userInfo.address
       }).then((res) => {
         if(res.code === 200) {

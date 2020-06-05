@@ -409,7 +409,7 @@
 .notice_table {
   /*margin-top: 10px;*/
   width: 90%;
-  margin: -25px auto;
+  margin: -10px auto;
 }
 .notice_table a {
   display: block;

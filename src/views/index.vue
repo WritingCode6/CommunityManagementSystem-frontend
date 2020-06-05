@@ -16,11 +16,11 @@
         </li>
         <li class="refresh">
           <a href @click.prevent="refresh">
-            <img src="../assets/image/tab/icon_refresh.png" alt />
+            <img src="../assets/image/icon/icon_refresh.png" alt />
           </a>
         </li>
         <li class="line">|</li>
-        <li class="welcome">欢迎您！{{ userName }}</li>
+        <li class="welcome">欢迎您！{{ userType }}{{ userName }}</li>
       </ul>
     </div>
     <div class="content">
@@ -147,7 +147,7 @@
 </template>
 
 <script>
-import {roleJudge} from "../utils/roleUtil";
+  import {roleJudge, tranUserType} from "../utils/roleUtil";
 
 export default {
   name: "index",
@@ -158,7 +158,9 @@ export default {
       userName: '',
       exitWindows: false,
       //true是管理员或工作人员，false是住户
-      role: true
+      role: true,
+      //工作人员类型
+      userType: ''
     };
   },
   methods: {
@@ -216,8 +218,9 @@ export default {
       this.reload();
     }
   },
-  beforeMount() {
+  created() {
     this.role = roleJudge();
+    this.userType = tranUserType();
     if(this.role === true) this.getStaffInfo();
     else if(this.role === false) this.getUserInfo();
   }
