@@ -34,7 +34,7 @@
                 :default-sort = "{prop: 'employeeId', order: 'ascending'}"
                 highlight-current-row>
           <!-- 设置min-width来自适应宽度 -->
-          <el-table-column prop="employeeId" label="工号" min-width="10%" align="center" sortable></el-table-column>
+          <el-table-column prop="employeeId" label="工作人员ID" min-width="10%" align="center" sortable></el-table-column>
           <el-table-column prop="name" label="姓名" min-width="15%" align="center"></el-table-column>
           <el-table-column prop="type" label="值班类型" min-width="15%" align="center"></el-table-column>
           <el-table-column prop="place" label="值班区域" min-width="15%" align="center"></el-table-column>
@@ -97,6 +97,7 @@
                           v-model="addDutyData.date"
                           type="date"
                           class="duty_input"
+                          value-format="yyyy-MM-dd"
                           placeholder="选择值班日期">
                   </el-date-picker>
                 </el-form-item>
@@ -355,7 +356,8 @@
           name: '',
           serviceId: '',
           sex: '',
-          phone: ''
+          phone: '',
+          userId: ''
         },
         dutyRules:{
           type:[
@@ -424,7 +426,6 @@
     methods: {
       //搜索值班信息
       searchDuty() {
-        console.log(this.searchData.date)
         this.getList(this.searchData.date, typeJudgeNum(this.searchData.type), this.pagingData.currentPage, this.pagingData.pageSize);
       },
       //值班信息接口
@@ -606,8 +607,10 @@
           }
         }).then((res) => {
           if(res.code === 200) {
+            console.log(res)
             this.checkWindows = true;
             this.staffDetail.name = res.data[0].name;
+            this.staffDetail.userId = res.data[0].userId;
             this.staffDetail.serviceId = res.data[0].serviceId;
             this.staffDetail.sex = sexChange(res.data[0].sex);
             this.staffDetail.phone = res.data[0].phone;
@@ -694,7 +697,7 @@ h3::before {
   border: none;
   border-radius: 8px;
   position: relative;
-  left: 161px;
+  left: 220px;
 }
 .add_staff {
   display: flex;

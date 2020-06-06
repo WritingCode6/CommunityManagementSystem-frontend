@@ -24,7 +24,7 @@
               <el-input v-model="userInfo.idNumber" class="longInput input" readonly></el-input>
             </el-form-item>
             <el-form-item prop="serviceId" class="serviceId">
-              <label>工作ID：</label>
+              <label>工号：</label>
               <el-input v-model="userInfo.serviceId" class="input" readonly></el-input>
             </el-form-item>
             <el-form-item prop="address" class="address">
@@ -65,7 +65,7 @@
               <el-input v-model="userInfo.idNumber" class="longInput input" readonly></el-input>
             </el-form-item>
             <el-form-item class="serviceId">
-              <label>工作ID：</label>
+              <label>工号：</label>
               <el-input v-model="userInfo.serviceId" class="input" readonly></el-input>
             </el-form-item>
             <el-form-item prop="address" class="address">

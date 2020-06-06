@@ -465,24 +465,25 @@ export default {
     getActivity(c) {
       this.$axios.get('/api/community/getCommunityActivity',{
         params: {
-          current: c
+          current: c,
+          size: this.paging.pageSize
         }
       }).then((res) => {
-          let data = res.data;
-          if(res.code === 200) {
-            this.activityData = data.records;
-            this.paging.total = data.total;
-            if(this.activityData.length === 0) {
-              this.listNull = false;
-            }else {
-              this.listNull = true;
-            }
-            this.saveTime();
-            this.activityTime();
+        let data = res.data;
+        if(res.code === 200) {
+          this.activityData = data.records;
+          this.paging.total = data.total;
+          if(this.activityData.length === 0) {
+            this.listNull = false;
+          }else {
+            this.listNull = true;
           }
-        else {
-          this.$message.error(res.message);
+          this.saveTime();
+          this.activityTime();
         }
+      else {
+        this.$message.error(res.message);
+      }
       }).catch((err) => {
         console.log(err);
       })
@@ -628,13 +629,13 @@ export default {
   border-width: 0px;
   border-radius: 15px;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 25px;
   margin-left: 150px;
 }
 .activity_table {
   /*margin-top: 50px;*/
   width: 90%;
-  margin: 12px auto;
+  margin: 25px auto;
 }
 .activity_table a {
   display: block;
